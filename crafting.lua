@@ -40,7 +40,7 @@ minetest.register_craftitem('x_farming:cookie', {
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:cookie 8',
-    recipe = { 'farming:wheat', 'x_farming:cocoa_bean', 'farming:flour', 'x_farming:bottle_soymilk', 'x_farming:sugar' }
+    recipe = { 'farming:wheat', 'x_farming:cocoa_bean', 'farming:flour', 'x_farming:bottle_soymilk', 'x_farming:sugar_substitute' }
 })
 
 minetest.register_craftitem('x_farming:chocolate', {
@@ -303,7 +303,7 @@ minetest.register_craft({
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:pumpkin_pie',
-    recipe = { 'x_farming:pumpkin_block', 'farming:flour', 'x_farming:bottle_soymilk', 'x_farming:sugar' }
+    recipe = { 'x_farming:pumpkin_block', 'farming:flour', 'x_farming:bottle_soymilk', 'x_farming:sugar_substitute' }
 })
 
 -- pumpkin as fuel (better than cactus)
@@ -374,13 +374,13 @@ end
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:donut',
-    recipe = { 'x_farming:bottle_soymilk', 'x_farming:sugar', 'farming:flour' }
+    recipe = { 'x_farming:bottle_soymilk', 'x_farming:sugar_substitute', 'farming:flour' }
 })
 
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:donut_chocolate',
-    recipe = { 'x_farming:bottle_soymilk', 'x_farming:sugar', 'farming:flour', 'x_farming:cocoa_bean' }
+    recipe = { 'x_farming:bottle_soymilk', 'x_farming:sugar_substitute', 'farming:flour', 'x_farming:cocoa_bean' }
 })
 
 -- Fries

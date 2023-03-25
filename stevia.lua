@@ -39,16 +39,16 @@ minetest.override_item('x_farming:stevia', {
     groups = { compost = 65 }
 })
 
-minetest.register_craftitem('x_farming:sugar', {
-    description = S('Sugar'),
-    short_description = S('Sugar'),
+minetest.register_craftitem('x_farming:sugar_substitute', {
+    description = S('Sugar Substitute'),
+    short_description = S('Sugar Substitute'),
     inventory_image = 'x_farming_sugar.png',
     groups = { flammable = 1 },
 })
 
 minetest.register_craft({
     type = 'shapeless',
-    output = 'x_farming:sugar',
+    output = 'x_farming:sugar_substitute',
     recipe = { 'x_farming:stevia', 'x_farming:stevia', 'x_farming:stevia', 'x_farming:stevia' }
 })
 
