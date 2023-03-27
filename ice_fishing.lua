@@ -624,7 +624,7 @@ for i, def in ipairs(fishes) do
         tiles = { img },
         inventory_image = img,
         wield_image = img .. "^[transformFXR90",
-        groups = { fish = 1 },
+        groups = { fish = 1, food_fish_raw = 1 },
         on_use = minetest.item_eat(def.item_eat),
     })
 
