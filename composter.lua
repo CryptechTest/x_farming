@@ -147,11 +147,11 @@ for i = 1, 5, 1 do
         end
 
         minetest.sound_play('default_dig_crumbly', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
-        local count = itemstack.get_count()
+        local count = itemstack:get_count()
         if (count > 1) then
-            itemstack.set_count(count - 1)
+            itemstack:set_count(count - 1)
         else 
-            itemstack.clear()
+            itemstack:clear()
         end
         return itemstack
     end
