@@ -114,6 +114,7 @@ for i = 1, 5, 1 do
         if chance == 0 then
             return itemstack
         end
+        
 
         if math.random() < chance / 100 then
             local meta = minetest.get_meta(pos)
@@ -146,7 +147,13 @@ for i = 1, 5, 1 do
         end
 
         minetest.sound_play('default_dig_crumbly', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
-
+        local count = itemstack.get_count()
+        if (count > 1) then
+            itemstack.set_count(count - 1)
+        end
+        else 
+            itemstack.clear()
+        end
         return itemstack
     end
 
