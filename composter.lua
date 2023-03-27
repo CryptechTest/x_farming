@@ -150,7 +150,6 @@ for i = 1, 5, 1 do
         local count = itemstack.get_count()
         if (count > 1) then
             itemstack.set_count(count - 1)
-        end
         else 
             itemstack.clear()
         end
