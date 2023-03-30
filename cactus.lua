@@ -305,7 +305,6 @@ end
 
 minetest.register_abm({
 	nodenames = { "group:thorns" },
-	--neighbors = { "group:soil" },
 	interval = 1,
 	chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
@@ -319,7 +318,4 @@ minetest.register_abm({
             end
         end
 	end
-
-    _custom = {
-        crate_item = 'x_farming:cactus_fruit_item'
-    }
+})
