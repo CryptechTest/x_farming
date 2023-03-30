@@ -43,7 +43,7 @@ minetest.register_craftitem('x_farming:sugar_substitute', {
     description = S('Sugar Substitute'),
     short_description = S('Sugar Substitute'),
     inventory_image = 'x_farming_sugar.png',
-    groups = { flammable = 1 },
+    groups = { flammable = 1, food_sugar = 1 },
 })
 
 minetest.register_craft({

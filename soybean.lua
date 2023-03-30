@@ -67,7 +67,7 @@ minetest.register_craft({
         'x_farming:soybean',
         'x_farming:soybean',
         'x_farming:soybean',
-        'x_farming:bottle_water'
+        'group:food_water'
     }
 })
 

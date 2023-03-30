@@ -791,8 +791,8 @@ local farming_steps = {
 ---@param pos Vector containing position
 function x_farming.x_bonemeal.particle_effect(pos)
     minetest.sound_play('x_farming_x_bonemeal_grow', {
-        pos = pos,
-        gain = 0.5,
+        pos = {x = pos.x, y = pos.y - 1, z = pos.z},
+        gain = 0.2,
     })
 
     minetest.add_particlespawner({

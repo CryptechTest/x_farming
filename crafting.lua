@@ -40,7 +40,7 @@ minetest.register_craftitem('x_farming:cookie', {
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:cookie 8',
-    recipe = { 'farming:wheat', 'x_farming:cocoa_bean', 'farming:flour', 'x_farming:bottle_soymilk', 'x_farming:sugar_substitute' }
+    recipe = { 'farming:wheat', 'x_farming:cocoa_bean', 'farming:flour', 'x_farming:bottle_soymilk', 'group:food_sugar' }
 })
 
 minetest.register_craftitem('x_farming:chocolate', {
@@ -128,7 +128,7 @@ minetest.register_craftitem('x_farming:bottle_coffee', {
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:bottle_coffee',
-    recipe = { 'x_farming:coffee', 'x_farming:bottle_water' }
+    recipe = { 'x_farming:coffee', 'group:food_water' }
 })
 
 if x_farming.vessels then
@@ -303,7 +303,7 @@ minetest.register_craft({
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:pumpkin_pie',
-    recipe = { 'x_farming:pumpkin_block', 'farming:flour', 'x_farming:bottle_soymilk', 'x_farming:sugar_substitute' }
+    recipe = { 'x_farming:pumpkin_block', 'farming:flour', 'x_farming:bottle_soymilk', 'group:food_sugar' }
 })
 
 -- pumpkin as fuel (better than cactus)
@@ -325,7 +325,7 @@ minetest.register_craftitem('x_farming:bottle_water', {
     tiles = { 'x_farming_bottle_water.png' },
     inventory_image = 'x_farming_bottle_water.png',
     wield_image = 'x_farming_bottle_water.png',
-    groups = { vessel = 1 },
+    groups = { vessel = 1, food_water = 1},
 })
 
 if x_farming.vessels then
@@ -339,15 +339,15 @@ if x_farming.vessels then
         replacements = { { 'bucket:water_bucket', 'bucket:bucket_empty' } },
     })
 
-    minetest.register_craft({
-        type = 'shapeless',
-        output = 'x_farming:bottle_water 5',
-        recipe = {
-            'vessels:glass_bottle', 'vessels:glass_bottle', 'vessels:glass_bottle',
-            'vessels:glass_bottle', 'vessels:glass_bottle', 'x_farming:seed_salt'
-        },
-        replacements = { { 'x_farming:seed_salt', 'x_farming:seed_salt' } },
-    })
+    --minetest.register_craft({
+    --    type = 'shapeless',
+    --    output = 'x_farming:bottle_water 5',
+    --    recipe = {
+    --        'vessels:glass_bottle', 'vessels:glass_bottle', 'vessels:glass_bottle',
+    --        'vessels:glass_bottle', 'vessels:glass_bottle', 'x_farming:seed_salt'
+    --    },
+    --    replacements = { { 'x_farming:seed_salt', 'x_farming:seed_salt' } },
+    --})
 else
     minetest.register_craft({
         type = 'shapeless',
@@ -359,28 +359,28 @@ else
         replacements = { { 'bucket:water_bucket', 'bucket:bucket_empty' } },
     })
 
-    minetest.register_craft({
-        type = 'shapeless',
-        output = 'x_farming:bottle_water 5',
-        recipe = {
-            'x_farming:glass_bottle', 'x_farming:glass_bottle', 'x_farming:glass_bottle',
-            'x_farming:glass_bottle', 'x_farming:glass_bottle', 'x_farming:seed_salt'
-        },
-        replacements = { { 'x_farming:seed_salt', 'x_farming:seed_salt' } },
-    })
+    --minetest.register_craft({
+    --    type = 'shapeless',
+    --    output = 'x_farming:bottle_water 5',
+    --    recipe = {
+    --        'x_farming:glass_bottle', 'x_farming:glass_bottle', 'x_farming:glass_bottle',
+    --        'x_farming:glass_bottle', 'x_farming:glass_bottle', 'x_farming:seed_salt'
+    --    },
+    --    replacements = { { 'x_farming:seed_salt', 'x_farming:seed_salt' } },
+    --})
 end
 
 -- Donuts
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:donut',
-    recipe = { 'x_farming:bottle_soymilk', 'x_farming:sugar_substitute', 'farming:flour' }
+    recipe = { 'x_farming:bottle_soymilk', 'group:food_sugar', 'farming:flour' }
 })
 
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:donut_chocolate',
-    recipe = { 'x_farming:bottle_soymilk', 'x_farming:sugar_substitute', 'farming:flour', 'x_farming:cocoa_bean' }
+    recipe = { 'x_farming:bottle_soymilk', 'group:food_sugar', 'farming:flour', 'x_farming:cocoa_bean' }
 })
 
 -- Fries
