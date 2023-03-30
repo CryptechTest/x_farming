@@ -146,7 +146,7 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
             5 / 16, 0.5, 5 / 16
         }
     },
-    groups = { choppy = 3, dig_immediate = 3, attached_node = 1, compost = 30 },
+    groups = { choppy = 3, dig_immediate = 3, attached_node = 1, compost = 30, thorns = 1 },
     sounds = default.node_sound_wood_defaults(),
 
     on_place = function(itemstack, placer, pointed_thing)
