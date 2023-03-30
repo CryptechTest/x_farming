@@ -230,12 +230,6 @@ default.register_leafdecay({
     radius = 1,
 })
 
-default.register_leafdecay({
-    trunks = { 'default:sand' },
-    leaves = { 'default:papyrus' },
-    radius = 7,
-})
-
 minetest.register_craft({
     output = 'x_farming:large_cactus_with_fruit_seedling',
     recipe = {
