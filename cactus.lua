@@ -34,12 +34,35 @@ minetest.register_decoration({
         persist = 0.6
     },
     biomes = { 'desert' },
-    y_max = 31000,
+    --y_max = 31000,
+    y_max = 48,
     y_min = 4,
     schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_large_cactus.mts',
     flags = 'place_center_x, place_center_z',
     rotation = 'random',
 })
+
+minetest.register_decoration({
+    name = 'x_farming:huge_cactus',
+    deco_type = 'schematic',
+    place_on = { 'default:desert_sand' },
+    sidelen = 16,
+    noise_params = {
+        offset = -0.0003,
+        scale = 0.0009,
+        spread = { x = 200, y = 200, z = 200 },
+        seed = 200,
+        octaves = 3,
+        persist = 0.7
+    },
+    biomes = { 'desert' },
+    y_max = 34,
+    y_min = 12,
+    schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_huge_cactus.mts',
+    flags = 'place_center_x, place_center_z',
+    rotation = 'random',
+})
+
 
 minetest.register_node('x_farming:cactus_fruit', {
     description = S('Dragon Fruit'),
@@ -205,6 +228,12 @@ default.register_leafdecay({
     trunks = { 'default:cactus' },
     leaves = { 'x_farming:cactus_fruit' },
     radius = 1,
+})
+
+default.register_leafdecay({
+    trunks = { 'default:sand' },
+    leaves = { 'default:papyrus' },
+    radius = 7,
 })
 
 minetest.register_craft({
