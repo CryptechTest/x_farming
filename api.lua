@@ -176,8 +176,13 @@ end
 ---Grow Large Cactus
 
 function x_farming.grow_large_cactus(pos)
+    minetest.set_node(pos, {name = "air"})
     local path = minetest.get_modpath('x_farming') ..
         '/schematics/x_farming_large_cactus_from_seedling.mts'
+    if (math.random(1,2) == 1) then
+        path = minetest.get_modpath('x_farming') ..
+        '/schematics/x_farming_large_cactus.mts'
+    end
     minetest.place_schematic({ x = pos.x, y = pos.y, z = pos.z },
         path, 'random', nil, false, 'place_center_x, place_center_z')
 end

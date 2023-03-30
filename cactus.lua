@@ -75,7 +75,7 @@ minetest.register_node('x_farming:cactus_fruit', {
             }
         },
     },
-    groups = { choppy = 3, flammable = 2, not_in_creative_inventory = 1, leafdecay = 3, leafdecay_drop = 1 },
+    groups = { choppy = 3, flammable = 2, not_in_creative_inventory = 1, leafdecay = 3, leafdecay_drop = 1, attached_node = 3 },
     sounds = default.node_sound_wood_defaults(),
 
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
@@ -237,3 +237,89 @@ x_farming.register_crate('crate_cactus_fruit_item_3', {
         crate_item = 'x_farming:cactus_fruit_item'
     }
 })
+
+--cactus
+--default.register_leafdecay({
+--    trunks = { 'default:cactus', 'default:sand', 'default:desert_sand', 'default:silver_sand' },
+--    leaves = { 'default:cactus' },
+--    radius = 1,
+--})
+
+local function calculate_damage_multiplier(object)
+	local ag = object.get_armor_groups and object:get_armor_groups()
+	if not ag then
+		return 0
+	end
+	if ag.immortal then
+		return 0
+	end
+	if ag.fleshy then
+		return 0.01 * ag.fleshy
+	elseif armor_enabled then
+		return 0
+	end
+	if ag.fleshy then
+		return math.sqrt(0.01 * ag.fleshy)
+	end
+	return 0
+end
+
+local function apply_fractional_damage(o, dmg)
+	local dmg_int = math.floor(dmg)
+	-- The closer you are to getting one more damage point,
+	-- the more likely it will be added.
+	if math.random() < dmg - dmg_int then
+		dmg_int = dmg_int + 1
+	end
+	if dmg_int > 0 then
+		local new_hp = math.max(o:get_hp() - dmg_int, 0)
+		o:set_hp(new_hp)
+		return new_hp == 0
+	end
+	return false
+end
+
+local function calculate_object_center(object)
+	if object:is_player() then
+		return {x=0, y=1, z=0}
+	end
+	return {x=0, y=0, z=0}
+end
+
+local function dmg_object(pos, object, strength)
+	local obj_pos = vector.add(object:get_pos(), calculate_object_center(object))
+	local mul = calculate_damage_multiplier(object)
+	local dmg = math.random(0.25, 1.0)
+	if not dmg then
+		return
+	end
+	-- abort if blocked
+	if mul == 0 then
+		return
+	end
+	if armor_enabled then
+		dmg = dmg * mul
+	end
+	apply_fractional_damage(object, dmg)
+end
+
+minetest.register_abm({
+	nodenames = { "group:thorns" },
+	--neighbors = { "group:soil" },
+	interval = 1,
+	chance = 1,
+	action = function(pos, node, active_object_count, active_object_count_wider)
+        local strength = minetest.get_item_group(node.name, "thorns")
+        local thorns_dmg_mult_sqrt = math.sqrt(1 / 0.2)
+        local max_dist = math.min(0.37, strength * thorns_dmg_mult_sqrt)
+        local abdomen_offset = 1;
+        for _, o in pairs(minetest.get_objects_inside_radius(pos, max_dist + abdomen_offset)) do
+            if o ~= nil and o:get_hp() > 0 then
+                dmg_object(pos, o, strength)
+            end
+        end
+	end
+
+    _custom = {
+        crate_item = 'x_farming:cactus_fruit_item'
+    }
