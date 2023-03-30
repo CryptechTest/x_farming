@@ -792,7 +792,7 @@ local farming_steps = {
 function x_farming.x_bonemeal.particle_effect(pos)
     minetest.sound_play('x_farming_x_bonemeal_grow', {
         pos = {x = pos.x, y = pos.y - 1, z = pos.z},
-        gain = 0.01,
+        gain = 0.1,
     })
 
     minetest.add_particlespawner({
