@@ -98,13 +98,24 @@ minetest.register_node('x_farming:cactus_fruit', {
             }
         },
     },
-    groups = { choppy = 3, flammable = 2, not_in_creative_inventory = 1, leafdecay = 3, leafdecay_drop = 1, attached_node = 3 },
-    sounds = default.node_sound_wood_defaults(),
+    groups = { choppy = 3, flammable = 2, not_in_creative_inventory = 1, attached_node = 3 },
+    sounds = default.node_sound_leaves_defaults(),
 
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         if oldnode.param2 == 20 then
             minetest.set_node(pos, { name = 'x_farming:cactus_fruit_mark' })
             minetest.get_node_timer(pos):start(math.random(300, 1500))
+        else
+            local n = minetest.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
+            if n.name ~= 'default:cactus' then
+                minetest.remove_node(pos)
+            elseif minetest.get_node_light(pos) < 11 then
+                minetest.get_node_timer(pos):start(200)
+            elseif oldnode.param2 ~= 1 then
+                minetest.set_node(pos, { name = 'x_farming:cactus_fruit_mark' })
+                minetest.get_node_timer(pos):start(math.random(30, 500))
+                minetest.log("action", "Placing missing cactus fruit mark at: " .. minetest.pos_to_string(pos))
+            end
         end
     end,
 })
@@ -122,10 +133,9 @@ minetest.register_node('x_farming:cactus_fruit_mark', {
     diggable = false,
     buildable_to = true,
     drop = '',
-    groups = { not_in_creative_inventory = 1 },
+    groups = { not_in_creative_inventory = 1, attached_node = 3 },
     on_timer = function(pos, elapsed)
         local n = minetest.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
-
         if n.name ~= 'default:cactus' then
             minetest.remove_node(pos)
         elseif minetest.get_node_light(pos) < 11 then
@@ -148,7 +158,7 @@ minetest.register_node('x_farming:cactus_fruit_item', {
     groups = { compost = 65 },
 
     after_place_node = function(pos, placer, itemstack, pointed_thing)
-        minetest.set_node(pos, { name = 'x_farming:cactus_fruit' })
+        minetest.set_node(pos, { name = 'x_farming:cactus_fruit', param2 = 1  })
     end,
 })
 
@@ -224,11 +234,11 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
     end,
 })
 
-default.register_leafdecay({
-    trunks = { 'default:cactus' },
-    leaves = { 'x_farming:cactus_fruit' },
-    radius = 1,
-})
+--default.register_leafdecay({
+--    trunks = { 'default:cactus' },
+--    leaves = { 'x_farming:cactus_fruit' },
+--    radius = 1,
+--})
 
 minetest.register_craft({
     output = 'x_farming:large_cactus_with_fruit_seedling',
