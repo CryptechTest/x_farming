@@ -14,110 +14,119 @@
 
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
---]]
-
-local S = minetest.get_translator(minetest.get_current_modname())
+--]] local S = minetest.get_translator(minetest.get_current_modname())
 
 -- Large cactus
 
 minetest.register_decoration({
     name = 'x_farming:large_cactus',
     deco_type = 'schematic',
-    place_on = { 'default:desert_sand' },
+    place_on = {'default:desert_sand'},
     sidelen = 16,
     noise_params = {
         offset = -0.0003,
         scale = 0.0009,
-        spread = { x = 200, y = 200, z = 200 },
+        spread = {
+            x = 200,
+            y = 200,
+            z = 200
+        },
         seed = 230,
         octaves = 3,
         persist = 0.6
     },
-    biomes = { 'desert' },
-    --y_max = 31000,
+    biomes = {'desert'},
+    -- y_max = 31000,
     y_max = 48,
     y_min = 4,
     schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_large_cactus.mts',
     flags = 'place_center_x, place_center_z',
-    rotation = 'random',
+    rotation = 'random'
 })
 
 minetest.register_decoration({
     name = 'x_farming:huge_cactus',
     deco_type = 'schematic',
-    place_on = { 'default:desert_sand' },
+    place_on = {'default:desert_sand'},
     sidelen = 16,
     noise_params = {
         offset = -0.0003,
         scale = 0.0009,
-        spread = { x = 200, y = 200, z = 200 },
+        spread = {
+            x = 200,
+            y = 200,
+            z = 200
+        },
         seed = 200,
         octaves = 3,
         persist = 0.7
     },
-    biomes = { 'desert' },
+    biomes = {'desert'},
     y_max = 34,
     y_min = 12,
     schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_huge_cactus.mts',
     flags = 'place_center_x, place_center_z',
-    rotation = 'random',
+    rotation = 'random'
 })
-
 
 minetest.register_node('x_farming:cactus_fruit', {
     description = S('Dragon Fruit'),
     short_description = S('Dragon Fruit'),
     inventory_image = 'x_farming_cactus_fruit_sides.png',
     is_ground_content = false,
-    tiles = {
-        'x_farming_cactus_fruit_top.png',
-        'x_farming_cactus_fruit_bottom.png',
-        'x_farming_cactus_fruit_sides.png',
-        'x_farming_cactus_fruit_sides.png',
-        'x_farming_cactus_fruit_sides.png',
-        'x_farming_cactus_fruit_sides.png'
-    },
+    tiles = {'x_farming_cactus_fruit_top.png', 'x_farming_cactus_fruit_bottom.png', 'x_farming_cactus_fruit_sides.png',
+             'x_farming_cactus_fruit_sides.png', 'x_farming_cactus_fruit_sides.png', 'x_farming_cactus_fruit_sides.png'},
     drawtype = 'nodebox',
     paramtype = 'light',
     node_box = {
         type = 'fixed',
-        fixed = {
-            { -0.25, -0.5, -0.25, 0.25, 0.0625, 0.25 },
-        }
+        fixed = {{-0.25, -0.5, -0.25, 0.25, 0.0625, 0.25}}
     },
     selection_box = {
         type = 'fixed',
-        fixed = { -0.25, -0.5, -0.25, 0.25, 0.0625, 0.25 },
+        fixed = {-0.25, -0.5, -0.25, 0.25, 0.0625, 0.25}
     },
     drop = {
         max_items = 1, -- Maximum number of items to drop.
         items = { -- Choose max_items randomly from this list.
-            {
-                items = { 'x_farming:cactus_fruit_item' }, -- Items to drop.
-                rarity = 1, -- Probability of dropping is 1 / rarity.
-            }
-        },
+        {
+            items = {'x_farming:cactus_fruit_item'}, -- Items to drop.
+            rarity = 1 -- Probability of dropping is 1 / rarity.
+        }}
     },
-    groups = { choppy = 3, flammable = 2, not_in_creative_inventory = 1, attached_node = 3 },
+    groups = {
+        choppy = 3,
+        flammable = 2,
+        not_in_creative_inventory = 1,
+        attached_node = 3
+    },
     sounds = default.node_sound_leaves_defaults(),
 
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         if oldnode.param2 == 20 then
-            minetest.set_node(pos, { name = 'x_farming:cactus_fruit_mark' })
+            minetest.set_node(pos, {
+                name = 'x_farming:cactus_fruit_mark'
+            })
             minetest.get_node_timer(pos):start(math.random(300, 1500))
         else
-            local n = minetest.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
+            local n = minetest.get_node({
+                x = pos.x,
+                y = pos.y - 1,
+                z = pos.z
+            })
             if n.name ~= 'default:cactus' then
                 minetest.remove_node(pos)
             elseif minetest.get_node_light(pos) < 11 then
                 minetest.get_node_timer(pos):start(200)
             elseif oldnode.param2 ~= 1 then
-                minetest.set_node(pos, { name = 'x_farming:cactus_fruit_mark' })
+                minetest.set_node(pos, {
+                    name = 'x_farming:cactus_fruit_mark'
+                })
                 minetest.get_node_timer(pos):start(math.random(30, 500))
                 minetest.log("action", "Placing missing cactus fruit mark at: " .. minetest.pos_to_string(pos))
             end
         end
-    end,
+    end
 })
 
 minetest.register_node('x_farming:cactus_fruit_mark', {
@@ -133,40 +142,55 @@ minetest.register_node('x_farming:cactus_fruit_mark', {
     diggable = false,
     buildable_to = true,
     drop = '',
-    groups = { not_in_creative_inventory = 1, attached_node = 3 },
+    groups = {
+        not_in_creative_inventory = 1,
+        attached_node = 3
+    },
     on_timer = function(pos, elapsed)
-        local n = minetest.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
+        local n = minetest.get_node({
+            x = pos.x,
+            y = pos.y - 1,
+            z = pos.z
+        })
         if n.name ~= 'default:cactus' then
             minetest.remove_node(pos)
         elseif minetest.get_node_light(pos) < 11 then
             minetest.get_node_timer(pos):start(200)
         else
-            minetest.set_node(pos, { name = 'x_farming:cactus_fruit', param2 = 20 })
+            minetest.set_node(pos, {
+                name = 'x_farming:cactus_fruit',
+                param2 = 20
+            })
         end
     end
 })
 
 minetest.register_node('x_farming:cactus_fruit_item', {
-    description = S('Dragon Fruit') .. '\n' .. S('Compost chance') .. ': 65%\n'
-    .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
+    description = S('Dragon Fruit') .. '\n' .. S('Compost chance') .. ': 65%\n' ..
+        minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     short_description = S('Dragon Fruit'),
     drawtype = 'plantlike',
-    tiles = { 'x_farming_cactus_fruit_item.png' },
+    tiles = {'x_farming_cactus_fruit_item.png'},
     inventory_image = 'x_farming_cactus_fruit_item.png',
     on_use = minetest.item_eat(2),
     sounds = default.node_sound_leaves_defaults(),
-    groups = { compost = 65 },
+    groups = {
+        compost = 65
+    },
 
     after_place_node = function(pos, placer, itemstack, pointed_thing)
-        minetest.set_node(pos, { name = 'x_farming:cactus_fruit', param2 = 1  })
-    end,
+        minetest.set_node(pos, {
+            name = 'x_farming:cactus_fruit',
+            param2 = 1
+        })
+    end
 })
 
 minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
     description = S('Large Cactus with Fruit Seedling') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Large Cactus with Fruit Seedling'),
     drawtype = 'plantlike',
-    tiles = { 'x_farming_large_cactus_with_fruit_seedling.png' },
+    tiles = {'x_farming_large_cactus_with_fruit_seedling.png'},
     inventory_image = 'x_farming_large_cactus_with_fruit_seedling.png',
     wield_image = 'x_farming_large_cactus_with_fruit_seedling.png',
     paramtype = 'light',
@@ -174,20 +198,28 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
     walkable = false,
     selection_box = {
         type = 'fixed',
-        fixed = {
-            -5 / 16, -0.5, -5 / 16,
-            5 / 16, 0.5, 5 / 16
-        }
+        fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 0.5, 5 / 16}
     },
-    groups = { choppy = 3, dig_immediate = 3, attached_node = 1, compost = 30, thorns = 1 },
+    groups = {
+        choppy = 3,
+        dig_immediate = 3,
+        attached_node = 1,
+        compost = 30,
+        thorns = 1
+    },
     sounds = default.node_sound_wood_defaults(),
 
     on_place = function(itemstack, placer, pointed_thing)
         itemstack = default.sapling_on_place(itemstack, placer, pointed_thing,
-            'x_farming:large_cactus_with_fruit_seedling',
-            { x = -3, y = 0, z = -3 },
-            { x = 3, y = 6, z = 3 },
-            4)
+            'x_farming:large_cactus_with_fruit_seedling', {
+                x = -3,
+                y = 0,
+                z = -3
+            }, {
+                x = 3,
+                y = 6,
+                z = 3
+            }, 4)
 
         return itemstack
     end,
@@ -207,8 +239,11 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
     end,
 
     on_timer = function(pos, elapsed)
-        local node_under = minetest.get_node_or_nil(
-            { x = pos.x, y = pos.y - 1, z = pos.z })
+        local node_under = minetest.get_node_or_nil({
+            x = pos.x,
+            y = pos.y - 1,
+            z = pos.z
+        })
         if not node_under then
             -- Node under not yet loaded, try later
             minetest.get_node_timer(pos):start(300)
@@ -228,112 +263,118 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
             return
         end
 
-        minetest.log('action', 'A large cactus seedling grows into a large' ..
-            'cactus at ' .. minetest.pos_to_string(pos))
+        minetest.log('action',
+            'A large cactus seedling grows into a large' .. 'cactus at ' .. minetest.pos_to_string(pos))
         x_farming.grow_large_cactus(pos)
-    end,
+    end
 })
 
---default.register_leafdecay({
+-- default.register_leafdecay({
 --    trunks = { 'default:cactus' },
 --    leaves = { 'x_farming:cactus_fruit' },
 --    radius = 1,
---})
+-- })
 
 minetest.register_craft({
     output = 'x_farming:large_cactus_with_fruit_seedling',
-    recipe = {
-        { '', 'x_farming:cactus_fruit_item', '' },
-        { 'x_farming:cactus_fruit_item', 'default:large_cactus_seedling', 'x_farming:cactus_fruit_item' },
-        { '', 'x_farming:cactus_fruit_item', '' },
-    }
+    recipe = {{'', 'x_farming:cactus_fruit_item', ''},
+              {'x_farming:cactus_fruit_item', 'default:large_cactus_seedling', 'x_farming:cactus_fruit_item'},
+              {'', 'x_farming:cactus_fruit_item', ''}}
 })
 
 minetest.register_craft({
     type = 'fuel',
     recipe = 'x_farming:large_cactus_with_fruit_seedling',
-    burntime = 5,
+    burntime = 5
 })
 
 minetest.register_craft({
     type = 'fuel',
     recipe = 'x_farming:cactus_fruit_item',
-    burntime = 10,
+    burntime = 10
 })
 
 ---crate
 x_farming.register_crate('crate_cactus_fruit_item_3', {
     description = S('Cactus Fruit Crate'),
     short_description = S('Cactus Fruit Crate'),
-    tiles = { 'x_farming_crate_cactus_fruit_item_3.png' },
+    tiles = {'x_farming_crate_cactus_fruit_item_3.png'},
     _custom = {
         crate_item = 'x_farming:cactus_fruit_item'
     }
 })
 
---cactus damage
+-- cactus damage
 local function calculate_damage_multiplier(object)
-	local ag = object.get_armor_groups and object:get_armor_groups()
-	if not ag then
-		return 0
-	end
-	if ag.immortal and ag.immortal > 0 then
-		return 0
-	end
+    local ag = object.get_armor_groups and object:get_armor_groups()
+    if not ag then
+        return 0
+    end
+    if ag.immortal and ag.immortal > 0 then
+        return 0
+    end
     local ent = object:get_luaentity()
     if ent and ent.immortal then
         return 0
     end
-	if ag.fleshy then
-		return 0.01 * ag.fleshy
-	end
-	if ag.fleshy then
-		return math.sqrt(0.01 * ag.fleshy)
-	end
-	return 0
+    if ag.fleshy then
+        return 0.01 * ag.fleshy
+    end
+    if ag.fleshy then
+        return math.sqrt(0.01 * ag.fleshy)
+    end
+    return 0
 end
 
 local function apply_fractional_damage(o, dmg)
-	local dmg_int = math.floor(dmg)
-	-- The closer you are to getting one more damage point,
-	-- the more likely it will be added.
-	if math.random() < dmg - dmg_int then
-		dmg_int = dmg_int + 1
-	end
-	if dmg_int > 0 then
-		local new_hp = math.max(o:get_hp() - dmg_int, 0)
-		o:set_hp(new_hp)
-		return new_hp == 0
-	end
-	return false
+    local dmg_int = math.floor(dmg)
+    -- The closer you are to getting one more damage point,
+    -- the more likely it will be added.
+    if math.random() < dmg - dmg_int then
+        dmg_int = dmg_int + 1
+    end
+    if dmg_int > 0 then
+        local new_hp = math.max(o:get_hp() - dmg_int, 0)
+        o:set_hp(new_hp)
+        return new_hp == 0
+    end
+    return false
 end
 
 local function calculate_object_center(object)
-	if object:is_player() then
-		return {x=0, y=1, z=0}
-	end
-	return {x=0, y=0.5, z=0}
+    if object:is_player() then
+        return {
+            x = 0,
+            y = 1,
+            z = 0
+        }
+    end
+    return {
+        x = 0,
+        y = 0.5,
+        z = 0
+    }
 end
 
 local function dmg_object(pos, object, strength)
-	--local obj_pos = vector.add(object:get_pos(), calculate_object_center(object))
-	local mul = calculate_damage_multiplier(object)
-	local dmg = math.random(0.25, 1.0)
-	if not dmg then
-		return
-	end
-	-- abort if blocked
-	if mul == 0 then
-		return
-	end
-	apply_fractional_damage(object, dmg * mul)
+    -- local obj_pos = vector.add(object:get_pos(), calculate_object_center(object))
+    local mul = calculate_damage_multiplier(object)
+    local dmg = math.random(0.25, 1.0)
+    if not dmg then
+        return
+    end
+    -- abort if blocked
+    if mul == 0 then
+        return
+    end
+    apply_fractional_damage(object, dmg * mul)
 end
 
 minetest.register_abm({
-	nodenames = { "group:thorns" },
-	interval = 1,
-	chance = 1,
-	action = function(pos, node, active_object_count, active_object_count_wider)
+    nodenames = {"group:thorns"},
+    interval = 1,
+    chance = 1,
+    action = function(pos, node, active_object_count, active_object_count_wider)
         local strength = minetest.get_item_group(node.name, "thorns")
         local thorns_dmg_mult_sqrt = math.sqrt(1 / 0.2)
         local max_dist = math.min(0.375, strength * thorns_dmg_mult_sqrt)
@@ -343,5 +384,5 @@ minetest.register_abm({
                 dmg_object(pos, o, strength)
             end
         end
-	end
+    end
 })
