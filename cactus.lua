@@ -271,25 +271,21 @@ x_farming.register_crate('crate_cactus_fruit_item_3', {
     }
 })
 
---cactus
---default.register_leafdecay({
---    trunks = { 'default:cactus', 'default:sand', 'default:desert_sand', 'default:silver_sand' },
---    leaves = { 'default:cactus' },
---    radius = 1,
---})
-
+--cactus damage
 local function calculate_damage_multiplier(object)
 	local ag = object.get_armor_groups and object:get_armor_groups()
 	if not ag then
 		return 0
 	end
-	if ag.immortal then
+	if ag.immortal and ag.immortal > 0 then
 		return 0
 	end
+    local ent = object:get_luaentity()
+    if ent and ent.immortal then
+        return 0
+    end
 	if ag.fleshy then
 		return 0.01 * ag.fleshy
-	elseif armor_enabled then
-		return 0
 	end
 	if ag.fleshy then
 		return math.sqrt(0.01 * ag.fleshy)
@@ -316,11 +312,11 @@ local function calculate_object_center(object)
 	if object:is_player() then
 		return {x=0, y=1, z=0}
 	end
-	return {x=0, y=0, z=0}
+	return {x=0, y=0.5, z=0}
 end
 
 local function dmg_object(pos, object, strength)
-	local obj_pos = vector.add(object:get_pos(), calculate_object_center(object))
+	--local obj_pos = vector.add(object:get_pos(), calculate_object_center(object))
 	local mul = calculate_damage_multiplier(object)
 	local dmg = math.random(0.25, 1.0)
 	if not dmg then
@@ -330,10 +326,7 @@ local function dmg_object(pos, object, strength)
 	if mul == 0 then
 		return
 	end
-	if armor_enabled then
-		dmg = dmg * mul
-	end
-	apply_fractional_damage(object, dmg)
+	apply_fractional_damage(object, dmg * mul)
 end
 
 minetest.register_abm({
@@ -343,7 +336,7 @@ minetest.register_abm({
 	action = function(pos, node, active_object_count, active_object_count_wider)
         local strength = minetest.get_item_group(node.name, "thorns")
         local thorns_dmg_mult_sqrt = math.sqrt(1 / 0.2)
-        local max_dist = math.min(0.37, strength * thorns_dmg_mult_sqrt)
+        local max_dist = math.min(0.375, strength * thorns_dmg_mult_sqrt)
         local abdomen_offset = 1;
         for _, o in pairs(minetest.get_objects_inside_radius(pos, max_dist + abdomen_offset)) do
             if o ~= nil and o:get_hp() > 0 then
