@@ -15,7 +15,6 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-
 screwdriver = screwdriver --[[@as MtgScrewdriver]]
 
 local S = minetest.get_translator(minetest.get_current_modname())
@@ -30,6 +29,7 @@ minetest.register_craftitem('x_farming:salt', {
     description = S('Salt'),
     short_description = S('Salt'),
     tiles = { 'x_farming_salt.png' },
+    groups = { food_salt = 1 },
     inventory_image = 'x_farming_salt.png',
     wield_image = 'x_farming_salt.png'
 })
@@ -80,16 +80,15 @@ minetest.register_node('x_farming:seed_salt', {
     sounds = default.node_sound_leaves_defaults(),
     next_plant = 'x_farming:salt_1',
     on_timer = farming.grow_plant,
-
     on_place = function(itemstack, placer, pointed_thing)
         local under = pointed_thing.under
         local node = minetest.get_node(under)
         local udef = minetest.registered_nodes[node.name]
         if udef and udef.on_rightclick and
-                not (placer and placer:is_player() and
-                placer:get_player_control().sneak) then
+            not (placer and placer:is_player() and
+            placer:get_player_control().sneak) then
             return udef.on_rightclick(under, node, placer, itemstack,
-                pointed_thing) or itemstack
+                    pointed_thing) or itemstack
         end
 
         return farming.place_seed(itemstack, placer, pointed_thing, 'x_farming:seed_salt')
@@ -126,7 +125,7 @@ minetest.register_node('x_farming:salt_1', {
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' }, rarity = 8 },
+            { items = { 'x_farming:salt' },      rarity = 8 },
             { items = { 'x_farming:seed_salt' }, rarity = 8 },
         }
     },
@@ -186,7 +185,7 @@ minetest.register_node('x_farming:salt_2', {
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' }, rarity = 7 },
+            { items = { 'x_farming:salt' },      rarity = 7 },
             { items = { 'x_farming:seed_salt' }, rarity = 7 },
         }
     },
@@ -246,15 +245,15 @@ minetest.register_node('x_farming:salt_3', {
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' }, rarity = 6 },
+            { items = { 'x_farming:salt' },      rarity = 6 },
             { items = { 'x_farming:seed_salt' }, rarity = 6 },
         }
     },
     node_box = {
         type = 'fixed',
         fixed = {
-            { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
-            { -0.0625, -0.5, -0.0625, 0.0625, -0.25, 0.0625 },
+            { -0.5,    -0.5, -0.5,    0.5,    -0.375, 0.5 },
+            { -0.0625, -0.5, -0.0625, 0.0625, -0.25,  0.0625 },
         }
     },
     collision_box = {
@@ -307,15 +306,15 @@ minetest.register_node('x_farming:salt_4', {
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' }, rarity = 5 },
+            { items = { 'x_farming:salt' },      rarity = 5 },
             { items = { 'x_farming:seed_salt' }, rarity = 5 },
         }
     },
     node_box = {
         type = 'fixed',
         fixed = {
-            { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
-            { -0.0625, -0.5, -0.0625, 0.0625, -0.25, 0.0625 },
+            { -0.5,    -0.5, -0.5,    0.5,    -0.375, 0.5 },
+            { -0.0625, -0.5, -0.0625, 0.0625, -0.25,  0.0625 },
         }
     },
     collision_box = {
@@ -368,16 +367,16 @@ minetest.register_node('x_farming:salt_5', {
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' }, rarity = 4 },
+            { items = { 'x_farming:salt' },      rarity = 4 },
             { items = { 'x_farming:seed_salt' }, rarity = 4 },
         }
     },
     node_box = {
         type = 'fixed',
         fixed = {
-            { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
-            { -0.1875, -0.375, -0.1875, 0.1875, -0.25, 0.1875 },
-            { -0.0625, -0.25, -0.0625, 0.0625, -0.125, 0.0625 },
+            { -0.5,    -0.5,   -0.5,    0.5,    -0.375, 0.5 },
+            { -0.1875, -0.375, -0.1875, 0.1875, -0.25,  0.1875 },
+            { -0.0625, -0.25,  -0.0625, 0.0625, -0.125, 0.0625 },
         }
     },
     collision_box = {
@@ -430,16 +429,16 @@ minetest.register_node('x_farming:salt_6', {
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' }, rarity = 3 },
+            { items = { 'x_farming:salt' },      rarity = 3 },
             { items = { 'x_farming:seed_salt' }, rarity = 3 },
         }
     },
     node_box = {
         type = 'fixed',
         fixed = {
-            { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
-            { -0.1875, -0.375, -0.1875, 0.1875, -0.25, 0.1875 },
-            { -0.0625, -0.25, -0.0625, 0.0625, -0.125, 0.0625 },
+            { -0.5,    -0.5,   -0.5,    0.5,    -0.375, 0.5 },
+            { -0.1875, -0.375, -0.1875, 0.1875, -0.25,  0.1875 },
+            { -0.0625, -0.25,  -0.0625, 0.0625, -0.125, 0.0625 },
         }
     },
     collision_box = {
@@ -492,8 +491,8 @@ minetest.register_node('x_farming:salt_7', {
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' }, rarity = 1 },
-            { items = { 'x_farming:salt' }, rarity = 2 },
+            { items = { 'x_farming:salt' },      rarity = 1 },
+            { items = { 'x_farming:salt' },      rarity = 2 },
             { items = { 'x_farming:seed_salt' }, rarity = 1 },
             { items = { 'x_farming:seed_salt' }, rarity = 2 },
         }
@@ -501,10 +500,10 @@ minetest.register_node('x_farming:salt_7', {
     node_box = {
         type = 'fixed',
         fixed = {
-            { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
-            { -0.3125, -0.5, -0.3125, 0.3125, -0.25, 0.3125 },
+            { -0.5,    -0.5, -0.5,    0.5,    -0.375, 0.5 },
+            { -0.3125, -0.5, -0.3125, 0.3125, -0.25,  0.3125 },
             { -0.1875, -0.5, -0.1875, 0.1875, -0.125, 0.1875 },
-            { -0.0625, -0.5, -0.0625, 0.0625, 0, 0.0625 },
+            { -0.0625, -0.5, -0.0625, 0.0625, 0,      0.0625 },
         }
     },
     collision_box = {
