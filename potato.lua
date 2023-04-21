@@ -30,9 +30,15 @@ farming.register_plant('x_farming:potato', {
     minlight = minlight,
     maxlight = maxlight,
     fertility = { 'grassland' },
-    groups = { flammable = 4 },
+    groups = { flammable = 4, hunger_amount = 2 },
     place_param2 = 3,
-    on_use = minetest.item_eat(2),
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end
 })
 
 -- needed
@@ -40,8 +46,14 @@ minetest.override_item('x_farming:potato', {
     description = S('Potato') .. '\n' .. S('Compost chance') .. ': 65%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     short_description = S('Potato'),
-    groups = { compost = 65 },
-    on_use = minetest.item_eat(2),
+    groups = { compost = 65, hunger_amount = 2 },
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
 })
 
 -- add poisonous potato to drops

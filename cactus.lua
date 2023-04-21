@@ -172,10 +172,16 @@ minetest.register_node('x_farming:cactus_fruit_item', {
     drawtype = 'plantlike',
     tiles = {'x_farming_cactus_fruit_item.png'},
     inventory_image = 'x_farming_cactus_fruit_item.png',
-    on_use = minetest.item_eat(2),
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
     sounds = default.node_sound_leaves_defaults(),
     groups = {
-        compost = 65
+        compost = 65, hunger_amount = 2
     },
 
     after_place_node = function(pos, placer, itemstack, pointed_thing)

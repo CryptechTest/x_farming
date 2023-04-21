@@ -67,8 +67,14 @@ minetest.register_node('x_farming:coffee_cup_hot', {
         type = 'fixed',
         fixed = { -0.25, -0.5, -0.4, 0.25, 0, 0.25 }
     },
-    groups = { vessel = 1, dig_immediate = 3, attached_node = 1 },
-    on_use = minetest.item_eat(6),
+    groups = { vessel = 1, dig_immediate = 3, attached_node = 1, hunger_amount = 6 },
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
     sounds = default.node_sound_glass_defaults(),
     sunlight_propagates = true
 })

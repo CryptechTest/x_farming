@@ -32,8 +32,14 @@ minetest.register_craft({
 minetest.register_craftitem('x_farming:cookie', {
     description = S('Cookie') .. '\n' .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     inventory_image = 'x_farming_cookie.png',
-    groups = { compost = 85 },
-    on_use = minetest.item_eat(2),
+    groups = { compost = 85, hunger_amount = 2 },
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
 })
 
 minetest.register_craft({
@@ -45,8 +51,14 @@ minetest.register_craft({
 minetest.register_craftitem('x_farming:chocolate', {
     description = S('Chocolate') .. '\n' .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
     inventory_image = 'x_farming_chocolate.png',
-    groups = { compost = 65 },
-    on_use = minetest.item_eat(3),
+    groups = { compost = 65, hunger_amount = 3 },
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
 })
 
 minetest.register_craft({
@@ -103,7 +115,16 @@ minetest.register_craftitem('x_farming:carrot_golden', {
     description = golden_carrot_desc,
     inventory_image = 'x_farming_carrot_golden.png',
     wield_image = 'x_farming_carrot_golden.png^[transformR270',
-    on_use = minetest.item_eat(10),
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
+    groups = {
+        hunger_amount = 10
+    }
 })
 
 minetest.register_craft({
@@ -157,8 +178,14 @@ minetest.register_craftitem('x_farming:corn_pop', {
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 1'),
     short_description = S('Popped corn'),
     inventory_image = 'x_farming_corn_pop.png',
-    groups = { compost = 50 },
-    on_use = minetest.item_eat(1),
+    groups = { compost = 50, hunger_amount = 1 },
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
 })
 
 minetest.register_craft({
@@ -188,7 +215,16 @@ minetest.register_craftitem('x_farming:golden_melon', {
     description = golden_melon_desc,
     inventory_image = 'x_farming_golden_melon.png',
     wield_image = 'x_farming_golden_melon.png^[transformR90',
-    on_use = minetest.item_eat(10),
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
+    groups = {
+        hunger_amount = 10
+    }
 })
 
 minetest.register_craft({
@@ -261,9 +297,15 @@ minetest.register_craftitem('x_farming:bakedpotato', {
     description = S('Baked Potato') .. '\n' .. S('Compost chance') .. ': 85%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Baked Potato'),
-    groups = { compost = 85 },
+    groups = { compost = 85, hunger_amount = 6 },
     inventory_image = 'x_farming_potato_baked.png',
-    on_use = minetest.item_eat(6),
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
 })
 
 local poisonouspotato_desc = S('Poisonous Potato') .. '\n'
@@ -277,7 +319,16 @@ end
 minetest.register_craftitem('x_farming:poisonouspotato', {
     description = poisonouspotato_desc,
     inventory_image = 'x_farming_potato_poisonous.png',
-    on_use = minetest.item_eat(-6),
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
+    groups = {
+        hunger_amount = -6
+    }
 })
 
 minetest.register_craft({

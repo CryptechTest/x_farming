@@ -624,8 +624,14 @@ for i, def in ipairs(fishes) do
         tiles = { img },
         inventory_image = img,
         wield_image = img .. "^[transformFXR90",
-        groups = { fish = 1, food_fish_raw = 1 },
-        on_use = minetest.item_eat(def.item_eat),
+        groups = { fish = 1, food_fish_raw = 1, hunger_amount = def.item_eat },
+        on_use = function(itemstack, user, pointed_thing)
+            local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+            if hunger_amount == 0 then 
+                return itemstack
+            end
+            minetest.item_eat(hunger_amount)
+        end,
     })
 
     ---hbhunger
@@ -646,7 +652,16 @@ for i, def in ipairs(fishes) do
                 '^(' .. img .. '^[colorize:#FFFFFF:255^[mask:x_farming_cooked_mask.png^[opacity:191)',
             wield_image = img .. '^[transformFXR90^[colorize:#3B2510:204' ..
                 '^(' .. img .. '^[colorize:#FFFFFF:255^[mask:x_farming_cooked_mask.png^[opacity:191)',
-            on_use = minetest.item_eat(def.item_eat_cooked),
+            on_use = function(itemstack, user, pointed_thing)
+                local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+                if hunger_amount == 0 then 
+                    return itemstack
+                end
+                minetest.item_eat(hunger_amount)
+            end,
+            groups = {
+                hunger_amount = def.item_eat_cooked
+            }
         })
 
         minetest.register_craft({
