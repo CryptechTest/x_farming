@@ -15,7 +15,6 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-
 local S = minetest.get_translator(minetest.get_current_modname())
 
 -- CORN
@@ -104,10 +103,10 @@ minetest.register_node('x_farming:corn_popcorn', {
     sounds = default.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sunlight_propagates = true
 })

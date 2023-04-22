@@ -15,7 +15,6 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-
 stairs = stairs --[[@as MtgStairs]]
 
 local S = minetest.get_translator(minetest.get_current_modname())
@@ -45,10 +44,10 @@ minetest.register_node('x_farming:donut', {
     sounds = default.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sunlight_propagates = true
 })
@@ -77,10 +76,10 @@ minetest.register_node('x_farming:donut_chocolate', {
     sounds = default.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sunlight_propagates = true
 })
@@ -111,10 +110,10 @@ minetest.register_node('x_farming:fries', {
     sounds = default.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sunlight_propagates = true
 })
@@ -145,10 +144,10 @@ minetest.register_node('x_farming:pumpkin_pie', {
     sounds = default.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sunlight_propagates = true
 })
@@ -178,10 +177,10 @@ minetest.register_node('x_farming:beetroot_soup', {
     groups = { vessel = 1, dig_immediate = 3, attached_node = 1, compost = 100, hunger_amount = 6 },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount, 'x_farming:bowl')
+        return minetest.item_eat(hunger_amount, 'x_farming:bowl')(itemstack, user, pointed_thing)
     end,
     sounds = default.node_sound_wood_defaults(),
     sunlight_propagates = true
@@ -212,10 +211,10 @@ minetest.register_node('x_farming:fish_stew', {
     groups = { vessel = 1, dig_immediate = 3, attached_node = 1, compost = 100, hunger_amount = 8 },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount, 'x_farming:bowl')
+        return minetest.item_eat(hunger_amount, 'x_farming:bowl')(itemstack, user, pointed_thing)
     end,
     sounds = default.node_sound_wood_defaults(),
     sunlight_propagates = true

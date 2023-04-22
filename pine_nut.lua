@@ -15,7 +15,6 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-
 stairs = stairs --[[@as MtgStairs]]
 
 local S = minetest.get_translator(minetest.get_current_modname())
@@ -50,7 +49,6 @@ minetest.register_node('x_farming:pine_nut_tree', {
     is_ground_content = false,
     groups = { tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2 },
     sounds = default.node_sound_wood_defaults(),
-
     on_place = minetest.rotate_node
 })
 
@@ -81,7 +79,6 @@ minetest.register_node('x_farming:pine_nut_leaves', {
         }
     },
     sounds = default.node_sound_leaves_defaults(),
-
     after_place_node = default.after_place_leaves,
 })
 
@@ -101,14 +98,17 @@ minetest.register_node('x_farming:pine_nut_sapling', {
         type = 'fixed',
         fixed = { -4 / 16, -0.5, -4 / 16, 4 / 16, 7 / 16, 4 / 16 }
     },
-    groups = { snappy = 2, dig_immediate = 3, flammable = 3,
-        attached_node = 1, sapling = 1 },
+    groups = {
+        snappy = 2,
+        dig_immediate = 3,
+        flammable = 3,
+        attached_node = 1,
+        sapling = 1
+    },
     sounds = default.node_sound_leaves_defaults(),
-
     on_construct = function(pos)
         minetest.get_node_timer(pos):start(math.random(300, 1500))
     end,
-
     on_place = function(itemstack, placer, pointed_thing)
         itemstack = default.sapling_on_place(itemstack, placer, pointed_thing,
             'x_farming:pine_nut_sapling',
@@ -154,11 +154,9 @@ minetest.register_node('x_farming:pine_nut', {
         compost = 65
     },
     sounds = default.node_sound_leaves_defaults(),
-
     after_place_node = function(pos, placer, itemstack, pointed_thing)
         minetest.set_node(pos, { name = 'x_farming:pine_nut', param2 = 1 })
     end,
-
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         if oldnode.param2 == 0 then
             minetest.set_node(pos, { name = 'x_farming:pine_nut_mark' })
@@ -174,10 +172,10 @@ minetest.register_craftitem('x_farming:pine_nut_roasted', {
     inventory_image = 'x_farming_pine_nut_roasted.png',
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     groups = { flammable = 2, compost = 85, hunger_amount = 2 },
 })

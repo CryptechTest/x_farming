@@ -15,7 +15,6 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-
 stairs = stairs --[[@as MtgStairs]]
 
 local S = minetest.get_translator(minetest.get_current_modname())
@@ -56,7 +55,6 @@ minetest.register_node('x_farming:kiwi_tree', {
     is_ground_content = false,
     groups = { tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2 },
     sounds = default.node_sound_wood_defaults(),
-
     on_place = minetest.rotate_node
 })
 
@@ -87,7 +85,6 @@ minetest.register_node('x_farming:kiwi_leaves', {
         }
     },
     sounds = default.node_sound_leaves_defaults(),
-
     after_place_node = after_place_leaves,
 })
 
@@ -107,14 +104,17 @@ minetest.register_node('x_farming:kiwi_sapling', {
         type = 'fixed',
         fixed = { -4 / 16, -0.5, -4 / 16, 4 / 16, 7 / 16, 4 / 16 }
     },
-    groups = { snappy = 2, dig_immediate = 3, flammable = 2,
-        attached_node = 1, sapling = 1 },
+    groups = {
+        snappy = 2,
+        dig_immediate = 3,
+        flammable = 2,
+        attached_node = 1,
+        sapling = 1
+    },
     sounds = default.node_sound_leaves_defaults(),
-
     on_construct = function(pos)
         minetest.get_node_timer(pos):start(math.random(300, 1500))
     end,
-
     on_place = function(itemstack, placer, pointed_thing)
         itemstack = default.sapling_on_place(itemstack, placer, pointed_thing,
             'x_farming:kiwi_sapling',
@@ -142,11 +142,11 @@ minetest.register_node('x_farming:kiwi', {
     walkable = false,
     is_ground_content = false,
     drop = {
-        max_items = 1, -- Maximum number of items to drop.
-        items = { -- Choose max_items randomly from this list.
+        max_items = 1,                              -- Maximum number of items to drop.
+        items = {                                   -- Choose max_items randomly from this list.
             {
                 items = { 'x_farming:kiwi_fruit' }, -- Items to drop.
-                rarity = 1, -- Probability of dropping is 1 / rarity.
+                rarity = 1,                         -- Probability of dropping is 1 / rarity.
             }
         },
     },
@@ -154,10 +154,16 @@ minetest.register_node('x_farming:kiwi', {
         type = 'fixed',
         fixed = { -3 / 16, -7 / 16, -3 / 16, 3 / 16, 4 / 16, 3 / 16 }
     },
-    groups = { fleshy = 3, dig_immediate = 3, flammable = 2,
-        leafdecay = 3, leafdecay_drop = 1, food_apple = 1, not_in_creative_inventory = 1 },
+    groups = {
+        fleshy = 3,
+        dig_immediate = 3,
+        flammable = 2,
+        leafdecay = 3,
+        leafdecay_drop = 1,
+        food_apple = 1,
+        not_in_creative_inventory = 1
+    },
     sounds = default.node_sound_leaves_defaults(),
-
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         if oldnode.param2 == 0 then
             minetest.set_node(pos, { name = 'x_farming:kiwi_mark' })
@@ -215,10 +221,10 @@ minetest.register_node('x_farming:kiwi_fruit', {
     sounds = default.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sunlight_propagates = true
 })

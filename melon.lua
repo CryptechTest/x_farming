@@ -15,7 +15,6 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-
 local S = minetest.get_translator(minetest.get_current_modname())
 
 -- MELON
@@ -38,10 +37,10 @@ minetest.override_item('x_farming:melon', {
     groups = { compost = 50, hunger_amount = 2 },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     wield_image = 'x_farming_melon.png^[transformR90',
 })
@@ -61,35 +60,35 @@ minetest.register_node('x_farming:melon_fruit', {
     is_ground_content = false,
     groups = { snappy = 3, flammable = 4, fall_damage_add_percent = -30, not_in_creative_inventory = 1 },
     drop = {
-        max_items = 7, -- Maximum number of items to drop.
-        items = { -- Choose max_items randomly from this list.
+        max_items = 7,                         -- Maximum number of items to drop.
+        items = {                              -- Choose max_items randomly from this list.
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 1, -- Probability of dropping is 1 / rarity.
+                rarity = 1,                    -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 2, -- Probability of dropping is 1 / rarity.
+                rarity = 2,                    -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 2, -- Probability of dropping is 1 / rarity.
+                rarity = 2,                    -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 2, -- Probability of dropping is 1 / rarity.
+                rarity = 2,                    -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 3, -- Probability of dropping is 1 / rarity.
+                rarity = 3,                    -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 3, -- Probability of dropping is 1 / rarity.
+                rarity = 3,                    -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 3, -- Probability of dropping is 1 / rarity.
+                rarity = 3,                    -- Probability of dropping is 1 / rarity.
             },
         },
     },
@@ -101,7 +100,6 @@ minetest.register_node('x_farming:melon_fruit', {
         -- make sure we have position
         if parent_pos_from_child
             and parent_pos_from_child ~= nil then
-
             parent_node = minetest.get_node(parent_pos_from_child)
         end
 
@@ -109,7 +107,6 @@ minetest.register_node('x_farming:melon_fruit', {
         if parent_node
             and parent_node ~= nil
             and parent_node.name == 'x_farming:melon_8' then
-
             x_farming.tick(parent_pos_from_child)
         end
     end

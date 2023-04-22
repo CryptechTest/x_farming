@@ -15,7 +15,6 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-
 local S = minetest.get_translator(minetest.get_current_modname())
 local minlight = 13
 local maxlight = default.LIGHT_MAX
@@ -34,10 +33,10 @@ farming.register_plant('x_farming:potato', {
     place_param2 = 3,
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end
 })
 
@@ -49,10 +48,10 @@ minetest.override_item('x_farming:potato', {
     groups = { compost = 65, hunger_amount = 2 },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
 })
 
@@ -60,11 +59,11 @@ minetest.override_item('x_farming:potato', {
 minetest.override_item('x_farming:potato_8', {
     drop = {
         items = {
-            { items = { 'x_farming:potato' }, rarity = 1 },
-            { items = { 'x_farming:potato' }, rarity = 2 },
+            { items = { 'x_farming:potato' },          rarity = 1 },
+            { items = { 'x_farming:potato' },          rarity = 2 },
             { items = { 'x_farming:poisonouspotato' }, rarity = 5 },
-            { items = { 'x_farming:seed_potato' }, rarity = 1 },
-            { items = { 'x_farming:seed_potato' }, rarity = 2 },
+            { items = { 'x_farming:seed_potato' },     rarity = 1 },
+            { items = { 'x_farming:seed_potato' },     rarity = 2 },
         }
     }
 })

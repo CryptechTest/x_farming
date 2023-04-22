@@ -35,10 +35,10 @@ minetest.register_craftitem('x_farming:cookie', {
     groups = { compost = 85, hunger_amount = 2 },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
 })
 
@@ -54,10 +54,10 @@ minetest.register_craftitem('x_farming:chocolate', {
     groups = { compost = 65, hunger_amount = 3 },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
 })
 
@@ -117,10 +117,10 @@ minetest.register_craftitem('x_farming:carrot_golden', {
     wield_image = 'x_farming_carrot_golden.png^[transformR270',
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     groups = {
         hunger_amount = 10
@@ -181,10 +181,10 @@ minetest.register_craftitem('x_farming:corn_pop', {
     groups = { compost = 50, hunger_amount = 1 },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
 })
 
@@ -217,10 +217,10 @@ minetest.register_craftitem('x_farming:golden_melon', {
     wield_image = 'x_farming_golden_melon.png^[transformR90',
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     groups = {
         hunger_amount = 10
@@ -301,10 +301,10 @@ minetest.register_craftitem('x_farming:bakedpotato', {
     inventory_image = 'x_farming_potato_baked.png',
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
 })
 
@@ -321,10 +321,10 @@ minetest.register_craftitem('x_farming:poisonouspotato', {
     inventory_image = 'x_farming_potato_poisonous.png',
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     groups = {
         hunger_amount = -6

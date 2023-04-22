@@ -14,14 +14,15 @@
 
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
---]] local S = minetest.get_translator(minetest.get_current_modname())
+--]]
+local S = minetest.get_translator(minetest.get_current_modname())
 
 -- Large cactus
 
 minetest.register_decoration({
     name = 'x_farming:large_cactus',
     deco_type = 'schematic',
-    place_on = {'default:desert_sand'},
+    place_on = { 'default:desert_sand' },
     sidelen = 16,
     noise_params = {
         offset = -0.0003,
@@ -35,7 +36,7 @@ minetest.register_decoration({
         octaves = 3,
         persist = 0.6
     },
-    biomes = {'desert'},
+    biomes = { 'desert' },
     -- y_max = 31000,
     y_max = 48,
     y_min = 4,
@@ -47,7 +48,7 @@ minetest.register_decoration({
 minetest.register_decoration({
     name = 'x_farming:huge_cactus',
     deco_type = 'schematic',
-    place_on = {'default:desert_sand'},
+    place_on = { 'default:desert_sand' },
     sidelen = 16,
     noise_params = {
         offset = -0.0003,
@@ -61,7 +62,7 @@ minetest.register_decoration({
         octaves = 3,
         persist = 0.7
     },
-    biomes = {'desert'},
+    biomes = { 'desert' },
     y_max = 34,
     y_min = 12,
     schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_huge_cactus.mts',
@@ -74,25 +75,25 @@ minetest.register_node('x_farming:cactus_fruit', {
     short_description = S('Dragon Fruit'),
     inventory_image = 'x_farming_cactus_fruit_sides.png',
     is_ground_content = false,
-    tiles = {'x_farming_cactus_fruit_top.png', 'x_farming_cactus_fruit_bottom.png', 'x_farming_cactus_fruit_sides.png',
-             'x_farming_cactus_fruit_sides.png', 'x_farming_cactus_fruit_sides.png', 'x_farming_cactus_fruit_sides.png'},
+    tiles = { 'x_farming_cactus_fruit_top.png', 'x_farming_cactus_fruit_bottom.png', 'x_farming_cactus_fruit_sides.png',
+        'x_farming_cactus_fruit_sides.png', 'x_farming_cactus_fruit_sides.png', 'x_farming_cactus_fruit_sides.png' },
     drawtype = 'nodebox',
     paramtype = 'light',
     node_box = {
         type = 'fixed',
-        fixed = {{-0.25, -0.5, -0.25, 0.25, 0.0625, 0.25}}
+        fixed = { { -0.25, -0.5, -0.25, 0.25, 0.0625, 0.25 } }
     },
     selection_box = {
         type = 'fixed',
-        fixed = {-0.25, -0.5, -0.25, 0.25, 0.0625, 0.25}
+        fixed = { -0.25, -0.5, -0.25, 0.25, 0.0625, 0.25 }
     },
     drop = {
-        max_items = 1, -- Maximum number of items to drop.
-        items = { -- Choose max_items randomly from this list.
-        {
-            items = {'x_farming:cactus_fruit_item'}, -- Items to drop.
-            rarity = 1 -- Probability of dropping is 1 / rarity.
-        }}
+        max_items = 1,                               -- Maximum number of items to drop.
+        items = {                                    -- Choose max_items randomly from this list.
+            {
+                items = { 'x_farming:cactus_fruit_item' }, -- Items to drop.
+                rarity = 1                           -- Probability of dropping is 1 / rarity.
+            } }
     },
     groups = {
         choppy = 3,
@@ -101,7 +102,6 @@ minetest.register_node('x_farming:cactus_fruit', {
         attached_node = 3
     },
     sounds = default.node_sound_leaves_defaults(),
-
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         if oldnode.param2 == 20 then
             minetest.set_node(pos, {
@@ -170,20 +170,19 @@ minetest.register_node('x_farming:cactus_fruit_item', {
         minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     short_description = S('Dragon Fruit'),
     drawtype = 'plantlike',
-    tiles = {'x_farming_cactus_fruit_item.png'},
+    tiles = { 'x_farming_cactus_fruit_item.png' },
     inventory_image = 'x_farming_cactus_fruit_item.png',
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then 
+        if hunger_amount == 0 then
             return itemstack
         end
-        minetest.item_eat(hunger_amount)
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sounds = default.node_sound_leaves_defaults(),
     groups = {
         compost = 65, hunger_amount = 2
     },
-
     after_place_node = function(pos, placer, itemstack, pointed_thing)
         minetest.set_node(pos, {
             name = 'x_farming:cactus_fruit',
@@ -196,7 +195,7 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
     description = S('Large Cactus with Fruit Seedling') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Large Cactus with Fruit Seedling'),
     drawtype = 'plantlike',
-    tiles = {'x_farming_large_cactus_with_fruit_seedling.png'},
+    tiles = { 'x_farming_large_cactus_with_fruit_seedling.png' },
     inventory_image = 'x_farming_large_cactus_with_fruit_seedling.png',
     wield_image = 'x_farming_large_cactus_with_fruit_seedling.png',
     paramtype = 'light',
@@ -204,7 +203,7 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
     walkable = false,
     selection_box = {
         type = 'fixed',
-        fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 0.5, 5 / 16}
+        fixed = { -5 / 16, -0.5, -5 / 16, 5 / 16, 0.5, 5 / 16 }
     },
     groups = {
         choppy = 3,
@@ -214,7 +213,6 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
         thorns = 1
     },
     sounds = default.node_sound_wood_defaults(),
-
     on_place = function(itemstack, placer, pointed_thing)
         itemstack = default.sapling_on_place(itemstack, placer, pointed_thing,
             'x_farming:large_cactus_with_fruit_seedling', {
@@ -229,7 +227,6 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
 
         return itemstack
     end,
-
     on_construct = function(pos)
         -- Normal cactus farming adds 1 cactus node by ABM,
         -- interval 12s, chance 83.
@@ -243,7 +240,6 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
         -- Set random range to average to 2789s.
         minetest.get_node_timer(pos):start(math.random(1859, 3719))
     end,
-
     on_timer = function(pos, elapsed)
         local node_under = minetest.get_node_or_nil({
             x = pos.x,
@@ -283,9 +279,9 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
 
 minetest.register_craft({
     output = 'x_farming:large_cactus_with_fruit_seedling',
-    recipe = {{'', 'x_farming:cactus_fruit_item', ''},
-              {'x_farming:cactus_fruit_item', 'default:large_cactus_seedling', 'x_farming:cactus_fruit_item'},
-              {'', 'x_farming:cactus_fruit_item', ''}}
+    recipe = { { '',                 'x_farming:cactus_fruit_item',   '' },
+        { 'x_farming:cactus_fruit_item', 'default:large_cactus_seedling', 'x_farming:cactus_fruit_item' },
+        { '',                            'x_farming:cactus_fruit_item',   '' } }
 })
 
 minetest.register_craft({
@@ -304,7 +300,7 @@ minetest.register_craft({
 x_farming.register_crate('crate_cactus_fruit_item_3', {
     description = S('Cactus Fruit Crate'),
     short_description = S('Cactus Fruit Crate'),
-    tiles = {'x_farming_crate_cactus_fruit_item_3.png'},
+    tiles = { 'x_farming_crate_cactus_fruit_item_3.png' },
     _custom = {
         crate_item = 'x_farming:cactus_fruit_item'
     }
@@ -377,7 +373,7 @@ local function dmg_object(pos, object, strength)
 end
 
 minetest.register_abm({
-    nodenames = {"group:thorns"},
+    nodenames = { "group:thorns" },
     interval = 1,
     chance = 1,
     action = function(pos, node, active_object_count, active_object_count_wider)
