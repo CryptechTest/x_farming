@@ -172,8 +172,14 @@ minetest.register_craftitem('x_farming:pine_nut_roasted', {
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     short_description = S('Pine Nut Roasted'),
     inventory_image = 'x_farming_pine_nut_roasted.png',
-    on_use = minetest.item_eat(2),
-    groups = { flammable = 2, compost = 85 },
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
+    groups = { flammable = 2, compost = 85, hunger_amount = 2 },
 })
 
 minetest.register_node('x_farming:pine_nut_mark', {

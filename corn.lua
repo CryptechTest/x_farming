@@ -100,9 +100,15 @@ minetest.register_node('x_farming:corn_popcorn', {
         type = 'fixed',
         fixed = { -0.3, -0.5, -0.3, 0.3, 0.25, 0.3 }
     },
-    groups = { dig_immediate = 3, attached_node = 1, compost = 65 },
+    groups = { dig_immediate = 3, attached_node = 1, compost = 65, hunger_amount = 5 },
     sounds = default.node_sound_leaves_defaults(),
-    on_use = minetest.item_eat(5),
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
     sunlight_propagates = true
 })
 

@@ -35,8 +35,14 @@ farming.register_plant('x_farming:melon', {
 minetest.override_item('x_farming:melon', {
     description = S('Melon') .. '\n' .. S('Compost chance') .. ': 50%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
-    groups = { compost = 50 },
-    on_use = minetest.item_eat(2),
+    groups = { compost = 50, hunger_amount = 2 },
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then 
+            return itemstack
+        end
+        minetest.item_eat(hunger_amount)
+    end,
     wield_image = 'x_farming_melon.png^[transformR90',
 })
 
