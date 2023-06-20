@@ -944,13 +944,6 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
 
     ---find suitable decorations
     for _, v in pairs(minetest.registered_decorations) do
-        ---only for 'simple' decoration types
-        if v.deco_type == 'simple' then
-            ---filter based on biome name in `biomes` table and node name in `place_on` table
-            if x_farming.x_bonemeal.tableContains(v.biomes, biome_name) then
-                table.insert(registered_decorations_filtered, v)
-            end
-        end
 
         ---clicked node is in decoration
         local _decoration = v.decoration
@@ -959,21 +952,41 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
             _decoration = { v.decoration }
         end
 
-        if x_farming.x_bonemeal.tableContains(_decoration, node.name) then
-            node_in_decor = true
-        end
+        local is_flora = false
+        if _decoration then
+            for _, d in pairs(_decoration) do
+                local deco_node = minetest.registered_nodes[d]
+                -- check if deco is group flora
+                if deco_node and deco_node.groups['flora'] then
+                    is_flora = true
 
-        ---all nodes on which decoration can be placed on
-        ---indexed by name
-        if not decor_place_on[v.place_on] then
-            if type(v.place_on) == 'string' then
-                decor_place_on[v.place_on] = true
-            elseif type(v.place_on) == 'table' then
-                for _, v2 in ipairs(v.place_on) do
-                    decor_place_on[v2] = true
+                    if x_farming.x_bonemeal.tableContains(_decoration, node.name) then
+                        node_in_decor = true
+                    end
+
+                    ---all nodes on which decoration can be placed on
+                    ---indexed by name
+                    if not decor_place_on[v.place_on] then
+                        if type(v.place_on) == 'string' then
+                            decor_place_on[v.place_on] = true
+                        elseif type(v.place_on) == 'table' then
+                            for _, v2 in ipairs(v.place_on) do
+                                decor_place_on[v2] = true
+                            end
+                        end
+                    end
                 end
             end
         end
+
+        ---only for 'simple' decoration types
+        if is_flora and v.deco_type == 'simple' then
+            ---filter based on biome name in `biomes` table and node name in `place_on` table
+            if x_farming.x_bonemeal.tableContains(v.biomes, biome_name) then
+                table.insert(registered_decorations_filtered, v)
+            end
+        end
+
     end
 
     ---find suitable positions
