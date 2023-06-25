@@ -51,9 +51,9 @@ local strawberry_def = {
     end
 }
 
-if minetest.get_modpath('farming') then
+--[[if minetest.get_modpath('farming') then
     strawberry_def.on_use = minetest.item_eat(2)
-end
+end--]]
 
 if minetest.get_modpath('mcl_farming') then
     strawberry_def.on_place = minetest.item_eat(2)

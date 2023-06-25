@@ -30,7 +30,7 @@ minetest.register_craft({
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:cookie 8',
-    recipe = { 'x_farming:barley', 'x_farming:cocoa_bean', 'x_farming:flour', 'x_farming:bottle_soymilk', 'x_farming:sugar' },
+    recipe = { 'x_farming:barley', 'x_farming:cocoa_bean', 'group:food_flour', 'x_farming:bottle_soymilk', 'x_farming:sugar' },
 })
 
 minetest.register_craft({
@@ -225,7 +225,7 @@ minetest.register_craft({
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:pumpkin_pie',
-    recipe = { 'x_farming:pumpkin_block', 'x_farming:flour', 'x_farming:bottle_soymilk', 'group:food_sugar' }
+    recipe = { 'x_farming:pumpkin_block', 'group:food_flour', 'x_farming:bottle_soymilk', 'group:food_sugar' }
 })
 
 --- FUELS
@@ -327,13 +327,13 @@ end
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:donut',
-    recipe = { 'x_farming:bottle_soymilk', 'group:food_sugar', 'x_farming:flour' }
+    recipe = { 'x_farming:bottle_soymilk', 'group:food_sugar', 'group:food_flour' }
 })
 
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:donut_chocolate',
-    recipe = { 'x_farming:bottle_soymilk', 'group:food_sugar', 'x_farming:flour', 'x_farming:cocoa_bean' }
+    recipe = { 'x_farming:bottle_soymilk', 'group:food_sugar', 'group:food_flour', 'x_farming:cocoa_bean' }
 })
 
 -- Fries
@@ -953,7 +953,7 @@ minetest.register_craft({
     recipe = {
         { 'x_farming:barley', 'x_farming:barley', 'x_farming:barley' },
         { 'x_farming:strawberry', 'x_farming:strawberry', 'x_farming:strawberry' },
-        { 'x_farming:sugar', 'x_farming:flour', 'x_farming:sugar' },
+        { 'x_farming:sugar', 'group:food_flour', 'x_farming:sugar' },
     }
 })
 
@@ -962,7 +962,7 @@ minetest.register_craft({
     recipe = {
         { 'x_farming:chocolate', 'x_farming:chocolate', 'x_farming:chocolate' },
         { 'x_farming:bottle_soymilk', 'x_farming:bottle_soymilk', 'x_farming:bottle_soymilk' },
-        { 'x_farming:sugar', 'x_farming:flour', 'x_farming:sugar' },
+        { 'x_farming:sugar', 'group:food_flour', 'x_farming:sugar' },
     }
 })
 
@@ -971,7 +971,7 @@ minetest.register_craft({
     recipe = {
         { 'x_farming:bottle_honey', 'x_farming:bottle_honey', 'x_farming:bottle_honey' },
         { 'x_farming:kiwi', 'x_farming:kiwi', 'x_farming:kiwi' },
-        { 'x_farming:bottle_soymilk', 'x_farming:flour', 'x_farming:bottle_soymilk' },
+        { 'x_farming:bottle_soymilk', 'group:food_flour', 'x_farming:bottle_soymilk' },
     }
 })
 
