@@ -38,7 +38,7 @@ minetest.register_node('x_farming:glass_bottle', {
         fixed = { -0.25, -0.5, -0.25, 0.25, 0.3, 0.25 }
     },
     groups = { vessel = 1, dig_immediate = 3, attached_node = 1 },
-    sounds = default.node_sound_glass_defaults(),
+    sounds = x_farming.node_sound_thin_glass_defaults(),
 })
 
 minetest.register_craft({
@@ -47,5 +47,14 @@ minetest.register_craft({
         { 'default:glass', '', 'default:glass' },
         { 'default:glass', '', 'default:glass' },
         { '', 'default:glass', '' }
+    }
+})
+
+minetest.register_craft({
+    output = 'x_farming:glass_bottle 10',
+    recipe = {
+        { 'group:glass', '', 'group:glass' },
+        { 'group:glass', '', 'group:glass' },
+        { '', 'group:glass', '' }
     }
 })

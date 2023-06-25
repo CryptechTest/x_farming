@@ -15,14 +15,12 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-farming = minetest.global_exists('farming') and farming --[[@as MtgFarming]]
-
 local S = minetest.get_translator(minetest.get_current_modname())
 local minlight = 13
-local maxlight = default.LIGHT_MAX
+local maxlight = 14
 
----beetroot
-farming.register_plant('x_farming:beetroot', {
+---BEETROOT
+x_farming.register_plant('x_farming:beetroot', {
     description = S('Beetroot Seed') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Beetroot Seed'),
     paramtype2 = 'meshoptions',
@@ -32,7 +30,7 @@ farming.register_plant('x_farming:beetroot', {
     maxlight = maxlight,
     fertility = { 'grassland' },
     groups = { flammable = 4, compost = 65, hunger_amount = 3 },
-    place_param2 = 3,
+    place_param2 = 0,
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
@@ -43,7 +41,7 @@ farming.register_plant('x_farming:beetroot', {
 })
 
 ---needed
-minetest.override_item('x_farming:beetroot', {
+local beetroot_def = {
     description = S('Beetroot') .. '\n' .. S('Compost chance') .. ': 65%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
     short_description = S('Beetroot'),
@@ -54,27 +52,28 @@ minetest.override_item('x_farming:beetroot', {
         end
         return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
-})
-
-minetest.register_decoration({
-    name = 'x_farming:beetroot_8',
-    deco_type = 'simple',
-    place_on = { 'default:silver_sand' },
-    sidelen = 16,
-    noise_params = {
-        offset = -0.1,
-        scale = 0.1,
-        spread = { x = 50, y = 50, z = 50 },
-        seed = 4242,
-        octaves = 3,
-        persist = 0.7
+    groups = {
+        -- X Farming
+        compost = 65,
+        -- MCL
+        food = 2,
+        eatable = 1,
+        compostability = 65
     },
-    biomes = { 'cold_desert' },
-    y_max = 31000,
-    y_min = 1,
-    decoration = 'x_farming:beetroot_8',
-    param2 = 3,
-})
+    _mcl_saturation = 1.2,
+    _mcl_blast_resistance = 0,
+}
+
+if minetest.get_modpath('farming') then
+    beetroot_def.on_use = minetest.item_eat(3)
+end
+
+if minetest.get_modpath('mcl_farming') then
+    beetroot_def.on_place = minetest.item_eat(3)
+    beetroot_def.on_secondary_use = minetest.item_eat(3)
+end
+
+minetest.override_item('x_farming:beetroot', beetroot_def)
 
 ---crate
 x_farming.register_crate('crate_beetroot_3', {
@@ -84,3 +83,53 @@ x_farming.register_crate('crate_beetroot_3', {
         crate_item = 'x_farming:beetroot'
     }
 })
+
+minetest.register_on_mods_loaded(function()
+    local deco_place_on = {}
+    local deco_biomes = {}
+
+    -- MTG
+    if minetest.get_modpath('default') then
+        table.insert(deco_place_on, 'default:silver_sand')
+        table.insert(deco_biomes, 'cold_desert')
+    end
+
+    -- Everness
+    if minetest.get_modpath('everness') then
+        table.insert(deco_place_on, 'everness:forsaken_desert_sand')
+        table.insert(deco_biomes, 'everness_forsaken_desert')
+    end
+
+    -- MCL
+    if minetest.get_modpath('mcl_core') then
+        table.insert(deco_place_on, 'mcl_colorblocks:hardened_clay')
+        table.insert(deco_biomes, 'Mesa')
+    end
+
+    if next(deco_place_on) and next(deco_biomes) then
+        minetest.register_decoration({
+            name = 'x_farming:beetroot',
+            deco_type = 'simple',
+            place_on = deco_place_on,
+            sidelen = 16,
+            noise_params = {
+                offset = -0.1,
+                scale = 0.1,
+                spread = { x = 50, y = 50, z = 50 },
+                seed = 4242,
+                octaves = 3,
+                persist = 0.7
+            },
+            biomes = deco_biomes,
+            y_max = 31000,
+            y_min = 1,
+            decoration = {
+                'x_farming:beetroot_5',
+                'x_farming:beetroot_6',
+                'x_farming:beetroot_7',
+                'x_farming:beetroot_8',
+            },
+            param2 = 0,
+        })
+    end
+end)

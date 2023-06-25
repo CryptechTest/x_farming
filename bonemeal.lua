@@ -16,8 +16,6 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-x_default = minetest.global_exists('x_default') and x_default --[[@as table]]
-
 local S = minetest.get_translator(minetest.get_current_modname())
 
 --- Register craftitem definition - added to minetest.registered_items[name]
@@ -41,9 +39,11 @@ minetest.register_craft({
     }
 })
 
-minetest.register_craft({
-    output = 'x_farming:bonemeal 4',
-    recipe = {
-        { 'default:coral_skeleton' }
-    }
-})
+if minetest.get_modpath('default') then
+    minetest.register_craft({
+        output = 'x_farming:bonemeal 4',
+        recipe = {
+            { 'default:coral_skeleton' }
+        }
+    })
+end

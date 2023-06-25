@@ -88,7 +88,6 @@
             "hb",
             "mesecon",
             "armor",
-            "default",
             "i3",
             "unified_inventory",
             "player_api",
@@ -98,9 +97,16 @@
             "skinsdb",
             "skins",
             "x_farming",
-            "x_default",
             "hbhunger",
-            "mobs"
+            "stairs",
+            "default",
+            "mcl_farming",
+            "mcl_potions",
+            "hunger_ng",
+            "mcl_stairs",
+            "hunger",
+            "stamina",
+            "mcl_hunger"
         ]
     }
 }
