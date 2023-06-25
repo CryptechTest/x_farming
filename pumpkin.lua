@@ -18,6 +18,24 @@
 
 local S = minetest.get_translator(minetest.get_current_modname())
 
+-- spawn snow golem
+local function pumpkin_on_construct(pos)
+    if not minetest.get_modpath('mobs_npc') then return end
+
+    for i = 1, 2 do
+        if minetest.get_node({ x = pos.x, y = pos.y - i, z = pos.z }).name ~= 'default:snowblock' then
+            return
+        end
+    end
+
+    --if 3 snow block are placed, this will make snow golem
+    for i = 0, 2 do
+        minetest.remove_node({ x = pos.x, y = pos.y - i, z = pos.z })
+    end
+
+    minetest.add_entity({ x = pos.x, y = pos.y - 1, z = pos.z }, 'mobs_npc:snow_golem')
+end
+
 -- PUMPKIN
 x_farming.register_plant('x_farming:pumpkin', {
     description = S('Pumpkin Seed') .. '\n' .. S('Compost chance') .. ': 30%',
@@ -129,6 +147,7 @@ minetest.register_node('x_farming:pumpkin_block', {
     },
     _mcl_blast_resistance = 1,
     _mcl_hardness = 1,
+    on_construct = pumpkin_on_construct
 })
 
 -- PUMPKIN LANTERN -- from recipe

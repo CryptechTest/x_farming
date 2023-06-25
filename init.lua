@@ -103,6 +103,11 @@ if minetest.get_modpath('candles_3d') then
     dofile(path .. '/mod_support_candles_3d.lua')
 end
 
+-- mob
+if minetest.get_modpath('mobs_npc') then
+    dofile(path .. '/snow_golem.lua')
+end
+
 local mod_end_time = (minetest.get_us_time() - mod_start_time) / 1000000
 
 print('[Mod] x_farming loaded.. [' .. mod_end_time .. 's]')
