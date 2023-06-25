@@ -143,6 +143,7 @@ local popcorn_def = {
         fixed = { -0.3, -0.5, -0.3, 0.3, 0.25, 0.3 }
     },
     groups = {
+        hunger_amount = 5,
         -- MTG
         dig_immediate = 3,
         attached_node = 1,
@@ -157,10 +158,7 @@ local popcorn_def = {
         fire_encouragement = 60,
         fire_flammability = 100,
         dig_by_water = 1,
-        destroy_by_lava_flow = 1,
-        attached_node = 1,
-        compost = 65,
-        hunger_amount = 5
+        destroy_by_lava_flow = 1
     },
     sounds = x_farming.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)

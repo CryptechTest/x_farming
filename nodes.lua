@@ -292,6 +292,7 @@ local beetroot_soup_def = {
         fixed = { -0.5, -0.5, -0.5, 0.5, -0.1, 0.5 }
     },
     groups = {
+        hunger_amount = 6,
         -- MTG
         vessel = 1,
         dig_immediate = 3,
@@ -1374,7 +1375,7 @@ minetest.register_node('x_farming:silt_loam_brick_block', {
 -- French Potatoes
 x_farming.register_feast('french_potatoes', {
     description = S('French Potatoes') .. '\n' .. S('Compost chance') .. ': 100%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 8'),
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 32'),
     short_description = S('French Potatoes'),
     mesh = 'x_farming_french_potatoes.obj',
     selection_box = {
@@ -1382,27 +1383,27 @@ x_farming.register_feast('french_potatoes', {
         fixed = { -8 / 16, -8 / 16, -7 / 16, 8 / 16, -1 / 16, 7 / 16 }
     },
     steps = 5,
-    hunger_amount = 8
+    hunger_amount = 32
 })
 
 -- Baked Fish
 x_farming.register_feast('baked_fish', {
     description = S('Baked Fish') .. '\n' .. S('Compost chance') .. ': 100%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 8'),
-    short_description = S('French Potatoes'),
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 32'),
+    short_description = S('Baked Fish'),
     mesh = 'x_farming_baked_fish.obj',
     selection_box = {
         type = 'fixed',
         fixed = { -8 / 16, -8 / 16, -7 / 16, 8 / 16, -1 / 16, 7 / 16 }
     },
     steps = 5,
-    hunger_amount = 8
+    hunger_amount = 32
 })
 
 -- Melon Slush
 x_farming.register_feast('melon_slush', {
     description = S('Melon Slush') .. '\n' .. S('Compost chance') .. ': 100%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 8'),
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 32'),
     short_description = S('Melon Slush'),
     mesh = 'x_farming_melon_slush.obj',
     selection_box = {
@@ -1413,37 +1414,37 @@ x_farming.register_feast('melon_slush', {
     last_drop = 'default:glass',
     sounds = x_farming.node_sound_thin_glass_defaults(),
     steps = 5,
-    hunger_amount = 8
+    hunger_amount = 32
 })
 
 -- Strawberry Pie
 x_farming.register_pie('strawberry_pie', {
     description = S('Strawberry Pie') .. '\n' .. S('Compost chance') .. ': 100%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 24'),
     short_description = S('Strawberry Pie'),
     mesh = 'x_farming_pie.obj',
     steps = 4,
-    hunger_amount = 6
+    hunger_amount = 24
 })
 
 -- Chocolate Pie
 x_farming.register_pie('chocolate_pie', {
     description = S('Chocolade Pie') .. '\n' .. S('Compost chance') .. ': 100%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 24'),
     short_description = S('Chocolade Pie'),
     mesh = 'x_farming_pie.obj',
     steps = 4,
-    hunger_amount = 6
+    hunger_amount = 24
 })
 
 -- Honey Glazed Kiwi Pie
 x_farming.register_pie('honey_kiwi_pie', {
     description = S('Honey Glazed Kiwi') .. '\n' .. S('Compost chance') .. ': 100%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 24'),
     short_description = S('Honey Glazed Kiwi'),
     mesh = 'x_farming_pie.obj',
     steps = 4,
-    hunger_amount = 6
+    hunger_amount = 24
 })
 
 --

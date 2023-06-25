@@ -2586,7 +2586,7 @@ function x_farming.register_feast(name, def)
             if hunger_amount == 0 then
                 return itemstack
             end
-            return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+            return minetest.item_eat(hunger_amount, "x_farming:bowl 4")(itemstack, user, pointed_thing)
         end,
     }
 
@@ -2687,10 +2687,12 @@ function x_farming.register_feast(name, def)
 
         -- Craftitem definition
         local craftitem_def = {
-            description = def.short_description .. ' ' .. S('Bowl'),
+            description = def.short_description .. ' ' .. S('Bowl') .. '\n' .. S('Compost chance') .. ': 100%\n'
+                .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': ' .. tostring(def.hunger_amount and def.hunger_amount / 4)),
             inventory_image = 'x_farming_bowl_' .. name .. '.png',
             wield_image = 'x_farming_bowl_' .. name .. '.png',
             groups = {
+                hunger_amount = def.hunger_amount and def.hunger_amount / 4,
                 -- MTG
                 -- X Farming
                 compost = 100,
@@ -2704,7 +2706,14 @@ function x_farming.register_feast(name, def)
         }
 
         if minetest.get_modpath('farming') then
-            craftitem_def.on_use = minetest.item_eat(8)
+            --craftitem_def.on_use = minetest.item_eat(8)
+            craftitem_def.on_use = function(itemstack, user, pointed_thing)
+                local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+                if hunger_amount == 0 then
+                    return itemstack
+                end
+                return minetest.item_eat(hunger_amount, "x_farming:bowl")(itemstack, user, pointed_thing)
+            end
         end
 
         if minetest.get_modpath('mcl_farming') then
@@ -2779,7 +2788,7 @@ function x_farming.register_pie(name, def)
             if hunger_amount == 0 then
                 return itemstack
             end
-            return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+            return minetest.item_eat(hunger_amount, "x_farming:bowl 4")(itemstack, user, pointed_thing)
         end,
     }
 
@@ -2869,10 +2878,12 @@ function x_farming.register_pie(name, def)
         minetest.register_node('x_farming:' .. name .. '_' .. i, d)
 
         local craftitem_def = {
-            description = def.short_description .. ' ' .. S('Slice'),
+            description = def.short_description .. ' ' .. S('Slice') .. '\n' .. S('Compost chance') .. ': 100%\n'
+            .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': ' .. tostring(def.hunger_amount and def.hunger_amount / 4)),
             inventory_image = 'x_farming_slice_' .. name .. '.png',
             wield_image = 'x_farming_slice_' .. name .. '.png',
             groups = {
+                hunger_amount = def.hunger_amount and def.hunger_amount / 4,
                 -- MTG
                 -- X Farming
                 compost = 100,
@@ -2886,7 +2897,14 @@ function x_farming.register_pie(name, def)
         }
 
         if minetest.get_modpath('farming') then
-            craftitem_def.on_use = minetest.item_eat(_def.item_eat)
+            --craftitem_def.on_use = minetest.item_eat(_def.item_eat)
+            craftitem_def.on_use = function(itemstack, user, pointed_thing)
+                local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+                if hunger_amount == 0 then
+                    return itemstack
+                end
+                return minetest.item_eat(hunger_amount, "x_farming:bowl")(itemstack, user, pointed_thing)
+            end
         end
 
         if minetest.get_modpath('mcl_farming') then

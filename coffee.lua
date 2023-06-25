@@ -75,7 +75,6 @@ local coffee_cup_hot_def = {
         type = 'fixed',
         fixed = { -0.25, -0.5, -0.4, 0.25, 0, 0.25 }
     },
-    groups = { vessel = 1, dig_immediate = 3, attached_node = 1, hunger_amount = 6 },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
@@ -84,6 +83,7 @@ local coffee_cup_hot_def = {
         return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     groups = {
+        hunger_amount = 6,
         -- MTG
         vessel = 1,
         dig_immediate = 3,
@@ -94,9 +94,7 @@ local coffee_cup_hot_def = {
         handy = 1,
         deco_block = 1,
         dig_by_water = 1,
-        destroy_by_lava_flow = 1,
-        attached_node = 1,
-        hunger_amount = 6
+        destroy_by_lava_flow = 1
     },
     sounds = x_farming.node_sound_thin_glass_defaults(),
     sunlight_propagates = true,
