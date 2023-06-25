@@ -1381,7 +1381,8 @@ x_farming.register_feast('french_potatoes', {
         type = 'fixed',
         fixed = { -8 / 16, -8 / 16, -7 / 16, 8 / 16, -1 / 16, 7 / 16 }
     },
-    steps = 5
+    steps = 5,
+    hunger_amount = 8
 })
 
 -- Baked Fish
@@ -1394,7 +1395,8 @@ x_farming.register_feast('baked_fish', {
         type = 'fixed',
         fixed = { -8 / 16, -8 / 16, -7 / 16, 8 / 16, -1 / 16, 7 / 16 }
     },
-    steps = 5
+    steps = 5,
+    hunger_amount = 8
 })
 
 -- Melon Slush
@@ -1410,7 +1412,8 @@ x_farming.register_feast('melon_slush', {
     use_texture_alpha = 'blend',
     last_drop = 'default:glass',
     sounds = x_farming.node_sound_thin_glass_defaults(),
-    steps = 5
+    steps = 5,
+    hunger_amount = 8
 })
 
 -- Strawberry Pie
@@ -1419,7 +1422,8 @@ x_farming.register_pie('strawberry_pie', {
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Strawberry Pie'),
     mesh = 'x_farming_pie.obj',
-    steps = 4
+    steps = 4,
+    hunger_amount = 6
 })
 
 -- Chocolate Pie
@@ -1428,7 +1432,8 @@ x_farming.register_pie('chocolate_pie', {
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Chocolade Pie'),
     mesh = 'x_farming_pie.obj',
-    steps = 4
+    steps = 4,
+    hunger_amount = 6
 })
 
 -- Honey Glazed Kiwi Pie
@@ -1437,7 +1442,8 @@ x_farming.register_pie('honey_kiwi_pie', {
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Honey Glazed Kiwi'),
     mesh = 'x_farming_pie.obj',
-    steps = 4
+    steps = 4,
+    hunger_amount = 6
 })
 
 --

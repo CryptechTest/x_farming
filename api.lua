@@ -2532,6 +2532,7 @@ end
 -- Feasts
 function x_farming.register_feast(name, def)
     local g = {
+        hunger_amount = def.hunger_amount,
         -- MTG
         choppy = 3,
         oddly_breakable_by_hand = 3,
@@ -2580,6 +2581,13 @@ function x_farming.register_feast(name, def)
         _mcl_hardness = 0,
         sounds = def.sounds or x_farming.node_sound_wood_defaults(),
         sunlight_propagates = true,
+        on_use = function(itemstack, user, pointed_thing)
+            local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+            if hunger_amount == 0 then
+                return itemstack
+            end
+            return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+        end,
     }
 
     for i = 1, def.steps do
@@ -2713,6 +2721,7 @@ end
 
 function x_farming.register_pie(name, def)
     local g = {
+        hunger_amount = def.hunger_amount,
         -- MTG
         choppy = 3,
         oddly_breakable_by_hand = 3,
@@ -2764,7 +2773,14 @@ function x_farming.register_pie(name, def)
         _mcl_hardness = 0,
         sounds = def.sounds or x_farming.node_sound_wood_defaults(),
         sunlight_propagates = true,
-        item_eat = 6
+        item_eat = 6,
+        on_use = function(itemstack, user, pointed_thing)
+            local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+            if hunger_amount == 0 then
+                return itemstack
+            end
+            return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+        end,
     }
 
     for i = 1, def.steps do
