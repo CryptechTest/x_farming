@@ -52,7 +52,7 @@ dofile(path .. '/salt.lua')
 dofile(path .. '/cotton.lua')
 dofile(path .. '/barley.lua')
 dofile(path .. '/bees.lua')
-dofile(path .. '/ropes.lua')
+--dofile(path .. '/ropes.lua')
 dofile(path .. '/rice.lua')
 dofile(path .. '/stove.lua')
 
