@@ -671,7 +671,7 @@ minetest.register_craft({
 
 minetest.register_craft({
     type = 'shapeless',
-    output = 'x_farming:sugar',
+    output = 'x_farming:sugar_substitute',
     recipe = { 'x_farming:stevia', 'x_farming:stevia', 'x_farming:stevia', 'x_farming:stevia' }
 })
 
