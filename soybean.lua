@@ -50,7 +50,7 @@ minetest.register_craftitem('x_farming:bottle_soymilk', {
     tiles = { 'x_farming_bottle_soymilk.png' },
     inventory_image = 'x_farming_bottle_soymilk.png',
     wield_image = 'x_farming_bottle_soymilk.png',
-    groups = { vessel = 1 },
+    groups = { vessel = 1, food_milk_glass = 1 },
     sounds = x_farming.node_sound_thin_glass_defaults(),
 })
 
