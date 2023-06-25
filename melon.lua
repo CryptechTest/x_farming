@@ -15,80 +15,105 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
+
 local S = minetest.get_translator(minetest.get_current_modname())
 
 -- MELON
-farming.register_plant('x_farming:melon', {
+x_farming.register_plant('x_farming:melon', {
     description = S('Melon Seed') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Melon Seed'),
     inventory_image = 'x_farming_melon_seed.png',
     steps = 8,
     minlight = 13,
-    maxlight = default.LIGHT_MAX,
+    maxlight = 14,
     fertility = { 'grassland' },
     groups = { flammable = 4 },
     place_param2 = 3,
 })
 
 -- needed
-minetest.override_item('x_farming:melon', {
+local melon_def = {
     description = S('Melon') .. '\n' .. S('Compost chance') .. ': 50%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
-    groups = { compost = 50, hunger_amount = 2 },
-    on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then
-            return itemstack
-        end
-        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
-    end,
-    wield_image = 'x_farming_melon.png^[transformR90',
-})
+    groups = {
+        -- X Farming
+        compost = 50,
+        -- MCL
+        food = 2,
+        eatable = 2,
+        compostability = 50,
+    },
+    _mcl_saturation = 1.2,
+    wield_image = 'x_farming_melon.png',
+}
+
+if minetest.get_modpath('farming') then
+    melon_def.on_use = minetest.item_eat(2)
+end
+
+if minetest.get_modpath('mcl_farming') then
+    melon_def.on_place = minetest.item_eat(2)
+    melon_def.on_secondary_use = minetest.item_eat(2)
+end
+
+minetest.override_item('x_farming:melon', melon_def)
 
 -- MELON FRUIT - HARVEST
 minetest.register_node('x_farming:melon_fruit', {
     description = S('Melon Fruit'),
     tiles = {
         'x_farming_melon_fruit_top.png',
-        'x_farming_melon_fruit_top.png',
+        'x_farming_melon_fruit_bottom.png',
         'x_farming_melon_fruit_side.png',
         'x_farming_melon_fruit_side.png',
         'x_farming_melon_fruit_side.png',
         'x_farming_melon_fruit_side.png'
     },
-    sounds = default.node_sound_wood_defaults(),
+    sounds = x_farming.node_sound_wood_defaults(),
     is_ground_content = false,
-    groups = { snappy = 3, flammable = 4, fall_damage_add_percent = -30, not_in_creative_inventory = 1 },
+    groups = {
+        -- MTG
+        snappy = 3,
+        flammable = 4,
+        fall_damage_add_percent = -30,
+        -- MCL
+        handy = 1,
+        axey = 1,
+        plant = 1,
+        dig_by_piston = 1,
+    },
+    _mcl_blast_resistance = 1,
+    _mcl_hardness = 1,
     drop = {
-        max_items = 7,                         -- Maximum number of items to drop.
-        items = {                              -- Choose max_items randomly from this list.
+        max_items = 7, -- Maximum number of items to drop.
+        items = { -- Choose max_items randomly from this list.
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 1,                    -- Probability of dropping is 1 / rarity.
+                rarity = 1, -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 2,                    -- Probability of dropping is 1 / rarity.
+                rarity = 2, -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 2,                    -- Probability of dropping is 1 / rarity.
+                rarity = 2, -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 2,                    -- Probability of dropping is 1 / rarity.
+                rarity = 2, -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 3,                    -- Probability of dropping is 1 / rarity.
+                rarity = 3, -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 3,                    -- Probability of dropping is 1 / rarity.
+                rarity = 3, -- Probability of dropping is 1 / rarity.
             },
             {
                 items = { 'x_farming:melon' }, -- Items to drop.
-                rarity = 3,                    -- Probability of dropping is 1 / rarity.
+                rarity = 3, -- Probability of dropping is 1 / rarity.
             },
         },
     },
@@ -100,6 +125,7 @@ minetest.register_node('x_farming:melon_fruit', {
         -- make sure we have position
         if parent_pos_from_child
             and parent_pos_from_child ~= nil then
+
             parent_node = minetest.get_node(parent_pos_from_child)
         end
 
@@ -107,7 +133,8 @@ minetest.register_node('x_farming:melon_fruit', {
         if parent_node
             and parent_node ~= nil
             and parent_node.name == 'x_farming:melon_8' then
-            x_farming.tick(parent_pos_from_child)
+
+            x_farming.tick_block(parent_pos_from_child)
         end
     end
 })
@@ -118,15 +145,32 @@ minetest.register_node('x_farming:melon_block', {
     short_description = S('Melon Block'),
     tiles = {
         'x_farming_melon_fruit_top.png',
-        'x_farming_melon_fruit_top.png',
+        'x_farming_melon_fruit_bottom.png',
         'x_farming_melon_fruit_side.png',
         'x_farming_melon_fruit_side.png',
         'x_farming_melon_fruit_side.png',
         'x_farming_melon_fruit_side.png'
     },
-    sounds = default.node_sound_wood_defaults(),
+    sounds = x_farming.node_sound_wood_defaults(),
     is_ground_content = false,
-    groups = { snappy = 3, flammable = 4, fall_damage_add_percent = -30, compost = 65 }
+    groups = {
+        -- MTG
+        snappy = 3,
+        flammable = 4,
+        fall_damage_add_percent = -30,
+        not_in_creative_inventory = 1,
+        compost = 65,
+        -- MCL
+        handy = 1,
+        axey = 1,
+        plant = 1,
+        dig_by_piston = 1,
+        building_block = 1,
+        enderman_takable = 1,
+        compostability = 65
+    },
+    _mcl_blast_resistance = 1,
+    _mcl_hardness = 1,
 })
 
 -- take over the growth from minetest_game farming from here
@@ -135,32 +179,41 @@ minetest.override_item('x_farming:melon_8', {
     on_timer = x_farming.grow_block
 })
 
+--  Golden Melon
+local golden_melon_def = {
+    description = S('Golden Melon') .. '\n' .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 10'),
+    inventory_image = 'x_farming_golden_melon.png',
+    wield_image = 'x_farming_golden_melon.png',
+    groups = {
+        -- MCL
+        food = 2,
+        eatable = 1,
+    },
+    _mcl_saturation = 14.4,
+}
+
+if x_farming.hbhunger ~= nil or x_farming.hunger_ng ~= nil then
+    golden_melon_def.description = golden_melon_def.description .. '\n' .. minetest.colorize(x_farming.colors.red, S('Heal') .. ': 10')
+end
+
+if minetest.get_modpath('farming') then
+    golden_melon_def.on_use = minetest.item_eat(10)
+end
+
+if minetest.get_modpath('mcl_farming') then
+    golden_melon_def.on_place = minetest.item_eat(10)
+    golden_melon_def.on_secondary_use = minetest.item_eat(10)
+end
+
+minetest.register_craftitem('x_farming:golden_melon', golden_melon_def)
+
 -- replacement LBM for pre-nodetimer plants
 minetest.register_lbm({
     name = 'x_farming:start_nodetimer_melon',
     nodenames = { 'x_farming:melon_8' },
     action = function(pos, node)
-        x_farming.tick_short(pos)
+        x_farming.tick_block_short(pos)
     end,
-})
-
-minetest.register_decoration({
-    name = 'x_farming:melon_8',
-    deco_type = 'simple',
-    place_on = { 'default:dirt_with_grass' },
-    sidelen = 16,
-    noise_params = {
-        offset = -0.1,
-        scale = 0.1,
-        spread = { x = 50, y = 50, z = 50 },
-        seed = 4242,
-        octaves = 3,
-        persist = 0.7
-    },
-    biomes = { 'grassland' },
-    y_max = 31000,
-    y_min = 1,
-    decoration = 'x_farming:melon_8',
 })
 
 ---crate
@@ -172,3 +225,52 @@ x_farming.register_crate('crate_melon_3', {
         crate_item = 'x_farming:melon'
     }
 })
+
+minetest.register_on_mods_loaded(function()
+    local deco_place_on = {}
+    local deco_biomes = {}
+
+    -- MTG
+    if minetest.get_modpath('default') then
+        table.insert(deco_place_on, 'default:dirt_with_grass')
+        table.insert(deco_biomes, 'grassland')
+    end
+
+    -- Everness
+    if minetest.get_modpath('everness') then
+        table.insert(deco_place_on, 'everness:dirt_with_coral_grass')
+        table.insert(deco_biomes, 'everness_coral_forest')
+    end
+
+    -- MCL
+    if minetest.get_modpath('mcl_core') then
+        table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
+        table.insert(deco_biomes, 'Plains')
+    end
+
+    if next(deco_place_on) and next(deco_biomes) then
+        minetest.register_decoration({
+            name = 'x_farming:melon',
+            deco_type = 'simple',
+            place_on = deco_place_on,
+            sidelen = 16,
+            noise_params = {
+                offset = -0.1,
+                scale = 0.1,
+                spread = { x = 50, y = 50, z = 50 },
+                seed = 4242,
+                octaves = 3,
+                persist = 0.7
+            },
+            biomes = deco_biomes,
+            y_max = 31000,
+            y_min = 1,
+            decoration = {
+                'x_farming:melon_5',
+                'x_farming:melon_6',
+                'x_farming:melon_7',
+                'x_farming:melon_8',
+            },
+        })
+    end
+end)

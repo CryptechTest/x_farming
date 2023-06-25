@@ -15,7 +15,6 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-screwdriver = screwdriver --[[@as MtgScrewdriver]]
 
 local S = minetest.get_translator(minetest.get_current_modname())
 
@@ -29,14 +28,13 @@ minetest.register_craftitem('x_farming:salt', {
     description = S('Salt'),
     short_description = S('Salt'),
     tiles = { 'x_farming_salt.png' },
-    groups = { food_salt = 1 },
     inventory_image = 'x_farming_salt.png',
     wield_image = 'x_farming_salt.png'
 })
 
 minetest.register_node('x_farming:seed_salt', {
-    description = S('Salty Water (plant on wet soil)'),
-    short_description = S('Salty Water (plant on wet soil)'),
+    description = S('Salty Water (plant soil)'),
+    short_description = S('Salty Water (plant soil)'),
     inventory_image = 'x_farming_salt_water.png',
     wield_image = 'x_farming_salt_water.png',
     fertility = { 'grassland' },
@@ -58,6 +56,7 @@ minetest.register_node('x_farming:seed_salt', {
         'x_farming_salt_1_side.png',
         'x_farming_salt_1_side.png'
     },
+    use_texture_alpha = 'clip',
     node_box = {
         type = 'fixed',
         fixed = {
@@ -76,22 +75,39 @@ minetest.register_node('x_farming:seed_salt', {
             { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
         },
     },
-    groups = { seed = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        -- MTG
+        seed = 1,
+        snappy = 3,
+        flammable = 2,
+        plant = 1,
+        attached_node = 1,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        dig_by_piston = 1
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     next_plant = 'x_farming:salt_1',
-    on_timer = farming.grow_plant,
+    on_timer = x_farming.grow_plant,
+
     on_place = function(itemstack, placer, pointed_thing)
         local under = pointed_thing.under
         local node = minetest.get_node(under)
         local udef = minetest.registered_nodes[node.name]
-        if udef and udef.on_rightclick and
-            not (placer and placer:is_player() and
-            placer:get_player_control().sneak) then
-            return udef.on_rightclick(under, node, placer, itemstack,
-                    pointed_thing) or itemstack
+        if udef and udef.on_rightclick
+            and not (placer and placer:is_player()
+            and placer:get_player_control().sneak)
+        then
+            return udef.on_rightclick(under, node, placer, itemstack, pointed_thing) or itemstack
         end
 
-        return farming.place_seed(itemstack, placer, pointed_thing, 'x_farming:seed_salt')
+        return x_farming.place_seed(itemstack, placer, pointed_thing, 'x_farming:seed_salt')
     end,
 })
 
@@ -117,15 +133,18 @@ minetest.register_node('x_farming:salt_1', {
         'x_farming_salt_1_side.png',
         'x_farming_salt_1_side.png'
     },
+    use_texture_alpha = 'clip',
     paramtype = 'light',
     sunlight_propagates = true,
-    on_rotate = screwdriver.disallow,
+    on_rotate = function(pos, node, user, mode, new_param2)
+        return false
+    end,
     is_ground_content = false,
     walkable = false,
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' },      rarity = 8 },
+            { items = { 'x_farming:salt' }, rarity = 8 },
             { items = { 'x_farming:seed_salt' }, rarity = 8 },
         }
     },
@@ -147,10 +166,26 @@ minetest.register_node('x_farming:salt_1', {
             { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
         },
     },
-    groups = { snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        -- MTG
+        snappy = 3,
+        flammable = 2,
+        plant = 1,
+        not_in_creative_inventory = 1,
+        attached_node = 1,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        dig_by_piston = 1
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     next_plant = 'x_farming:salt_2',
-    on_timer = farming.grow_plant,
+    on_timer = x_farming.grow_plant,
     minlight = 13,
     maxlight = 15
 })
@@ -177,15 +212,18 @@ minetest.register_node('x_farming:salt_2', {
         'x_farming_salt_1_side.png',
         'x_farming_salt_1_side.png'
     },
+    use_texture_alpha = 'clip',
     paramtype = 'light',
     sunlight_propagates = true,
-    on_rotate = screwdriver.disallow,
+    on_rotate = function(pos, node, user, mode, new_param2)
+        return false
+    end,
     is_ground_content = false,
     walkable = false,
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' },      rarity = 7 },
+            { items = { 'x_farming:salt' }, rarity = 7 },
             { items = { 'x_farming:seed_salt' }, rarity = 7 },
         }
     },
@@ -207,10 +245,26 @@ minetest.register_node('x_farming:salt_2', {
             { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
         },
     },
-    groups = { snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        -- MTG
+        snappy = 3,
+        flammable = 2,
+        plant = 1,
+        not_in_creative_inventory = 1,
+        attached_node = 1,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        dig_by_piston = 1
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     next_plant = 'x_farming:salt_3',
-    on_timer = farming.grow_plant,
+    on_timer = x_farming.grow_plant,
     minlight = 13,
     maxlight = 15
 })
@@ -237,23 +291,26 @@ minetest.register_node('x_farming:salt_3', {
         'x_farming_salt_2_side.png',
         'x_farming_salt_2_side.png'
     },
+    use_texture_alpha = 'clip',
     paramtype = 'light',
     sunlight_propagates = true,
-    on_rotate = screwdriver.disallow,
+    on_rotate = function(pos, node, user, mode, new_param2)
+        return false
+    end,
     is_ground_content = false,
     walkable = false,
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' },      rarity = 6 },
+            { items = { 'x_farming:salt' }, rarity = 6 },
             { items = { 'x_farming:seed_salt' }, rarity = 6 },
         }
     },
     node_box = {
         type = 'fixed',
         fixed = {
-            { -0.5,    -0.5, -0.5,    0.5,    -0.375, 0.5 },
-            { -0.0625, -0.5, -0.0625, 0.0625, -0.25,  0.0625 },
+            { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
+            { -0.0625, -0.5, -0.0625, 0.0625, -0.25, 0.0625 },
         }
     },
     collision_box = {
@@ -268,10 +325,26 @@ minetest.register_node('x_farming:salt_3', {
             { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
         },
     },
-    groups = { snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        -- MTG
+        snappy = 3,
+        flammable = 2,
+        plant = 1,
+        not_in_creative_inventory = 1,
+        attached_node = 1,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        dig_by_piston = 1
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     next_plant = 'x_farming:salt_4',
-    on_timer = farming.grow_plant,
+    on_timer = x_farming.grow_plant,
     minlight = 13,
     maxlight = 15
 })
@@ -298,23 +371,26 @@ minetest.register_node('x_farming:salt_4', {
         'x_farming_salt_2_side.png',
         'x_farming_salt_2_side.png'
     },
+    use_texture_alpha = 'clip',
     paramtype = 'light',
     sunlight_propagates = true,
-    on_rotate = screwdriver.disallow,
+    on_rotate = function(pos, node, user, mode, new_param2)
+        return false
+    end,
     is_ground_content = false,
     walkable = false,
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' },      rarity = 5 },
+            { items = { 'x_farming:salt' }, rarity = 5 },
             { items = { 'x_farming:seed_salt' }, rarity = 5 },
         }
     },
     node_box = {
         type = 'fixed',
         fixed = {
-            { -0.5,    -0.5, -0.5,    0.5,    -0.375, 0.5 },
-            { -0.0625, -0.5, -0.0625, 0.0625, -0.25,  0.0625 },
+            { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
+            { -0.0625, -0.5, -0.0625, 0.0625, -0.25, 0.0625 },
         }
     },
     collision_box = {
@@ -329,10 +405,26 @@ minetest.register_node('x_farming:salt_4', {
             { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
         },
     },
-    groups = { snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        -- MTG
+        snappy = 3,
+        flammable = 2,
+        plant = 1,
+        not_in_creative_inventory = 1,
+        attached_node = 1,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        dig_by_piston = 1
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     next_plant = 'x_farming:salt_5',
-    on_timer = farming.grow_plant,
+    on_timer = x_farming.grow_plant,
     minlight = 13,
     maxlight = 15
 })
@@ -359,24 +451,27 @@ minetest.register_node('x_farming:salt_5', {
         'x_farming_salt_3_side.png',
         'x_farming_salt_3_side.png'
     },
+    use_texture_alpha = 'clip',
     paramtype = 'light',
     sunlight_propagates = true,
-    on_rotate = screwdriver.disallow,
+    on_rotate = function(pos, node, user, mode, new_param2)
+        return false
+    end,
     is_ground_content = false,
     walkable = false,
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' },      rarity = 4 },
+            { items = { 'x_farming:salt' }, rarity = 4 },
             { items = { 'x_farming:seed_salt' }, rarity = 4 },
         }
     },
     node_box = {
         type = 'fixed',
         fixed = {
-            { -0.5,    -0.5,   -0.5,    0.5,    -0.375, 0.5 },
-            { -0.1875, -0.375, -0.1875, 0.1875, -0.25,  0.1875 },
-            { -0.0625, -0.25,  -0.0625, 0.0625, -0.125, 0.0625 },
+            { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
+            { -0.1875, -0.375, -0.1875, 0.1875, -0.25, 0.1875 },
+            { -0.0625, -0.25, -0.0625, 0.0625, -0.125, 0.0625 },
         }
     },
     collision_box = {
@@ -391,10 +486,26 @@ minetest.register_node('x_farming:salt_5', {
             { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
         },
     },
-    groups = { snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        -- MTG
+        snappy = 3,
+        flammable = 2,
+        plant = 1,
+        not_in_creative_inventory = 1,
+        attached_node = 1,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        dig_by_piston = 1
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     next_plant = 'x_farming:salt_6',
-    on_timer = farming.grow_plant,
+    on_timer = x_farming.grow_plant,
     minlight = 13,
     maxlight = 15
 })
@@ -421,24 +532,27 @@ minetest.register_node('x_farming:salt_6', {
         'x_farming_salt_3_side.png',
         'x_farming_salt_3_side.png'
     },
+    use_texture_alpha = 'clip',
     paramtype = 'light',
     sunlight_propagates = true,
-    on_rotate = screwdriver.disallow,
+    on_rotate = function(pos, node, user, mode, new_param2)
+        return false
+    end,
     is_ground_content = false,
     walkable = false,
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' },      rarity = 3 },
+            { items = { 'x_farming:salt' }, rarity = 3 },
             { items = { 'x_farming:seed_salt' }, rarity = 3 },
         }
     },
     node_box = {
         type = 'fixed',
         fixed = {
-            { -0.5,    -0.5,   -0.5,    0.5,    -0.375, 0.5 },
-            { -0.1875, -0.375, -0.1875, 0.1875, -0.25,  0.1875 },
-            { -0.0625, -0.25,  -0.0625, 0.0625, -0.125, 0.0625 },
+            { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
+            { -0.1875, -0.375, -0.1875, 0.1875, -0.25, 0.1875 },
+            { -0.0625, -0.25, -0.0625, 0.0625, -0.125, 0.0625 },
         }
     },
     collision_box = {
@@ -453,10 +567,26 @@ minetest.register_node('x_farming:salt_6', {
             { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
         },
     },
-    groups = { snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        -- MTG
+        snappy = 3,
+        flammable = 2,
+        plant = 1,
+        not_in_creative_inventory = 1,
+        attached_node = 1,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        dig_by_piston = 1
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     next_plant = 'x_farming:salt_7',
-    on_timer = farming.grow_plant,
+    on_timer = x_farming.grow_plant,
     minlight = 13,
     maxlight = 15
 })
@@ -483,16 +613,19 @@ minetest.register_node('x_farming:salt_7', {
         'x_farming_salt_4_side.png',
         'x_farming_salt_4_side.png'
     },
+    use_texture_alpha = 'clip',
     paramtype = 'light',
     sunlight_propagates = true,
-    on_rotate = screwdriver.disallow,
+    on_rotate = function(pos, node, user, mode, new_param2)
+        return false
+    end,
     is_ground_content = false,
     walkable = false,
     buildable_to = true,
     drop = {
         items = {
-            { items = { 'x_farming:salt' },      rarity = 1 },
-            { items = { 'x_farming:salt' },      rarity = 2 },
+            { items = { 'x_farming:salt' }, rarity = 1 },
+            { items = { 'x_farming:salt' }, rarity = 2 },
             { items = { 'x_farming:seed_salt' }, rarity = 1 },
             { items = { 'x_farming:seed_salt' }, rarity = 2 },
         }
@@ -500,10 +633,10 @@ minetest.register_node('x_farming:salt_7', {
     node_box = {
         type = 'fixed',
         fixed = {
-            { -0.5,    -0.5, -0.5,    0.5,    -0.375, 0.5 },
-            { -0.3125, -0.5, -0.3125, 0.3125, -0.25,  0.3125 },
+            { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
+            { -0.3125, -0.5, -0.3125, 0.3125, -0.25, 0.3125 },
             { -0.1875, -0.5, -0.1875, 0.1875, -0.125, 0.1875 },
-            { -0.0625, -0.5, -0.0625, 0.0625, 0,      0.0625 },
+            { -0.0625, -0.5, -0.0625, 0.0625, 0, 0.0625 },
         }
     },
     collision_box = {
@@ -518,8 +651,24 @@ minetest.register_node('x_farming:salt_7', {
             { -0.5, -0.5, -0.5, 0.5, -0.375, 0.5 },
         },
     },
-    groups = { snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        -- MTG
+        snappy = 3,
+        flammable = 2,
+        plant = 1,
+        not_in_creative_inventory = 1,
+        attached_node = 1,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        dig_by_piston = 1
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     minlight = 13,
     maxlight = 15
 })
@@ -541,25 +690,6 @@ minetest.register_lbm({
     end,
 })
 
-minetest.register_decoration({
-    name = 'x_farming:salt_7',
-    deco_type = 'schematic',
-    place_on = { 'default:dirt', 'default:dry_dirt' },
-    sidelen = 16,
-    noise_params = {
-        offset = -0.3,
-        scale = 0.7,
-        spread = { x = 200, y = 200, z = 200 },
-        seed = 354,
-        octaves = 3,
-        persist = 0.7
-    },
-    biomes = { 'rainforest_swamp', 'savanna_shore' },
-    y_max = 0,
-    y_min = 0,
-    schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_salt_decor.mts',
-})
-
 ---bag
 x_farming.register_bag('bag_salt', {
     description = S('Salt') .. ' Bag',
@@ -569,3 +699,43 @@ x_farming.register_bag('bag_salt', {
         bag_item = 'x_farming:salt'
     }
 })
+
+minetest.register_on_mods_loaded(function()
+    local deco_place_on = {}
+    local deco_biomes = {}
+
+    -- MTG
+    if minetest.get_modpath('default') then
+        table.insert(deco_place_on, 'default:dirt')
+        table.insert(deco_place_on, 'default:dry_dirt')
+        table.insert(deco_biomes, 'rainforest_swamp')
+        table.insert(deco_biomes, 'savanna_shore')
+    end
+
+    -- MCL
+    if minetest.get_modpath('mcl_core') then
+        table.insert(deco_place_on, 'mcl_core:sand')
+        table.insert(deco_biomes, 'Savanna_beach')
+    end
+
+    if next(deco_place_on) and next(deco_biomes) then
+        minetest.register_decoration({
+            name = 'x_farming:salt',
+            deco_type = 'schematic',
+            place_on = deco_place_on,
+            sidelen = 16,
+            noise_params = {
+                offset = -0.3,
+                scale = 0.7,
+                spread = { x = 200, y = 200, z = 200 },
+                seed = 354,
+                octaves = 3,
+                persist = 0.7
+            },
+            biomes = deco_biomes,
+            y_max = 0,
+            y_min = 0,
+            schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_salt_decor.mts',
+        })
+    end
+end)

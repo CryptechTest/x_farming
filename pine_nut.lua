@@ -15,30 +15,10 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
+
 stairs = stairs --[[@as MtgStairs]]
 
 local S = minetest.get_translator(minetest.get_current_modname())
-
--- decoration
-minetest.register_decoration({
-    name = 'x_farming:pine_nut_tree',
-    deco_type = 'schematic',
-    place_on = { 'default:dirt_with_snow', 'default:dirt_with_coniferous_litter' },
-    sidelen = 16,
-    noise_params = {
-        offset = 0.010,
-        scale = 0.005,
-        spread = { x = 100, y = 100, z = 100 },
-        seed = 2,
-        octaves = 3,
-        persist = 0.66
-    },
-    biomes = { 'taiga', 'coniferous_forest' },
-    y_max = 31000,
-    y_min = 4,
-    schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_pine_nut_tree.mts',
-    flags = 'place_center_x, place_center_z'
-})
 
 -- trunk
 minetest.register_node('x_farming:pine_nut_tree', {
@@ -47,8 +27,24 @@ minetest.register_node('x_farming:pine_nut_tree', {
     tiles = { 'x_farming_pine_nut_tree_top.png', 'x_farming_pine_nut_tree_top.png', 'x_farming_pine_nut_tree.png' },
     paramtype2 = 'facedir',
     is_ground_content = false,
-    groups = { tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2 },
-    sounds = default.node_sound_wood_defaults(),
+    groups = {
+        -- MTG
+        choppy = 2,
+        oddly_breakable_by_hand = 1,
+        -- MCL
+        handy = 1,
+        axey = 1,
+        building_block = 1,
+        material_wood = 1,
+        fire_encouragement = 5,
+        fire_flammability = 5,
+        -- ALL
+        tree = 1,
+        flammable = 2,
+    },
+    _mcl_blast_resistance = 2,
+    _mcl_hardness = 2,
+    sounds = x_farming.node_sound_wood_defaults(),
     on_place = minetest.rotate_node
 })
 
@@ -62,7 +58,28 @@ minetest.register_node('x_farming:pine_nut_leaves', {
     special_tiles = { 'x_farming_pine_nut_leaves.png' },
     paramtype = 'light',
     is_ground_content = false,
-    groups = { snappy = 3, leafdecay = 3, flammable = 2, leaves = 1 },
+    groups = {
+        -- MTG
+        snappy = 3,
+        leafdecay = 3,
+        -- MCL
+        handy = 1,
+        hoey = 1,
+        shearsy = 1,
+        swordy = 1,
+        dig_by_piston = 1,
+        fire_encouragement = 30,
+        fire_flammability = 60,
+        deco_block = 1,
+        compostability = 30,
+        -- ALL
+        flammable = 2,
+        leaves = 1,
+    },
+    _mcl_shears_drop = true,
+    _mcl_blast_resistance = 0.2,
+    _mcl_hardness = 0.2,
+    _mcl_silk_touch_drop = true,
     drop = {
         max_items = 1,
         items = {
@@ -78,8 +95,8 @@ minetest.register_node('x_farming:pine_nut_leaves', {
             }
         }
     },
-    sounds = default.node_sound_leaves_defaults(),
-    after_place_node = default.after_place_leaves,
+    sounds = x_farming.node_sound_leaves_defaults(),
+    after_place_node = x_farming.after_place_leaves,
 })
 
 -- sapling
@@ -99,18 +116,32 @@ minetest.register_node('x_farming:pine_nut_sapling', {
         fixed = { -4 / 16, -0.5, -4 / 16, 4 / 16, 7 / 16, 4 / 16 }
     },
     groups = {
+        -- MTG
         snappy = 2,
+        flammable = 2,
+        -- MCL
+        plant = 1,
+        non_mycelium_plant = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        dig_by_piston = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 30,
+        -- ALL
         dig_immediate = 3,
-        flammable = 3,
         attached_node = 1,
-        sapling = 1
+        sapling = 1,
     },
-    sounds = default.node_sound_leaves_defaults(),
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
+
     on_construct = function(pos)
         minetest.get_node_timer(pos):start(math.random(300, 1500))
     end,
+
     on_place = function(itemstack, placer, pointed_thing)
-        itemstack = default.sapling_on_place(itemstack, placer, pointed_thing,
+        itemstack = x_farming.sapling_on_place(itemstack, placer, pointed_thing,
             'x_farming:pine_nut_sapling',
             -- minp, maxp to be checked, relative to sapling pos
             -- minp_relative.y = 1 because sapling pos has been checked
@@ -124,7 +155,7 @@ minetest.register_node('x_farming:pine_nut_sapling', {
 })
 
 -- fruit
-minetest.register_node('x_farming:pine_nut', {
+local pine_nut_def = {
     description = S('Pine Nut') .. '\n' .. S('Compost chance') .. ': 65%',
     short_description = S('Pine Nut'),
     drawtype = 'plantlike',
@@ -146,45 +177,89 @@ minetest.register_node('x_farming:pine_nut', {
         }
     },
     groups = {
+        -- MTG
         fleshy = 3,
         dig_immediate = 3,
-        flammable = 2,
         leafdecay = 3,
         leafdecay_drop = 1,
-        compost = 65
+        compost = 65,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        non_mycelium_plant = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 65,
+        -- ALL
+        flammable = 2,
+        attached_node = 1,
     },
-    sounds = default.node_sound_leaves_defaults(),
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
+
     after_place_node = function(pos, placer, itemstack, pointed_thing)
         minetest.set_node(pos, { name = 'x_farming:pine_nut', param2 = 1 })
     end,
+
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         if oldnode.param2 == 0 then
             minetest.set_node(pos, { name = 'x_farming:pine_nut_mark' })
             minetest.get_node_timer(pos):start(math.random(300, 1500))
         end
     end,
-})
+}
 
-minetest.register_craftitem('x_farming:pine_nut_roasted', {
+minetest.register_node('x_farming:pine_nut', pine_nut_def)
+
+local pine_nut_roasted_def = {
     description = S('Pine Nut Roasted') .. '\n' .. S('Compost chance') .. ': 85%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     short_description = S('Pine Nut Roasted'),
     inventory_image = 'x_farming_pine_nut_roasted.png',
-    on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then
-            return itemstack
-        end
-        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
-    end,
-    groups = { flammable = 2, compost = 85, hunger_amount = 2 },
-})
+    groups = {
+        -- MTG
+        fleshy = 3,
+        dig_immediate = 3,
+        compost = 85,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        non_mycelium_plant = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 85,
+        food = 2,
+        eatable = 1,
+        -- ALL
+        flammable = 2,
+        attached_node = 1,
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+}
+
+if minetest.get_modpath('farming') then
+    pine_nut_roasted_def.on_use = minetest.item_eat(2)
+end
+
+if minetest.get_modpath('mcl_farming') then
+    pine_nut_roasted_def.on_place = minetest.item_eat(2)
+    pine_nut_roasted_def.on_secondary_use = minetest.item_eat(2)
+end
+
+minetest.register_craftitem('x_farming:pine_nut_roasted', pine_nut_roasted_def)
 
 minetest.register_node('x_farming:pine_nut_mark', {
     description = S('Pine Nut Marker'),
     short_description = S('Pine Nut Marker'),
-    inventory_image = 'x_farming:pine_nut.png^default_invisible_node_overlay.png',
-    wield_image = 'x_farming:pine_nut.png^default_invisible_node_overlay.png',
+    inventory_image = 'x_farming:pine_nut.png^x_farming_invisible_node_overlay.png',
+    wield_image = 'x_farming:pine_nut.png^x_farming_invisible_node_overlay.png',
     drawtype = 'airlike',
     paramtype = 'light',
     sunlight_propagates = true,
@@ -206,12 +281,17 @@ minetest.register_node('x_farming:pine_nut_mark', {
 })
 
 -- leafdecay
+-- this doesnt do anything since christmas tree is loaded adterwards
+-- and is overriding it due to the same trunk
 
-default.register_leafdecay({
-    trunks = { 'x_farming:pine_nut_tree' },
-    leaves = { 'x_farming:pine_nut', 'x_farming:pine_nut_leaves' },
-    radius = 3,
-})
+-- x_farming.register_leafdecay({
+--     trunks = { 'x_farming:pine_nut_tree' },
+--     leaves = {
+--         'x_farming:pine_nut',
+--         'x_farming:pine_nut_leaves'
+--     },
+--     radius = 3,
+-- })
 
 -- planks
 minetest.register_node('x_farming:pine_nut_wood', {
@@ -221,34 +301,26 @@ minetest.register_node('x_farming:pine_nut_wood', {
     place_param2 = 0,
     tiles = { 'x_farming_pine_nut_wood.png' },
     is_ground_content = false,
-    groups = { choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, wood = 1 },
-    sounds = default.node_sound_wood_defaults(),
-})
-
-minetest.register_craft({
-    output = 'x_farming:pine_nut_wood 4',
-    recipe = {
-        { 'x_farming:pine_nut_tree' },
-    }
-})
-
-minetest.register_craft({
-    type = 'fuel',
-    recipe = 'x_farming:pine_nut_wood',
-    burntime = 6,
-})
-
-minetest.register_craft({
-    type = 'fuel',
-    recipe = 'x_farming:pine_nut_tree',
-    burntime = 26,
-})
-
-minetest.register_craft({
-    type = 'cooking',
-    cooktime = 7,
-    output = 'x_farming:pine_nut_roasted',
-    recipe = 'x_farming:pine_nut'
+    groups = {
+        -- MTG
+        choppy = 2,
+        oddly_breakable_by_hand = 2,
+        -- Everness
+        everness_wood = 1,
+        -- MCL
+        handy = 1,
+        axey = 1,
+        building_block = 1,
+        material_wood = 1,
+        fire_encouragement = 5,
+        fire_flammability = 20,
+        -- ALL
+        flammable = 3,
+        wood = 1,
+    },
+    _mcl_blast_resistance = 3,
+    _mcl_hardness = 2,
+    sounds = x_farming.node_sound_wood_defaults(),
 })
 
 if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
@@ -259,8 +331,24 @@ if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
         { 'x_farming_pine_nut_wood.png' },
         S('Pine Nut Wooden Stair'),
         S('Pine Nut Wooden Slab'),
-        default.node_sound_wood_defaults(),
+        x_farming.node_sound_wood_defaults(),
         false
+    )
+end
+
+if minetest.get_modpath('mcl_stairs') then
+    mcl_stairs.register_stair_and_slab(
+        'pine_nut_wood',
+        'x_farming:pine_nut_wood',
+        { handy = 1, axey = 1, building_block = 1, material_wood = 1, fire_encouragement = 5, fire_flammability = 20, flammable = 3, wood = 1, },
+        { 'x_farming_pine_nut_wood.png' },
+        S('Pine Nut Wooden Stair'),
+        S('Pine Nut Wooden Slab'),
+        x_farming.node_sound_wood_defaults(),
+        6,
+        2,
+        S('Double Pine Nut Wooden Slab'),
+        nil
     )
 end
 
@@ -273,3 +361,45 @@ x_farming.register_crate('crate_pine_nut_3', {
         crate_item = 'x_farming:pine_nut'
     }
 })
+
+minetest.register_on_mods_loaded(function()
+    local deco_place_on = {}
+    local deco_biomes = {}
+
+    -- MTG
+    if minetest.get_modpath('default') then
+        table.insert(deco_place_on, 'default:dirt_with_snow')
+        table.insert(deco_place_on, 'default:dirt_with_coniferous_litter')
+        table.insert(deco_biomes, 'taiga')
+        table.insert(deco_biomes, 'coniferous_forest')
+    end
+
+    -- MCL
+    if minetest.get_modpath('mcl_core') then
+        table.insert(deco_place_on, 'mcl_core:podzol')
+        table.insert(deco_biomes, 'MegaSpruceTaiga')
+        table.insert(deco_biomes, 'MegaTaiga')
+    end
+
+    if next(deco_place_on) and next(deco_biomes) then
+        minetest.register_decoration({
+            name = 'x_farming:pine_nut_tree',
+            deco_type = 'schematic',
+            place_on = deco_place_on,
+            sidelen = 16,
+            noise_params = {
+                offset = 0.010,
+                scale = 0.005,
+                spread = { x = 100, y = 100, z = 100 },
+                seed = 2,
+                octaves = 3,
+                persist = 0.66
+            },
+            biomes = deco_biomes,
+            y_max = 31000,
+            y_min = 4,
+            schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_pine_nut_tree.mts',
+            flags = 'place_center_x, place_center_z'
+        })
+    end
+end)

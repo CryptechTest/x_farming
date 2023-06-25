@@ -15,36 +15,15 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
+
 stairs = stairs --[[@as MtgStairs]]
 
 local S = minetest.get_translator(minetest.get_current_modname())
 
--- Required wrapper to allow customization of default.after_place_leaves
+-- Required wrapper to allow customization of x_farming.after_place_leaves
 local function after_place_leaves(...)
-    return default.after_place_leaves(...)
+    return x_farming.after_place_leaves(...)
 end
-
--- decoration
-minetest.register_decoration({
-    name = 'x_farming:kiwi_tree',
-    deco_type = 'schematic',
-    place_on = { 'default:dry_dirt_with_dry_grass' },
-    sidelen = 16,
-    noise_params = {
-        offset = 0,
-        scale = 0.001,
-        spread = { x = 250, y = 250, z = 250 },
-        seed = 2,
-        octaves = 3,
-        persist = 0.66
-    },
-    biomes = { 'savanna' },
-    y_max = 31000,
-    y_min = 1,
-    schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_kiwi_tree.mts',
-    flags = 'place_center_x, place_center_z',
-    rotation = 'random',
-})
 
 -- trunk
 minetest.register_node('x_farming:kiwi_tree', {
@@ -53,8 +32,24 @@ minetest.register_node('x_farming:kiwi_tree', {
     tiles = { 'x_farming_kiwi_tree_top.png', 'x_farming_kiwi_tree_top.png', 'x_farming_kiwi_tree.png' },
     paramtype2 = 'facedir',
     is_ground_content = false,
-    groups = { tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2 },
-    sounds = default.node_sound_wood_defaults(),
+    groups = {
+        -- MTG
+        choppy = 2,
+        oddly_breakable_by_hand = 1,
+        -- MCL
+        handy = 1,
+        axey = 1,
+        building_block = 1,
+        material_wood = 1,
+        fire_encouragement = 5,
+        fire_flammability = 5,
+        -- ALL
+        tree = 1,
+        flammable = 2,
+    },
+    _mcl_blast_resistance = 2,
+    _mcl_hardness = 2,
+    sounds = x_farming.node_sound_wood_defaults(),
     on_place = minetest.rotate_node
 })
 
@@ -68,7 +63,28 @@ minetest.register_node('x_farming:kiwi_leaves', {
     special_tiles = { 'x_farming_kiwi_leaves.png' },
     paramtype = 'light',
     is_ground_content = false,
-    groups = { snappy = 3, leafdecay = 3, flammable = 2, leaves = 1 },
+    groups = {
+        -- MTG
+        snappy = 3,
+        leafdecay = 3,
+        -- MCL
+        handy = 1,
+        hoey = 1,
+        shearsy = 1,
+        swordy = 1,
+        dig_by_piston = 1,
+        fire_encouragement = 30,
+        fire_flammability = 60,
+        deco_block = 1,
+        compostability = 30,
+        -- ALL
+        flammable = 2,
+        leaves = 1,
+    },
+    _mcl_shears_drop = true,
+    _mcl_blast_resistance = 0.2,
+    _mcl_hardness = 0.2,
+    _mcl_silk_touch_drop = true,
     drop = {
         max_items = 1,
         items = {
@@ -84,7 +100,8 @@ minetest.register_node('x_farming:kiwi_leaves', {
             }
         }
     },
-    sounds = default.node_sound_leaves_defaults(),
+    sounds = x_farming.node_sound_leaves_defaults(),
+
     after_place_node = after_place_leaves,
 })
 
@@ -105,18 +122,32 @@ minetest.register_node('x_farming:kiwi_sapling', {
         fixed = { -4 / 16, -0.5, -4 / 16, 4 / 16, 7 / 16, 4 / 16 }
     },
     groups = {
+        -- MTG
         snappy = 2,
-        dig_immediate = 3,
         flammable = 2,
+        -- MCL
+        plant = 1,
+        non_mycelium_plant = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        dig_by_piston = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 30,
+        -- ALL
+        dig_immediate = 3,
         attached_node = 1,
-        sapling = 1
+        sapling = 1,
     },
-    sounds = default.node_sound_leaves_defaults(),
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
+
     on_construct = function(pos)
         minetest.get_node_timer(pos):start(math.random(300, 1500))
     end,
+
     on_place = function(itemstack, placer, pointed_thing)
-        itemstack = default.sapling_on_place(itemstack, placer, pointed_thing,
+        itemstack = x_farming.sapling_on_place(itemstack, placer, pointed_thing,
             'x_farming:kiwi_sapling',
             -- minp, maxp to be checked, relative to sapling pos
             -- minp_relative.y = 1 because sapling pos has been checked
@@ -129,7 +160,7 @@ minetest.register_node('x_farming:kiwi_sapling', {
     end,
 })
 
--- fruit
+-- fruit - for marker only
 minetest.register_node('x_farming:kiwi', {
     description = S('Kiwi'),
     short_description = S('Kiwi'),
@@ -142,11 +173,11 @@ minetest.register_node('x_farming:kiwi', {
     walkable = false,
     is_ground_content = false,
     drop = {
-        max_items = 1,                              -- Maximum number of items to drop.
-        items = {                                   -- Choose max_items randomly from this list.
+        max_items = 1, -- Maximum number of items to drop.
+        items = { -- Choose max_items randomly from this list.
             {
                 items = { 'x_farming:kiwi_fruit' }, -- Items to drop.
-                rarity = 1,                         -- Probability of dropping is 1 / rarity.
+                rarity = 1, -- Probability of dropping is 1 / rarity.
             }
         },
     },
@@ -155,15 +186,29 @@ minetest.register_node('x_farming:kiwi', {
         fixed = { -3 / 16, -7 / 16, -3 / 16, 3 / 16, 4 / 16, 3 / 16 }
     },
     groups = {
+        -- MTG
         fleshy = 3,
         dig_immediate = 3,
-        flammable = 2,
         leafdecay = 3,
         leafdecay_drop = 1,
-        food_apple = 1,
-        not_in_creative_inventory = 1
+        not_in_creative_inventory = 1,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        non_mycelium_plant = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 30,
+        -- ALL
+        flammable = 2,
     },
-    sounds = default.node_sound_leaves_defaults(),
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
+
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         if oldnode.param2 == 0 then
             minetest.set_node(pos, { name = 'x_farming:kiwi_mark' })
@@ -175,8 +220,8 @@ minetest.register_node('x_farming:kiwi', {
 minetest.register_node('x_farming:kiwi_mark', {
     description = S('Kiwi Marker'),
     short_description = S('Kiwi Marker'),
-    inventory_image = 'x_farming:kiwi_fruit.png^default_invisible_node_overlay.png',
-    wield_image = 'x_farming:kiwi_fruit.png^default_invisible_node_overlay.png',
+    inventory_image = 'x_farming:kiwi_fruit.png^x_farming_invisible_node_overlay.png',
+    wield_image = 'x_farming:kiwi_fruit.png^x_farming_invisible_node_overlay.png',
     drawtype = 'airlike',
     paramtype = 'light',
     sunlight_propagates = true,
@@ -197,13 +242,15 @@ minetest.register_node('x_farming:kiwi_mark', {
     end
 })
 
-minetest.register_node('x_farming:kiwi_fruit', {
+-- Kiwi eatable fruit
+local kiwi_fruit_def = {
     description = S('Kiwi') .. '\n' .. S('Compost chance') .. ': 65%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     short_description = S('Kiwi'),
     drawtype = 'mesh',
     mesh = 'x_farming_kiwi_fruit.obj',
     tiles = { 'x_farming_kiwi_fruit_mesh.png' },
+    use_texture_alpha = 'clip',
     inventory_image = 'x_farming_kiwi_fruit.png',
     wield_image = 'x_farming_kiwi_fruit.png',
     paramtype = 'light',
@@ -217,21 +264,41 @@ minetest.register_node('x_farming:kiwi_fruit', {
         type = 'fixed',
         fixed = { -0.1, -0.5, -0.1, 0.1, -0.3, 0.1 }
     },
-    groups = { dig_immediate = 3, attached_node = 1, compost = 65, hunger_amount = 2 },
-    sounds = default.node_sound_leaves_defaults(),
-    on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then
-            return itemstack
-        end
-        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
-    end,
+    groups = {
+        -- MTG
+        dig_immediate = 3,
+        compost = 65,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        non_mycelium_plant = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 65,
+        food = 2,
+        eatable = 1,
+        -- ALL
+        flammable = 2,
+        attached_node = 1,
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
+    on_use = minetest.item_eat(2),
     sunlight_propagates = true
-})
+}
+
+if minetest.get_modpath('mcl_farming') then
+    kiwi_fruit_def.on_secondary_use = minetest.item_eat(2)
+end
+
+minetest.register_node('x_farming:kiwi_fruit', kiwi_fruit_def)
 
 -- leafdecay
-
-default.register_leafdecay({
+x_farming.register_leafdecay({
     trunks = { 'x_farming:kiwi_tree' },
     leaves = { 'x_farming:kiwi', 'x_farming:kiwi_leaves' },
     radius = 3,
@@ -245,29 +312,29 @@ minetest.register_node('x_farming:kiwi_wood', {
     place_param2 = 0,
     tiles = { 'x_farming_kiwi_wood.png' },
     is_ground_content = false,
-    groups = { choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, wood = 1 },
-    sounds = default.node_sound_wood_defaults(),
+    groups = {
+        -- MTG
+        choppy = 2,
+        oddly_breakable_by_hand = 2,
+        -- Everness
+        everness_wood = 1,
+        -- MCL
+        handy = 1,
+        axey = 1,
+        building_block = 1,
+        material_wood = 1,
+        fire_encouragement = 5,
+        fire_flammability = 20,
+        -- ALL
+        flammable = 3,
+        wood = 1,
+    },
+    _mcl_blast_resistance = 3,
+    _mcl_hardness = 2,
+    sounds = x_farming.node_sound_wood_defaults(),
 })
 
-minetest.register_craft({
-    output = 'x_farming:kiwi_wood 4',
-    recipe = {
-        { 'x_farming:kiwi_tree' },
-    }
-})
-
-minetest.register_craft({
-    type = 'fuel',
-    recipe = 'x_farming:kiwi_wood',
-    burntime = 8,
-})
-
-minetest.register_craft({
-    type = 'fuel',
-    recipe = 'x_farming:kiwi_tree',
-    burntime = 22,
-})
-
+-- Stairs
 if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
     stairs.register_stair_and_slab(
         'kiwi_wood',
@@ -276,12 +343,28 @@ if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
         { 'x_farming_kiwi_wood.png' },
         S('Kiwi Wooden Stair'),
         S('Kiwi Wooden Slab'),
-        default.node_sound_wood_defaults(),
+        x_farming.node_sound_wood_defaults(),
         false
     )
 end
 
----crate
+if minetest.get_modpath('mcl_stairs') then
+    mcl_stairs.register_stair_and_slab(
+        'kiwi_wood',
+        'x_farming:kiwi_wood',
+        { handy = 1, axey = 1, building_block = 1, material_wood = 1, fire_encouragement = 5, fire_flammability = 20, flammable = 3, wood = 1, },
+        { 'x_farming_kiwi_wood.png' },
+        S('Kiwi Wooden Stair'),
+        S('Kiwi Wooden Slab'),
+        x_farming.node_sound_wood_defaults(),
+        6,
+        2,
+        S('Double Kiwi Wooden Slab'),
+        nil
+    )
+end
+
+-- Crate
 x_farming.register_crate('crate_kiwi_fruit_3', {
     description = S('Kiwi Fruit Crate'),
     short_description = S('Kiwi Fruit Crate'),
@@ -290,3 +373,49 @@ x_farming.register_crate('crate_kiwi_fruit_3', {
         crate_item = 'x_farming:kiwi_fruit'
     }
 })
+
+minetest.register_on_mods_loaded(function()
+    local deco_place_on = {}
+    local deco_biomes = {}
+
+    -- MTG
+    if minetest.get_modpath('default') then
+        table.insert(deco_place_on, 'default:dry_dirt_with_dry_grass')
+        table.insert(deco_biomes, 'savanna')
+    end
+
+    -- Everness
+    if minetest.get_modpath('everness') then
+        table.insert(deco_place_on, 'everness:dirt_with_coral_grass')
+        table.insert(deco_biomes, 'everness:dry_dirt_with_dry_grass')
+    end
+
+    -- MCL
+    if minetest.get_modpath('mcl_core') then
+        table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
+        table.insert(deco_biomes, 'Savanna')
+    end
+
+    if next(deco_place_on) and next(deco_biomes) then
+        minetest.register_decoration({
+            name = 'x_farming:kiwi_tree',
+            deco_type = 'schematic',
+            place_on = deco_place_on,
+            sidelen = 16,
+            noise_params = {
+                offset = 0,
+                scale = 0.001,
+                spread = { x = 250, y = 250, z = 250 },
+                seed = 2,
+                octaves = 3,
+                persist = 0.66
+            },
+            biomes = deco_biomes,
+            y_max = 31000,
+            y_min = 1,
+            schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_kiwi_tree.mts',
+            flags = 'place_center_x, place_center_z',
+            rotation = 'random',
+        })
+    end
+end)

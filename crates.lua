@@ -22,24 +22,40 @@ local S = minetest.get_translator(minetest.get_current_modname())
 x_farming.register_crate('crate_empty', {
     description = S('Empty Crate'),
     tiles = { 'x_farming_crate_empty.png' },
-    groups = { choppy = 2, oddly_breakable_by_hand = 2, flammable = 2 },
+    groups = {
+        -- MTG
+        choppy = 2,
+        oddly_breakable_by_hand = 2,
+        -- MCL
+        handy = 1,
+        material_wood = 1,
+        deco_block = 1,
+        fire_encouragement = 3,
+        fire_flammability = 4,
+        -- ALL
+        flammable = 2
+    },
     stack_max = tonumber(minetest.settings:get('default_stack_max')) or 99
 })
 
----crate wheat
-x_farming.register_crate('crate_wheat_3', {
-    description = S('Wheat Crate'),
-    tiles = { 'x_farming_crate_wheat_3.png' },
-    _custom = {
-        crate_item = 'farming:wheat'
-    }
-})
+if minetest.get_modpath('farming') then
+    ---crate wheat
+    x_farming.register_crate('crate_wheat_3', {
+        description = S('Wheat Crate'),
+        short_description = S('Wheat Crate'),
+        tiles = { 'x_farming_crate_wheat_3.png' },
+        _custom = {
+            crate_item = 'farming:wheat'
+        }
+    })
 
----crate cotton
-x_farming.register_crate('crate_cotton_3', {
-    description = S('Cotton Crate'),
-    tiles = { 'x_farming_crate_cotton_3.png' },
-    _custom = {
-        crate_item = 'farming:cotton'
-    }
-})
+    ---crate cotton
+    x_farming.register_crate('crate_cotton_3', {
+        description = S('Cotton Crate'),
+        short_description = S('Cotton Crate'),
+        tiles = { 'x_farming_crate_cotton_3.png' },
+        _custom = {
+            crate_item = 'farming:cotton'
+        }
+    })
+end

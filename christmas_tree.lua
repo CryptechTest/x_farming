@@ -19,7 +19,8 @@
 local S = minetest.get_translator(minetest.get_current_modname())
 
 minetest.register_node('x_farming:christmas_tree_sapling', {
-    description = S('Christmas Tree Sapling'),
+    description = S('Christmas Tree Sapling') .. '\n' .. S('Compost chance') .. ': 30%',
+    short_description = S('Christmas Tree Sapling'),
     drawtype = 'plantlike',
     tiles = { 'x_farming_christmas_tree_sapling.png' },
     inventory_image = 'x_farming_christmas_tree_sapling.png',
@@ -33,20 +34,32 @@ minetest.register_node('x_farming:christmas_tree_sapling', {
         fixed = { -4 / 16, -0.5, -4 / 16, 4 / 16, 7 / 16, 4 / 16 }
     },
     groups = {
+        -- MTG
         snappy = 2,
+        -- MCL
+        plant = 1,
+        non_mycelium_plant = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        dig_by_piston = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 30,
+        -- ALL
         dig_immediate = 3,
         flammable = 3,
         attached_node = 1,
         sapling = 1
     },
-    sounds = default.node_sound_leaves_defaults(),
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
 
     on_construct = function(pos)
         minetest.get_node_timer(pos):start(math.random(300, 1500))
     end,
 
     on_place = function(itemstack, placer, pointed_thing)
-        itemstack = default.sapling_on_place(itemstack, placer, pointed_thing,
+        itemstack = x_farming.sapling_on_place(itemstack, placer, pointed_thing,
             'x_farming:christmas_tree_sapling',
             -- minp, maxp to be checked, relative to sapling pos
             -- minp_relative.y = 1 because sapling pos has been checked
@@ -61,7 +74,8 @@ minetest.register_node('x_farming:christmas_tree_sapling', {
 
 -- Decorated Pine Leaves
 minetest.register_node('x_farming:christmas_tree_leaves', {
-    description = S('Decorated Pine Leaves'),
+    description = S('Decorated Pine Leaves') .. '\n' .. S('Compost chance') .. ': 30%',
+    short_description = S('Decorated Pine Leaves'),
     drawtype = 'allfaces_optional',
     tiles = {
         {
@@ -78,40 +92,72 @@ minetest.register_node('x_farming:christmas_tree_leaves', {
     waving = 0,
     paramtype = 'light',
     is_ground_content = false,
-    groups = { snappy = 3, leafdecay = 3, flammable = 2, leaves = 1 },
-    sounds = default.node_sound_leaves_defaults(),
-    after_place_node = default.after_place_leaves,
+    groups = {
+        -- MTG
+        snappy = 3,
+        leafdecay = 3,
+        -- MCL
+        handy = 1,
+        hoey = 1,
+        shearsy = 1,
+        swordy = 1,
+        dig_by_piston = 1,
+        fire_encouragement = 30,
+        fire_flammability = 60,
+        deco_block = 1,
+        compostability = 30,
+        -- ALL
+        flammable = 2,
+        leaves = 1,
+    },
+    _mcl_shears_drop = true,
+    _mcl_blast_resistance = 0.2,
+    _mcl_hardness = 0.2,
+    _mcl_silk_touch_drop = true,
+    sounds = x_farming.node_sound_leaves_defaults(),
+    after_place_node = x_farming.after_place_leaves,
     light_source = 5,
 })
 
 -- Star
 minetest.register_node('x_farming:christmas_tree_star', {
     description = S('Christmas Tree Star'),
-    tiles = {'x_farming_christmas_tree_star.png'},
+    tiles = { 'x_farming_christmas_tree_star.png' },
     inventory_image = 'x_farming_christmas_tree_star.png',
     wield_image = 'x_farming_christmas_tree_star.png',
     drawtype = 'plantlike',
     paramtype = 'light',
     walkable = false,
     groups = {
+        -- MTG
         cracky = 1,
         crumbly = 1,
         choppy = 1,
         oddly_breakable_by_hand = 1,
         not_in_creative_inventory = 1,
         leafdecay = 3,
-        leafdecay_drop = 1
+        leafdecay_drop = 1,
+        -- MCL
+        handy = 1,
+        glass = 1,
+        building_block = 1,
+        material_glass = 1
     },
-    sounds = default.node_sound_glass_defaults(),
+    _mcl_blast_resistance = 0.3,
+    _mcl_hardness = 0.3,
+    sounds = x_farming.node_sound_thin_glass_defaults(),
     light_source = 5,
 })
 
-default.register_leafdecay({
-    trunks = { 'default:pine_tree' },
+x_farming.register_leafdecay({
+    trunks = { 'x_farming:pine_nut_tree' },
     leaves = {
         'x_farming:christmas_tree_leaves',
-        'default:pine_needles',
         'x_farming:christmas_tree_star',
+        -- since christmas tree is loaded after pine_nut_tree
+        -- we are including pine_nut_leaves here
+        'x_farming:pine_nut',
+        'x_farming:pine_nut_leaves',
     },
     radius = 3,
 })

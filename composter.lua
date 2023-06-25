@@ -51,12 +51,26 @@ for i = 1, 5, 1 do
     def.drawtype = 'mesh'
     def.mesh = 'x_farming_crate.obj'
     def.tiles = { 'x_farming_composter_' .. i .. '.png' }
-    def.sounds = default.node_sound_wood_defaults()
+    def.use_texture_alpha = 'clip'
+    def.sounds = x_farming.node_sound_wood_defaults()
     def.paramtype = 'light'
     def.paramtype2 = 'facedir'
     def.place_param2 = 0
     def.is_ground_content = false
-    def.groups = { choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, not_in_creative_inventory = 1 }
+    def.groups = {
+        -- MTG
+        choppy = 2,
+        oddly_breakable_by_hand = 2,
+        flammable = 2,
+        not_in_creative_inventory = 1,
+        -- MCL
+        handy = 1,
+        material_wood = 1,
+        deco_block = 1,
+        dirtifier = 1,
+        fire_encouragement = 3,
+        fire_flammability = 4,
+    }
     def.stack_max = 1
     def.mod_origin = 'x_farming'
     def.drop = 'x_farming:composter_1'
@@ -114,8 +128,8 @@ for i = 1, 5, 1 do
         if chance == 0 then
             return itemstack
         end
-        
 
+        -- fill the composter
         if math.random() < chance / 100 then
             local meta = minetest.get_meta(pos)
             local prev_status = meta:get_int('composter_status')
@@ -146,19 +160,31 @@ for i = 1, 5, 1 do
             end
         end
 
-        minetest.sound_play('default_dig_crumbly', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
-        local count = itemstack:get_count()
-        if (count > 1) then
-            itemstack:set_count(count - 1)
-        else 
-            itemstack:clear()
+        minetest.sound_play('x_farming_dirt_hit', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
+
+        if not minetest.is_creative_enabled(clicker:get_player_name()) then
+            itemstack:take_item()
         end
+
         return itemstack
     end
 
     if i == 1 then
         -- empty composter is craftable, so can be in creative inventory
-        def.groups = { choppy = 2, oddly_breakable_by_hand = 2, flammable = 2 }
+        def.groups = {
+            -- MTG
+            choppy = 2,
+            oddly_breakable_by_hand = 2,
+            -- MCL
+            handy = 1,
+            material_wood = 1,
+            deco_block = 1,
+            dirtifier = 1,
+            fire_encouragement = 3,
+            fire_flammability = 4,
+            -- ALL
+            flammable = 2,
+        }
         def.description = S('Composter') .. ' (' .. S('right-click/place with item to create compost') .. ')'
         def.short_description = S('Composter')
     end
@@ -191,15 +217,22 @@ for i = 1, 5, 1 do
             local above = vector.new(pos.x, pos.y + 0.5, pos.z)
             local drop_pos = minetest.find_node_near(above, 0.5, { 'air' }) or above
 
-            minetest.sound_play('default_dig_crumbly', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
+            minetest.sound_play('x_farming_dirt_hit', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
             -- drop bonemeal
-            minetest.item_drop(ItemStack({ name = 'x_farming:bonemeal' }), nil, drop_pos)
+            minetest.add_item(
+                vector.new(drop_pos.x, drop_pos.y + 1, drop_pos.z),
+                ItemStack({ name = 'x_farming:bonemeal', count = math.random(1, 2) })
+            )
             -- swap to beginning
             minetest.swap_node(pos, { name = 'x_farming:composter_1' })
             -- reset status
             meta:set_int('composter_status', 0)
         end
     end
+
+    -- MCL
+    def._mcl_hardness = 0.6
+    def._mcl_blast_resistance = 0.6
 
     minetest.register_node(def.name, def)
 end
