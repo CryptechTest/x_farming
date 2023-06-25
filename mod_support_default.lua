@@ -17,7 +17,7 @@
 --]]
 
 local tree_defs = {
-    ['default:sapling'] = {
+    {
         -- apple tree
         name = 'default:sapling',
         chance = 2,
@@ -31,7 +31,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:junglesapling'] = {
+    {
         -- jungle tree
         name = 'default:junglesapling',
         chance = 2,
@@ -45,7 +45,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:emergent_jungle_sapling'] = {
+    {
         -- emergent jungle tree
         name = 'default:emergent_jungle_sapling',
         chance = 2,
@@ -59,7 +59,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:acacia_sapling'] = {
+    {
         -- acacia tree
         name = 'default:acacia_sapling',
         chance = 2,
@@ -73,7 +73,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:aspen_sapling'] = {
+    {
         -- aspen tree
         name = 'default:aspen_sapling',
         chance = 2,
@@ -87,7 +87,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:pine_sapling'] = {
+    {
         -- pine tree
         name = 'default:pine_sapling',
         chance = 2,
@@ -105,7 +105,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:bush_sapling'] = {
+    {
         -- Bush
         name = 'default:bush_sapling',
         chance = 2,
@@ -119,7 +119,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:acacia_bush_sapling'] = {
+    {
         -- Acacia bush
         name = 'default:acacia_bush_sapling',
         chance = 2,
@@ -133,7 +133,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:pine_bush_sapling'] = {
+    {
         -- Pine bush
         name = 'default:pine_bush_sapling',
         chance = 2,
@@ -147,7 +147,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:blueberry_bush_sapling'] = {
+    {
         -- Blueberry bush
         name = 'default:blueberry_bush_sapling',
         chance = 2,
@@ -161,7 +161,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:papyrus'] = {
+     {
         -- Papyrus
         name = 'default:papyrus',
         chance = 2,
@@ -177,7 +177,7 @@ local tree_defs = {
             return true
         end
     },
-    ['default:large_cactus_seedling'] = {
+    {
         -- Large Cactus
         name = 'default:large_cactus_seedling',
         chance = 2,
