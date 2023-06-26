@@ -798,41 +798,50 @@ minetest.register_craft({
 })
 
 -- Rice
+
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:silt_loam_soil',
     recipe = { 'group:soil', 'default:clay', 'group:sand' }
 })
 
-minetest.register_craft({
+if minetest.get_modpath("bakedclay") then
+    minetest.register_craft({
+        type = 'shapeless',
+        output = 'x_farming:silt_loam_soil',
+        recipe = { 'group:soil', 'group:bakedclay', 'group:sand' }
+    })
+end
+
+--[[minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:silt_loam_soil',
     recipe = { 'group:soil', 'default:clay', 'group:everness_sand' }
-})
+})--]]
 
-minetest.register_craft({
+--[[minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:silt_loam_soil',
     recipe = { 'group:soil', 'group:hardenedclay', 'group:sand' }
-})
+})--]]
 
-minetest.register_craft({
+--[[minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:silt_loam_soil',
     recipe = { 'group:soil', 'group:hardenedclay', 'group:everness_sand' }
-})
+})-]]
 
-minetest.register_craft({
+--[[minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:silt_loam_soil',
     recipe = { 'group:soil', 'group:hardenedclay_smooth', 'group:sand' }
-})
+})--]]
 
-minetest.register_craft({
+--[[minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:silt_loam_soil',
     recipe = { 'group:soil', 'group:hardenedclay_smooth', 'group:everness_sand' }
-})
+})--]]
 
 minetest.register_craft({
     type = 'cooking',
