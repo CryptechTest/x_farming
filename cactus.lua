@@ -209,6 +209,7 @@ minetest.register_node('x_farming:cactus_fruit_mark', {
         attached_node = 3
     },
     on_timer = function(pos, elapsed)
+        local n = minetest.get_node(pos)
         if n.name ~= 'default:cactus' or n.name ~= 'x_farming:cactus' then
             minetest.remove_node(pos)
         elseif minetest.get_node_light(pos) < 11 then
