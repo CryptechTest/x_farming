@@ -2788,7 +2788,7 @@ function x_farming.register_pie(name, def)
             if hunger_amount == 0 then
                 return itemstack
             end
-            return minetest.item_eat(hunger_amount, "x_farming:bowl 4")(itemstack, user, pointed_thing)
+            return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
         end,
     }
 
@@ -2907,7 +2907,7 @@ function x_farming.register_pie(name, def)
                 if hunger_amount == 0 then
                     return itemstack
                 end
-                return minetest.item_eat(hunger_amount, "x_farming:bowl")(itemstack, user, pointed_thing)
+                return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
             end
         end
 
