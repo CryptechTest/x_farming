@@ -76,6 +76,43 @@ minetest.register_craft({
     }
 })
 
+-- glass of soymilk
+minetest.register_craftitem(":x_farming:glass_soymilk", {
+	description = S("Glass of Soymilk") .. '\n' ..
+		minetest.colorize('#DEB887', S('Hunger') .. ': 2'),
+	inventory_image = "x_farming_glass_soymilk.png",
+	on_use = function(itemstack, user, pointed_thing)
+		local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+		if hunger_amount == 0 then
+			return itemstack
+		end
+		return minetest.item_eat(hunger_amount, "vessels:drinking_glass")(itemstack, user, pointed_thing)
+	end,
+	groups = { food_soymilk_glass = 1, flammable = 3, vessel = 1, drink = 1, hunger_amount = 2 }
+})
+
+minetest.register_craft({
+	output = "x_farming:glass_soymilk 4",
+	recipe = {
+		{ "vessels:drinking_glass", "vessels:drinking_glass" },
+		{ "vessels:drinking_glass", "vessels:drinking_glass" },
+		{ "x_farming:bottle_soymilk", "x_farming:bottle_soymilk" }
+	},
+	replacements = { { "x_farming:bottle_soymilk", "vessels:glass_bottle 2" } }
+})
+
+minetest.register_craft({
+	output = "x_farming:bottle_soymilk 2",
+	recipe = {
+		{ "x_farming:glass_soymilk", "x_farming:glass_soymilk" },
+		{ "x_farming:glass_soymilk", "x_farming:glass_soymilk" },
+		{ "vessels:glass_bottle",   "vessels:glass_bottle" }
+	},
+	replacements = {
+		{ "vessels:glass_soymilk", "vessels:drinking_glass 4" }
+	}
+})
+
 ---crate
 x_farming.register_crate('crate_soybean_3', {
     description = S('Soybean Crate'),
