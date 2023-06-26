@@ -20,13 +20,14 @@ stairs = stairs --[[@as MtgStairs]]
 local S = minetest.get_translator(minetest.get_current_modname())
 
 -- Donuts
-minetest.register_node('x_farming:donut', {
+local donut_def = {
     description = S('Donut') .. '\n' .. S('Compost chance') .. ': 85%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
     short_description = S('Donut'),
     drawtype = 'mesh',
     mesh = 'x_farming_donut.obj',
     tiles = { 'x_farming_donut_mesh.png' },
+    use_texture_alpha = 'clip',
     inventory_image = 'x_farming_donut.png',
     wield_image = 'x_farming_donut.png',
     paramtype = 'light',
@@ -40,8 +41,30 @@ minetest.register_node('x_farming:donut', {
         type = 'fixed',
         fixed = { -0.25, -0.5, -0.25, 0.25, -0.35, 0.25 }
     },
-    groups = { dig_immediate = 3, attached_node = 1, compost = 85, hunger_amount = 3 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        hunger_amount = 3,
+        -- MTG
+        dig_immediate = 3,
+        compost = 85,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        non_mycelium_plant = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 85,
+        food = 2,
+        eatable = 1,
+        -- ALL
+        flammable = 2,
+        attached_node = 1,
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
@@ -50,15 +73,22 @@ minetest.register_node('x_farming:donut', {
         return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sunlight_propagates = true
-})
+}
 
-minetest.register_node('x_farming:donut_chocolate', {
+if minetest.get_modpath('mcl_farming') then
+    donut_def.on_secondary_use = minetest.item_eat(3)
+end
+
+minetest.register_node('x_farming:donut', donut_def)
+
+local donut_chocolate_def = {
     description = S('Chocolate Donut') .. '\n' .. S('Compost chance') .. ': 85%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 4'),
     short_description = S('Chocolate Donut'),
     drawtype = 'mesh',
     mesh = 'x_farming_donut.obj',
     tiles = { 'x_farming_donut_chocolate_mesh.png' },
+    use_texture_alpha = 'clip',
     inventory_image = 'x_farming_donut_chocolate.png',
     wield_image = 'x_farming_donut_chocolate.png',
     paramtype = 'light',
@@ -72,8 +102,30 @@ minetest.register_node('x_farming:donut_chocolate', {
         type = 'fixed',
         fixed = { -0.25, -0.5, -0.25, 0.25, -0.35, 0.25 }
     },
-    groups = { dig_immediate = 3, attached_node = 1, compost = 85, hunger_amount = 4 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        hunger_amount = 4,
+        -- MTG
+        dig_immediate = 3,
+        compost = 85,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        non_mycelium_plant = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 85,
+        food = 2,
+        eatable = 1,
+        -- ALL
+        flammable = 2,
+        attached_node = 1,
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
@@ -82,16 +134,23 @@ minetest.register_node('x_farming:donut_chocolate', {
         return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sunlight_propagates = true
-})
+}
+
+if minetest.get_modpath('mcl_farming') then
+    donut_chocolate_def.on_secondary_use = minetest.item_eat(4)
+end
+
+minetest.register_node('x_farming:donut_chocolate', donut_chocolate_def)
 
 -- Fries
-minetest.register_node('x_farming:fries', {
+local fries_def = {
     description = S('Fries') .. '\n' .. S('Compost chance') .. ': 85%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Fries'),
     drawtype = 'mesh',
     mesh = 'x_farming_fries.obj',
     tiles = { 'x_farming_fries_mesh.png' },
+    use_texture_alpha = 'clip',
     inventory_image = 'x_farming_fries.png',
     wield_image = 'x_farming_fries.png',
     paramtype = 'light',
@@ -106,8 +165,30 @@ minetest.register_node('x_farming:fries', {
         type = 'fixed',
         fixed = { -0.25, -0.5, -0.1, 0.25, -0.2, 0.1 }
     },
-    groups = { dig_immediate = 3, attached_node = 1, compost = 85, hunger_amount = 6 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        hunger_amount = 6,
+        -- MTG
+        dig_immediate = 3,
+        compost = 85,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        non_mycelium_plant = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 85,
+        food = 2,
+        eatable = 1,
+        -- ALL
+        flammable = 2,
+        attached_node = 1,
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
@@ -116,18 +197,25 @@ minetest.register_node('x_farming:fries', {
         return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sunlight_propagates = true
-})
+}
+
+if minetest.get_modpath('mcl_farming') then
+    fries_def.on_secondary_use = minetest.item_eat(6)
+end
+
+minetest.register_node('x_farming:fries', fries_def)
 
 -- Pumpkin pie
-minetest.register_node('x_farming:pumpkin_pie', {
+local pumpkin_pie_def = {
     description = S('Pumpkin Pie') .. '\n' .. S('Compost chance') .. ': 100%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Pumpkin Pie'),
     drawtype = 'mesh',
     mesh = 'x_farming_pumpkin_pie.obj',
     tiles = { 'x_farming_pumpkin_pie_mesh.png' },
+    use_texture_alpha = 'clip',
     inventory_image = 'x_farming_pumpkin_pie.png',
-    wield_image = 'x_farming_pumpkin_pie.png',
+    wield_image = 'x_farming_pumpkin_pie.png^[transformFXFYR180',
     paramtype = 'light',
     paramtype2 = 'facedir',
     is_ground_content = false,
@@ -140,8 +228,30 @@ minetest.register_node('x_farming:pumpkin_pie', {
         type = 'fixed',
         fixed = { -0.3, -0.5, -0.3, 0.3, -0.3, 0.3 }
     },
-    groups = { dig_immediate = 3, attached_node = 1, compost = 100, hunger_amount = 6 },
-    sounds = default.node_sound_leaves_defaults(),
+    groups = {
+        hunger_amount = 6,
+        -- MTG
+        dig_immediate = 3,
+        compost = 100,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        non_mycelium_plant = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 100,
+        food = 2,
+        eatable = 1,
+        -- ALL
+        flammable = 2,
+        attached_node = 1,
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
@@ -150,16 +260,23 @@ minetest.register_node('x_farming:pumpkin_pie', {
         return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sunlight_propagates = true
-})
+}
+
+if minetest.get_modpath('mcl_farming') then
+    pumpkin_pie_def.on_secondary_use = minetest.item_eat(6)
+end
+
+minetest.register_node('x_farming:pumpkin_pie', pumpkin_pie_def)
 
 -- Beetroot soup
-minetest.register_node('x_farming:beetroot_soup', {
+local beetroot_soup_def = {
     description = S('Beetroot Soup') .. '\n' .. S('Compost chance') .. ': 100%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Beetroot Soup'),
     drawtype = 'mesh',
     mesh = 'x_farming_beetroot_soup.obj',
     tiles = { 'x_farming_beetroot_soup_mesh.png' },
+    use_texture_alpha = 'clip',
     inventory_image = 'x_farming_beetroot_soup.png',
     wield_image = 'x_farming_beetroot_soup.png',
     paramtype = 'light',
@@ -174,7 +291,27 @@ minetest.register_node('x_farming:beetroot_soup', {
         type = 'fixed',
         fixed = { -0.5, -0.5, -0.5, 0.5, -0.1, 0.5 }
     },
-    groups = { vessel = 1, dig_immediate = 3, attached_node = 1, compost = 100, hunger_amount = 6 },
+    groups = {
+        hunger_amount = 6,
+        -- MTG
+        vessel = 1,
+        dig_immediate = 3,
+        attached_node = 1,
+        -- X Farming
+        compost = 100,
+        -- MCL
+        food = 3,
+        eatable = 6,
+        compostability = 100,
+        handy = 1,
+        deco_block = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+    },
+    sounds = x_farming.node_sound_wood_defaults(),
+    sunlight_propagates = true,
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
@@ -182,18 +319,27 @@ minetest.register_node('x_farming:beetroot_soup', {
         end
         return minetest.item_eat(hunger_amount, 'x_farming:bowl')(itemstack, user, pointed_thing)
     end,
-    sounds = default.node_sound_wood_defaults(),
-    sunlight_propagates = true
-})
+    -- MCL
+    _mcl_saturation = 0.6,
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+}
+
+if minetest.get_modpath('mcl_farming') then
+    beetroot_soup_def.on_secondary_use = minetest.item_eat(6, 'x_farming:bowl')
+end
+
+minetest.register_node('x_farming:beetroot_soup', beetroot_soup_def)
 
 -- Fish Stew
-minetest.register_node('x_farming:fish_stew', {
+local fish_stew_def = {
     description = S('Fish Stew') .. '\n' .. S('Compost chance') .. ': 100%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 8'),
     short_description = S('Fish Stew'),
     drawtype = 'mesh',
     mesh = 'x_farming_fish_stew.obj',
     tiles = { 'x_farming_fish_stew_mesh.png' },
+    use_texture_alpha = 'clip',
     inventory_image = 'x_farming_fish_stew.png',
     wield_image = 'x_farming_fish_stew.png',
     paramtype = 'light',
@@ -208,17 +354,36 @@ minetest.register_node('x_farming:fish_stew', {
         type = 'fixed',
         fixed = { -0.5, -0.5, -0.5, 0.5, -0.1, 0.5 }
     },
-    groups = { vessel = 1, dig_immediate = 3, attached_node = 1, compost = 100, hunger_amount = 8 },
-    on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then
-            return itemstack
-        end
-        return minetest.item_eat(hunger_amount, 'x_farming:bowl')(itemstack, user, pointed_thing)
-    end,
-    sounds = default.node_sound_wood_defaults(),
+    groups = {
+        hunger_amount = 8,
+        -- MTG
+        vessel = 1,
+        dig_immediate = 3,
+        attached_node = 1,
+        -- X Farming
+        compost = 100,
+        -- MCL
+        food = 3,
+        eatable = 6,
+        compostability = 100,
+        handy = 1,
+        deco_block = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+    },
+    -- MCL
+    _mcl_saturation = 0.6,
+    sounds = x_farming.node_sound_wood_defaults(),
     sunlight_propagates = true
-})
+}
+
+if minetest.get_modpath('mcl_farming') then
+    fish_stew_def.on_secondary_use = minetest.item_eat(8, 'x_farming:bowl')
+end
+
+minetest.register_node('x_farming:fish_stew', fish_stew_def)
 
 -- Cactus brick
 minetest.register_node('x_farming:cactus_brick', {
@@ -231,8 +396,17 @@ minetest.register_node('x_farming:cactus_brick', {
         'x_farming_cactus_brick.png',
     },
     is_ground_content = false,
-    groups = { cracky = 3 },
-    sounds = default.node_sound_stone_defaults()
+    groups = {
+        -- MTG
+        cracky = 2,
+        -- MCL
+        pickaxey = 1,
+        stonebrick = 1,
+        building_block = 1
+    },
+    _mcl_blast_resistance = 6,
+    _mcl_hardness = 3,
+    sounds = x_farming.node_sound_stone_defaults()
 })
 
 if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
@@ -243,8 +417,24 @@ if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
         { 'x_farming_cactus_brick.png' },
         S('Cactus Brick Stair'),
         S('Cactus Brick Slab'),
-        default.node_sound_stone_defaults(),
+        x_farming.node_sound_stone_defaults(),
         false
+    )
+end
+
+if minetest.get_modpath('mcl_stairs') then
+    mcl_stairs.register_stair_and_slab(
+        'cactus_brick',
+        'x_farming:cactus_brick',
+        { pickaxey = 1 },
+        { 'x_farming_cactus_brick.png' },
+        S('Cactus Brick Stair'),
+        S('Cactus Brick Slab'),
+        x_farming.node_sound_stone_defaults(),
+        6,
+        2,
+        S('Double Cactus Brick Slab'),
+        nil
     )
 end
 
@@ -260,6 +450,7 @@ minetest.register_node('x_farming:scarecrow', {
     drawtype = 'mesh',
     mesh = 'x_farming_scarecrow.obj',
     tiles = { 'x_farming_scarecrow_1.png' },
+    use_texture_alpha = 'clip',
     inventory_image = 'x_farming_scarecrow_1_item.png',
     wield_image = 'x_farming_scarecrow_1_item.png',
     paramtype = 'light',
@@ -275,8 +466,18 @@ minetest.register_node('x_farming:scarecrow', {
         type = 'fixed',
         fixed = { -0.4, -0.5, -0.4, 0.4, 1.5, 0.4 }
     },
-    groups = { choppy = 1, oddly_breakable_by_hand = 1, flammable = 2 },
-    sounds = default.node_sound_wood_defaults(),
+    groups = {
+        -- MTG
+        choppy = 1,
+        oddly_breakable_by_hand = 1,
+        flammable = 2,
+        -- MCL
+        handy = 1,
+        axey = 1,
+    },
+    _mcl_blast_resistance = 1,
+    _mcl_hardness = 1,
+    sounds = x_farming.node_sound_wood_defaults(),
     on_construct = function(pos)
         local meta = minetest.get_meta(pos)
         meta:set_string('x_farming_scarecrow_state', 'inactive')
@@ -329,6 +530,7 @@ minetest.register_node('x_farming:scarecrow_2', {
     drawtype = 'mesh',
     mesh = 'x_farming_scarecrow_2.obj',
     tiles = { 'x_farming_scarecrow_2.png' },
+    use_texture_alpha = 'clip',
     inventory_image = 'x_farming_scarecrow_1_item.png',
     wield_image = 'x_farming_scarecrow_1_item.png',
     paramtype = 'light',
@@ -345,8 +547,19 @@ minetest.register_node('x_farming:scarecrow_2', {
         type = 'fixed',
         fixed = { -0.4, -0.5, -0.4, 0.4, 1.5, 0.4 }
     },
-    groups = { choppy = 1, oddly_breakable_by_hand = 1, flammable = 2 },
-    sounds = default.node_sound_wood_defaults(),
+    groups = {
+        -- MTG
+        choppy = 1,
+        oddly_breakable_by_hand = 1,
+        flammable = 2,
+        not_in_creative_inventory = 1,
+        -- MCL
+        handy = 1,
+        axey = 1,
+    },
+    _mcl_blast_resistance = 1,
+    _mcl_hardness = 1,
+    sounds = x_farming.node_sound_wood_defaults(),
     on_construct = function(pos)
         local meta = minetest.get_meta(pos)
         meta:set_string('x_farming_scarecrow_state', 'active')
@@ -462,3 +675,831 @@ minetest.register_node('x_farming:scarecrow_2', {
         end
     end,
 })
+
+-- Honey
+minetest.register_node('x_farming:honey_block', {
+    description = S('Honey Block'),
+    short_description = S('Honey Block'),
+    drawtype = 'mesh',
+    mesh = 'x_farming_honey.obj',
+    tiles = { 'x_farming_honey_block_mesh.png' },
+    use_texture_alpha = 'blend',
+    paramtype = 'light',
+    sunlight_propagates = true,
+    wield_image = 'x_farming_honey_block_item.png',
+    inventory_image = '[inventorycube{x_farming_honey_block_item.png{x_farming_honey_block_item.png{x_farming_honey_block_item.png',
+    groups = {
+        -- MTG
+        snappy = 3,
+        disable_jump = 1,
+        -- MCL
+        handy = 1,
+        hoey = 1,
+        swordy = 1,
+        deco_block = 1,
+        -- ALL
+        fall_damage_add_percent = -80,
+    },
+    collision_box = {
+        type = 'fixed',
+        fixed = { -0.3, -0.3, -0.3, 0.3, 0.3, 0.3 }
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_slime_defaults(),
+    move_resistance = 7,
+})
+
+minetest.register_node('x_farming:honeycomb_block', {
+    description = S('Honeycomb Block'),
+    short_description = S('Honeeycomb Block'),
+    tiles = { 'x_farming_honeycomb_block.png' },
+    paramtype = 'light',
+    groups = {
+        -- MTG
+        crumbly = 3,
+        -- MCL
+        handy = 1,
+        deco_block = 1,
+    },
+    _mcl_blast_resistance = 0.6,
+    _mcl_hardness = 0.6,
+    sounds = x_farming.node_sound_dirt_defaults()
+})
+
+-- Candles
+for i = 1, 4 do
+    -- OFF
+    minetest.register_node('x_farming:candle_off_' .. i, {
+        description = S('Candle'),
+        short_description = S('Candle'),
+        drawtype = 'mesh',
+        mesh = 'x_farming_candle_' .. i .. '.obj',
+        tiles = {
+            { name = 'x_farming_candle_mesh.png' },
+            {
+                name = 'x_farming_candle_no_flame.png',
+                backface_culling = false
+            }
+        },
+        paramtype2 = 'facedir',
+        use_texture_alpha = 'clip',
+        paramtype = 'light',
+        sunlight_propagates = true,
+        walkable = false,
+        liquids_pointable = false,
+        floodable = true,
+        inventory_image = 'x_farming_candle_item.png',
+        wield_image = 'x_farming_candle_item.png',
+        drop = {
+            max_items = i,
+            items = {
+                {
+                    rarity = 1,
+                    items = { 'x_farming:candle_off_1' },
+                },
+                {
+                    rarity = 1,
+                    items = { 'x_farming:candle_off_1' },
+                },
+                {
+                    rarity = 1,
+                    items = { 'x_farming:candle_off_1' },
+                },
+                {
+                    rarity = 1,
+                    items = { 'x_farming:candle_off_1' },
+                }
+            },
+        },
+        groups = {
+            -- MTG
+            snappy = 3,
+            candle = i == 1 and 1 or nil,
+            attached_node = 1,
+            not_in_creative_inventory = i == 1 and 0 or 1,
+            -- MCL
+            handy = 1,
+            hoey = 1,
+            swordy = 1,
+            deco_block = 1
+        },
+        selection_box = {
+            type = 'fixed',
+            fixed = { -0.3, -0.5, -0.3, 0.3, 0.4, 0.3 }
+        },
+        _mcl_blast_resistance = 0,
+        _mcl_hardness = 0,
+        sounds = x_farming.node_sound_wood_defaults(),
+        on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+            local stack_name = itemstack:get_name()
+
+            if minetest.get_item_group(stack_name, 'candle') > 0 and i < 4 then
+                minetest.swap_node(pos, { name = 'x_farming:candle_off_' .. i + 1, param2 = node.param2 })
+
+                if not minetest.is_creative_enabled(clicker:get_player_name()) then
+                    itemstack:take_item()
+                end
+            elseif minetest.get_item_group(stack_name, 'torch') > 0
+                or stack_name == 'fire:flint_and_steel'
+                or stack_name == 'mcl_fire:flint_and_steel'
+            then
+                minetest.swap_node(pos, { name = 'x_farming:candle_on_' .. i, param2 = node.param2 })
+            end
+
+            return itemstack
+        end,
+        on_flood = x_farming.on_flood_candle
+    })
+
+    -- ON
+    minetest.register_node('x_farming:candle_on_' .. i, {
+        description = S('Candle'),
+        short_description = S('Candle'),
+        drawtype = 'mesh',
+        mesh = 'x_farming_candle_' .. i .. '.obj',
+        tiles = {
+            { name = 'x_farming_candle_mesh.png' },
+            {
+                name = 'x_farming_candle_flame_animated.png',
+                backface_culling = false,
+                animation = {
+                    type = 'vertical_frames',
+                    aspect_w = 16,
+                    aspect_h = 16,
+                    length = 1
+                },
+            }
+        },
+        paramtype2 = 'facedir',
+        use_texture_alpha = 'clip',
+        paramtype = 'light',
+        sunlight_propagates = true,
+        walkable = false,
+        liquids_pointable = false,
+        floodable = true,
+        inventory_image = 'x_farming_candle_item.png',
+        wield_image = 'x_farming_candle_item.png',
+        drop = {
+            max_items = i,
+            items = {
+                {
+                    rarity = 1,
+                    items = { 'x_farming:candle_off_1' },
+                },
+                {
+                    rarity = 1,
+                    items = { 'x_farming:candle_off_1' },
+                },
+                {
+                    rarity = 1,
+                    items = { 'x_farming:candle_off_1' },
+                },
+                {
+                    rarity = 1,
+                    items = { 'x_farming:candle_off_1' },
+                }
+            },
+        },
+        groups = {
+            -- MTG
+            snappy = 3,
+            attached_node = 1,
+            candle_on = 1,
+            not_in_creative_inventory = 1,
+            -- MCL
+            handy = 1,
+            hoey = 1,
+            swordy = 1,
+            deco_block = 1
+        },
+        selection_box = {
+            type = 'fixed',
+            fixed = { -0.3, -0.5, -0.3, 0.3, 0.4, 0.3 }
+        },
+        _mcl_blast_resistance = 0,
+        _mcl_hardness = 0,
+        sounds = x_farming.node_sound_wood_defaults(),
+        light_source = i * 3,
+        on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+            local stack_name = itemstack:get_name()
+
+            if minetest.get_item_group(stack_name, 'candle') > 0 and i < 4 then
+                minetest.swap_node(pos, { name = 'x_farming:candle_on_' .. i + 1, param2 = node.param2 })
+
+                if not minetest.is_creative_enabled(clicker:get_player_name()) then
+                    itemstack:take_item()
+                end
+            else
+                minetest.swap_node(pos, { name = 'x_farming:candle_off_' .. i, param2 = node.param2 })
+            end
+
+            return itemstack
+        end,
+        on_flood = x_farming.on_flood_candle
+    })
+end
+
+-- Colored Candles
+for color_id, color_def in pairs(x_farming.candle_colors) do
+    local color_group = 'color_' .. color_id
+
+    for i = 1, 4 do
+        -- OFF
+        minetest.register_node('x_farming:candle_' .. color_id .. '_off_' .. i, {
+            description = color_def.name .. ' ' .. S('Candle'),
+            short_description = color_def.name .. ' ' .. S('Candle'),
+            drawtype = 'mesh',
+            mesh = 'x_farming_candle_' .. i .. '.obj',
+            tiles = {
+                { name = 'x_farming_candle_mesh.png^[multiply:' .. color_def.hex .. ':255' },
+                {
+                    name = 'x_farming_candle_no_flame.png',
+                    backface_culling = false
+                }
+            },
+            paramtype2 = 'facedir',
+            use_texture_alpha = 'clip',
+            paramtype = 'light',
+            sunlight_propagates = true,
+            walkable = false,
+            liquids_pointable = false,
+            floodable = true,
+            inventory_image = 'x_farming_candle_item.png^[multiply:' .. color_def.hex .. ':255',
+            wield_image = 'x_farming_candle_item.png^[multiply:' .. color_def.hex .. ':255',
+            drop = {
+                max_items = i,
+                items = {
+                    {
+                        rarity = 1,
+                        items = { 'x_farming:candle_' .. color_id .. '_off_1' },
+                    },
+                    {
+                        rarity = 1,
+                        items = { 'x_farming:candle_' .. color_id .. '_off_1' },
+                    },
+                    {
+                        rarity = 1,
+                        items = { 'x_farming:candle_' .. color_id .. '_off_1' },
+                    },
+                    {
+                        rarity = 1,
+                        items = { 'x_farming:candle_' .. color_id .. '_off_1' },
+                    }
+                },
+            },
+            groups = {
+                -- MTG
+                snappy = 3,
+                candle = i == 1 and 1 or nil,
+                attached_node = 1,
+                not_in_creative_inventory = i == 1 and 0 or 1,
+                ['candle_' .. '_' .. color_group] = 1,
+                -- MCL
+                handy = 1,
+                hoey = 1,
+                swordy = 1,
+                deco_block = 1,
+            },
+            selection_box = {
+                type = 'fixed',
+                fixed = { -0.3, -0.5, -0.3, 0.3, 0.4, 0.3 }
+            },
+            _mcl_blast_resistance = 0,
+            _mcl_hardness = 0,
+            sounds = x_farming.node_sound_wood_defaults(),
+            on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+                local stack_name = itemstack:get_name()
+
+                if minetest.get_item_group(stack_name, 'candle') > 0
+                    and minetest.get_item_group(stack_name, 'candle_' .. '_' .. color_group) > 0
+                    and i < 4
+                then
+                    minetest.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_off_' .. i + 1, param2 = node.param2 })
+
+                    if not minetest.is_creative_enabled(clicker:get_player_name()) then
+                        itemstack:take_item()
+                    end
+                elseif minetest.get_item_group(stack_name, 'torch') > 0
+                    or stack_name == 'fire:flint_and_steel'
+                    or stack_name == 'mcl_fire:flint_and_steel'
+                then
+                    minetest.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_on_' .. i, param2 = node.param2 })
+                end
+
+                return itemstack
+            end,
+            on_flood = x_farming.on_flood_candle
+        })
+
+        -- ON
+        minetest.register_node('x_farming:candle_' .. color_id .. '_on_' .. i, {
+            description = color_def.name .. ' ' .. S('Candle'),
+            short_description = color_def.name .. ' ' .. S('Candle'),
+            drawtype = 'mesh',
+            mesh = 'x_farming_candle_' .. i .. '.obj',
+            tiles = {
+                { name = 'x_farming_candle_mesh.png^[multiply:' .. color_def.hex .. ':255' },
+                {
+                    name = 'x_farming_candle_flame_animated.png',
+                    backface_culling = false,
+                    animation = {
+                        type = 'vertical_frames',
+                        aspect_w = 16,
+                        aspect_h = 16,
+                        length = 1
+                    },
+                }
+            },
+            paramtype2 = 'facedir',
+            use_texture_alpha = 'clip',
+            paramtype = 'light',
+            sunlight_propagates = true,
+            walkable = false,
+            liquids_pointable = false,
+            floodable = true,
+            inventory_image = 'x_farming_candle_item.png^[multiply:' .. color_def.hex .. ':255',
+            wield_image = 'x_farming_candle_item.png^[multiply:' .. color_def.hex .. ':255',
+            drop = {
+                max_items = i,
+                items = {
+                    {
+                        rarity = 1,
+                        items = { 'x_farming:candle_' .. color_id .. '_off_1' },
+                    },
+                    {
+                        rarity = 1,
+                        items = { 'x_farming:candle_' .. color_id .. '_off_1' },
+                    },
+                    {
+                        rarity = 1,
+                        items = { 'x_farming:candle_' .. color_id .. '_off_1' },
+                    },
+                    {
+                        rarity = 1,
+                        items = { 'x_farming:candle_' .. color_id .. '_off_1' },
+                    }
+                },
+            },
+            groups = {
+                -- MTG
+                snappy = 3,
+                attached_node = 1,
+                candle_on = 1,
+                -- ['candle_' .. '_' .. color_group] = 1,
+                not_in_creative_inventory = 1,
+                -- MCL
+                handy = 1,
+                hoey = 1,
+                swordy = 1,
+                deco_block = 1
+            },
+            selection_box = {
+                type = 'fixed',
+                fixed = { -0.3, -0.5, -0.3, 0.3, 0.4, 0.3 }
+            },
+            _mcl_blast_resistance = 0,
+            _mcl_hardness = 0,
+            sounds = x_farming.node_sound_wood_defaults(),
+            light_source = i * 3,
+            on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+                local stack_name = itemstack:get_name()
+
+                if minetest.get_item_group(stack_name, 'candle') > 0 and i < 4 then
+                    minetest.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_on_' .. i + 1, param2 = node.param2 })
+
+                    if not minetest.is_creative_enabled(clicker:get_player_name()) then
+                        itemstack:take_item()
+                    end
+                else
+                    minetest.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_off_' .. i, param2 = node.param2 })
+                end
+
+                return itemstack
+            end,
+            on_flood = x_farming.on_flood_candle
+        })
+    end
+
+    local craft_dye = 'group:dye,' .. color_group
+
+    if color_def.craft_dye then
+        craft_dye = color_def.craft_dye
+    end
+
+    -- Crafting
+    minetest.register_craft({
+        type = 'shapeless',
+        output = 'x_farming:candle_' .. color_id .. '_off_1',
+        recipe = { 'group:candle', craft_dye },
+    })
+
+    if minetest.get_modpath('mcl_dye') then
+        local mcl_groups = {}
+
+        for key, value in pairs(color_def.mcl_groups) do
+            table.insert(mcl_groups, key)
+        end
+
+        local mcl_craft_dye = 'group:dye,' .. table.concat(mcl_groups, ',')
+
+        minetest.register_craft({
+            type = 'shapeless',
+            output = 'x_farming:candle_' .. color_id .. '_off_1',
+            recipe = { 'group:candle', mcl_craft_dye },
+        })
+    end
+end
+
+-- Pillow
+
+local pillow_colors = {
+    {
+        name = 'white',
+        description = S('White'),
+        mcl_group = { 'unicolor_white' }
+    },
+    {
+        name = 'grey',
+        description = S('Grey'),
+        mcl_group = { 'unicolor_grey' }
+    },
+    {
+        name = 'dark_grey',
+        description = S('Dark Grey'),
+        mcl_group = { 'unicolor_darkgrey' }
+    },
+    {
+        name = 'black',
+        description = S('Black'),
+        mcl_group = { 'unicolor_black' }
+    },
+    {
+        name = 'violet',
+        description = S('Violet'),
+        mcl_group = { 'unicolor_red_violet' }
+    },
+    {
+        name = 'blue',
+        description = S('Blue'),
+        mcl_group = { 'unicolor_blue' }
+    },
+    {
+        name = 'light_blue',
+        description = S('Light Blue'),
+        mcl_group = { 'unicolor_light_blue' }
+    },
+    {
+        name = 'cyan',
+        description = S('Cyan'),
+        mcl_group = { 'unicolor_cyan' }
+    },
+    {
+        name = 'dark_green',
+        description = S('Dark Green'),
+        mcl_group = { 'unicolor_dark_green' }
+    },
+    {
+        name = 'green',
+        description = S('Green'),
+        mcl_group = { 'unicolor_green' }
+    },
+    {
+        name = 'yellow',
+        description = S('Yellow'),
+        mcl_group = { 'unicolor_yellow' }
+    },
+    {
+        name = 'brown',
+        description = S('Brown'),
+        mcl_group = { 'unicolor_dark_orange' }
+    },
+    {
+        name = 'orange',
+        description = S('Orange'),
+        mcl_group = { 'unicolor_orange' }
+    },
+    {
+        name = 'red',
+        description = S('Red'),
+        mcl_group = { 'unicolor_red' }
+    },
+    {
+        name = 'magenta',
+        description = S('Magenta'),
+        mcl_group = { 'unicolor_red_violet' }
+    },
+    {
+        name = 'pink',
+        description = S('Pink'),
+        mcl_group = { 'unicolor_light_red' }
+    },
+}
+
+if not minetest.get_modpath('x_clay') then
+    minetest.register_craftitem('x_farming:dye_light_blue', {
+        inventory_image = 'x_farming_dye_light_blue.png',
+        description = S('Light Blue Dye'),
+        short_description = S('Light Blue Dye'),
+        groups = { dye = 1, color_light_blue = 1 }
+    })
+
+    minetest.register_craft({
+        type = 'shapeless',
+        output = 'x_clay:dye_light_blue 2',
+        recipe = { 'group:dye,color_white', 'group:dye,color_blue' },
+    })
+end
+
+for _, def in ipairs(pillow_colors) do
+    local color_group = 'color_' .. def.name
+
+    minetest.register_node('x_farming:pillow_' .. def.name, {
+        description = S('Pillow') .. ' ' .. def.description,
+        short_description = S('Pillow') .. ' ' .. def.description,
+        tiles = { 'x_farming_pillow_' .. def.name .. '.png' },
+        is_ground_content = false,
+        groups = {
+            -- MTG
+            snappy = 2,
+            choppy = 2,
+            oddly_breakable_by_hand = 3,
+            flammable = 3,
+            pillow = 1,
+            [color_group] = 1,
+            -- MCL
+            handy = 1,
+            shearsy_wool = 1,
+            fire_encouragement = 30,
+            fire_flammability = 60,
+            building_block = 1,
+            [def.mcl_group[1]] = 1,
+        },
+        _mcl_hardness = 0.8,
+        _mcl_blast_resistance = 0.8,
+        sounds = x_farming.node_sound_pillow_defaults(),
+    })
+
+    if minetest.get_modpath('mcl_dye') and x_farming.candle_colors[def.name] then
+        local mcl_groups = {}
+        local color_def = x_farming.candle_colors[def.name]
+
+        for key, value in pairs(color_def.mcl_groups) do
+            table.insert(mcl_groups, key)
+        end
+
+        local mcl_craft_dye = 'group:dye,' .. table.concat(mcl_groups, ',')
+
+        minetest.register_craft({
+            type = 'shapeless',
+            output = 'x_farming:pillow_' .. def.name,
+            recipe = { mcl_craft_dye, 'group:pillow' },
+        })
+    end
+
+    if minetest.get_modpath('dye') then
+        minetest.register_craft({
+            type = 'shapeless',
+            output = 'x_farming:pillow_' .. def.name,
+            recipe = { 'group:dye,' .. color_group, 'group:pillow' },
+        })
+    end
+end
+
+minetest.register_node('x_farming:silt_loam_soil', {
+    description = S('Silt Loam Soil. Used for farming rice.'),
+    short_description = S('Silt Loam Soil'),
+    tiles = { 'x_farming_silt_loam_soil.png' },
+    groups = {
+        -- MTG
+        crumbly = 3,
+        -- MCL
+        handy = 1,
+        shovely = 1,
+        dirt = 1,
+        soil_sapling = 2,
+        soil_sugarcane = 1,
+        cultivatable = 2,
+        enderman_takable = 1,
+        building_block = 1,
+        -- ALL
+        soil = 1,
+    },
+    _mcl_blast_resistance = 0.5,
+    _mcl_hardness = 0.5,
+    sounds = x_farming.node_sound_dirt_defaults(),
+})
+
+-- barley stack
+minetest.register_node('x_farming:barley_stack', {
+    description = S('Barley Stack'),
+    tiles = {
+        'x_farming_barley_stack_top.png',
+        'x_farming_barley_stack_top.png',
+        'x_farming_barley_stack_side.png',
+    },
+    paramtype2 = 'facedir',
+    is_ground_content = false,
+    groups = {
+        -- MTG
+        snappy = 3,
+        -- MCL
+        handy = 1,
+        hoey = 1,
+        building_block = 1,
+        fire_encouragement = 60,
+        fire_flammability = 20,
+        compostability = 85,
+        -- ALL
+        flammable = 4,
+        fall_damage_add_percent = -30,
+    },
+    _mcl_blast_resistance = 0.5,
+    _mcl_hardness = 0.5,
+    sounds = x_farming.node_sound_leaves_defaults(),
+    on_place = minetest.rotate_node
+})
+
+-- rice stack
+minetest.register_node('x_farming:rice_stack', {
+    description = S('Rice Stack'),
+    tiles = {
+        'x_farming_rice_stack_top.png',
+        'x_farming_rice_stack_bottom.png',
+        'x_farming_rice_stack_side.png',
+    },
+    paramtype2 = 'facedir',
+    is_ground_content = false,
+    groups = {
+        -- MTG
+        snappy = 3,
+        -- MCL
+        handy = 1,
+        hoey = 1,
+        building_block = 1,
+        fire_encouragement = 60,
+        fire_flammability = 20,
+        compostability = 85,
+        -- ALL
+        flammable = 4,
+        fall_damage_add_percent = -30,
+    },
+    _mcl_blast_resistance = 0.5,
+    _mcl_hardness = 0.5,
+    sounds = x_farming.node_sound_leaves_defaults(),
+    on_place = minetest.rotate_node
+})
+
+minetest.register_node('x_farming:silt_loam_brick_block', {
+    description = S('Silt Loam Brick Block'),
+    paramtype2 = 'facedir',
+    place_param2 = 0,
+    tiles = {
+        'x_farming_silt_loam_brick_block.png^[transformFX',
+        'x_farming_silt_loam_brick_block.png',
+    },
+    is_ground_content = false,
+    groups = {
+        -- MTG
+        cracky = 3,
+        -- MCL
+        pickaxey = 1,
+        building_block = 1,
+        material_stone = 1
+    },
+    _mcl_blast_resistance = 6,
+    _mcl_hardness = 2,
+    sounds = x_farming.node_sound_stone_defaults(),
+})
+
+-- French Potatoes
+x_farming.register_feast('french_potatoes', {
+    description = S('French Potatoes') .. '\n' .. S('Compost chance') .. ': 100%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 32'),
+    short_description = S('French Potatoes'),
+    mesh = 'x_farming_french_potatoes.obj',
+    selection_box = {
+        type = 'fixed',
+        fixed = { -8 / 16, -8 / 16, -7 / 16, 8 / 16, -1 / 16, 7 / 16 }
+    },
+    steps = 5,
+    hunger_amount = 32
+})
+
+-- Baked Fish
+x_farming.register_feast('baked_fish', {
+    description = S('Baked Fish') .. '\n' .. S('Compost chance') .. ': 100%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 32'),
+    short_description = S('Baked Fish'),
+    mesh = 'x_farming_baked_fish.obj',
+    selection_box = {
+        type = 'fixed',
+        fixed = { -8 / 16, -8 / 16, -7 / 16, 8 / 16, -1 / 16, 7 / 16 }
+    },
+    steps = 5,
+    hunger_amount = 32
+})
+
+-- Melon Slush
+x_farming.register_feast('melon_slush', {
+    description = S('Melon Slush') .. '\n' .. S('Compost chance') .. ': 100%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 32'),
+    short_description = S('Melon Slush'),
+    mesh = 'x_farming_melon_slush.obj',
+    selection_box = {
+        type = 'fixed',
+        fixed = { -7 / 16, -8 / 16, -7 / 16, 7 / 16, 3 / 16, 7 / 16 }
+    },
+    use_texture_alpha = 'blend',
+    last_drop = 'default:glass',
+    sounds = x_farming.node_sound_thin_glass_defaults(),
+    steps = 5,
+    hunger_amount = 32
+})
+
+-- Strawberry Pie
+x_farming.register_pie('strawberry_pie', {
+    description = S('Strawberry Pie') .. '\n' .. S('Compost chance') .. ': 100%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 24'),
+    short_description = S('Strawberry Pie'),
+    mesh = 'x_farming_pie.obj',
+    steps = 4,
+    hunger_amount = 24
+})
+
+-- Chocolate Pie
+x_farming.register_pie('chocolate_pie', {
+    description = S('Chocolade Pie') .. '\n' .. S('Compost chance') .. ': 100%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 24'),
+    short_description = S('Chocolade Pie'),
+    mesh = 'x_farming_pie.obj',
+    steps = 4,
+    hunger_amount = 24
+})
+
+-- Honey Glazed Kiwi Pie
+x_farming.register_pie('honey_kiwi_pie', {
+    description = S('Honey Glazed Kiwi') .. '\n' .. S('Compost chance') .. ': 100%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 24'),
+    short_description = S('Honey Glazed Kiwi'),
+    mesh = 'x_farming_pie.obj',
+    steps = 4,
+    hunger_amount = 24
+})
+
+--
+-- Convert farming soils - copy from MTG
+--
+if not minetest.get_modpath('farming') then
+    minetest.register_abm({
+        label = 'X Farming soil',
+        nodenames = { 'group:field' },
+        interval = 15,
+        chance = 4,
+        action = function(pos, node)
+            local n_def = minetest.registered_nodes[node.name] or nil
+            local wet = n_def.soil.wet or nil
+            local base = n_def.soil.base or nil
+            local dry = n_def.soil.dry or nil
+            if not n_def or not n_def.soil or not wet or not base or not dry then
+                return
+            end
+
+            pos.y = pos.y + 1
+            local nn = minetest.get_node_or_nil(pos)
+            if not nn or not nn.name then
+                return
+            end
+            local nn_def = minetest.registered_nodes[nn.name] or nil
+            pos.y = pos.y - 1
+
+            if nn_def and nn_def.walkable and minetest.get_item_group(nn.name, 'plant') == 0 then
+                minetest.set_node(pos, { name = base })
+                return
+            end
+            -- check if there is water nearby
+            local wet_lvl = minetest.get_item_group(node.name, 'wet')
+            if minetest.find_node_near(pos, 3, { 'group:water' }) then
+                -- if it is dry soil and not base node, turn it into wet soil
+                if wet_lvl == 0 then
+                    minetest.set_node(pos, { name = wet })
+                end
+            else
+                -- only turn back if there are no unloaded blocks (and therefore
+                -- possible water sources) nearby
+                if not minetest.find_node_near(pos, 3, { 'ignore' }) then
+                    -- turn it back into base if it is already dry
+                    if wet_lvl == 0 then
+                        -- only turn it back if there is no plant/seed on top of it
+                        if minetest.get_item_group(nn.name, 'plant') == 0 and minetest.get_item_group(nn.name, 'seed') == 0 then
+                            minetest.set_node(pos, { name = base })
+                        end
+                    elseif wet_lvl == 1 then
+                        -- if its wet turn it back into dry soil
+                        minetest.set_node(pos, { name = dry })
+                    end
+                end
+            end
+        end,
+    })
+end

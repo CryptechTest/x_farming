@@ -17,10 +17,10 @@
 --]]
 local S = minetest.get_translator(minetest.get_current_modname())
 local minlight = 13
-local maxlight = default.LIGHT_MAX
+local maxlight = 14
 
 -- carrot
-farming.register_plant('x_farming:carrot', {
+x_farming.register_plant('x_farming:carrot', {
     description = S('Planting Carrot') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Planting Carrot'),
     paramtype2 = 'meshoptions',
@@ -29,7 +29,7 @@ farming.register_plant('x_farming:carrot', {
     minlight = minlight,
     maxlight = maxlight,
     fertility = { 'grassland' },
-    groups = { flammable = 4, compost = 65, hunger_amount = 3 },
+    groups = { flammable = 4, compost = 65, hunger_amount = 2 },
     place_param2 = 3,
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
@@ -41,10 +41,19 @@ farming.register_plant('x_farming:carrot', {
 })
 
 -- needed
-minetest.override_item('x_farming:carrot', {
+local carrot_def = {
     description = S('Carrot') .. '\n' .. S('Compost chance') .. ': 65%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
     short_description = S('Carrot'),
+    groups = {
+        hunger_amount = 3,
+        -- X Farming
+        compost = 65,
+        -- MCL
+        food = 2,
+        eatable = 1,
+        compostability = 65
+    },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
@@ -52,27 +61,56 @@ minetest.override_item('x_farming:carrot', {
         end
         return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
-})
+    _mcl_saturation = 3.6,
+    _mcl_blast_resistance = 0,
+}
 
-minetest.register_decoration({
-    name = 'x_farming:carrot_8',
-    deco_type = 'simple',
-    place_on = { 'default:dirt_with_grass' },
-    sidelen = 16,
-    noise_params = {
-        offset = -0.1,
-        scale = 0.1,
-        spread = { x = 50, y = 50, z = 50 },
-        seed = 4242,
-        octaves = 3,
-        persist = 0.7
+if minetest.get_modpath('farming') then
+    carrot_def.on_use = minetest.item_eat(3)
+end
+
+if minetest.get_modpath('mcl_farming') then
+    carrot_def.on_place = minetest.item_eat(3)
+    carrot_def.on_secondary_use = minetest.item_eat(3)
+end
+
+minetest.override_item('x_farming:carrot', carrot_def)
+
+-- Golden carrot
+local golden_carrot_def = {
+    description = S('Golden Carrot') .. '\n' .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 10'),
+    inventory_image = 'x_farming_carrot_golden.png',
+    wield_image = 'x_farming_carrot_golden.png',
+    groups = {
+        hunger_amount = 10,
+        -- MCL
+        food = 2,
+        eatable = 1,
     },
-    biomes = { 'grassland' },
-    y_max = 31000,
-    y_min = 1,
-    decoration = 'x_farming:carrot_8',
-    param2 = 3,
-})
+    _mcl_saturation = 14.4,
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then
+            return itemstack
+        end
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+    end,
+}
+
+if x_farming.hbhunger ~= nil or x_farming.hunger_ng ~= nil then
+    golden_carrot_def.description = golden_carrot_def.description .. '\n' .. minetest.colorize(x_farming.colors.red, S('Heal') .. ': 10')
+end
+
+if minetest.get_modpath('farming') then
+    golden_carrot_def.on_use = minetest.item_eat(10)
+end
+
+if minetest.get_modpath('mcl_farming') then
+    golden_carrot_def.on_place = minetest.item_eat(10)
+    golden_carrot_def.on_secondary_use = minetest.item_eat(10)
+end
+
+minetest.register_craftitem('x_farming:carrot_golden', golden_carrot_def)
 
 ---crate
 x_farming.register_crate('crate_carrot_3', {
@@ -83,3 +121,53 @@ x_farming.register_crate('crate_carrot_3', {
         crate_item = 'x_farming:carrot'
     }
 })
+
+minetest.register_on_mods_loaded(function()
+    local deco_place_on = {}
+    local deco_biomes = {}
+
+    -- MTG
+    if minetest.get_modpath('default') then
+        table.insert(deco_place_on, 'default:dirt_with_grass')
+        table.insert(deco_biomes, 'grassland')
+    end
+
+    -- Everness
+    if minetest.get_modpath('everness') then
+        table.insert(deco_place_on, 'everness:dirt_with_coral_grass')
+        table.insert(deco_biomes, 'everness_coral_forest')
+    end
+
+    -- MCL
+    if minetest.get_modpath('mcl_core') then
+        table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
+        table.insert(deco_biomes, 'Plains')
+    end
+
+    if next(deco_place_on) and next(deco_biomes) then
+        minetest.register_decoration({
+            name = 'x_farming:carrot',
+            deco_type = 'simple',
+            place_on = deco_place_on,
+            sidelen = 16,
+            noise_params = {
+                offset = -0.1,
+                scale = 0.1,
+                spread = { x = 50, y = 50, z = 50 },
+                seed = 4242,
+                octaves = 3,
+                persist = 0.7
+            },
+            biomes = deco_biomes,
+            y_max = 31000,
+            y_min = 1,
+            decoration = {
+                'x_farming:carrot_5',
+                'x_farming:carrot_6',
+                'x_farming:carrot_7',
+                'x_farming:carrot_8',
+            },
+            param2 = 3,
+        })
+    end
+end)

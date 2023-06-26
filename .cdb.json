@@ -2,12 +2,11 @@
     "type": "MOD",
     "title": "X Farming",
     "name": "x_farming",
-    "short_description": "Extends default farming with new plants, crops and ice fishing.",
+    "short_description": "Farming with new plants, crops, trees, ice fishing, bees, candles, scarecrow, crates, composter, bonemeal, ropes, pies...",
     "dev_state": "MAINTENANCE_ONLY",
     "tags": [
         "decorative",
         "food",
-        "mobs",
         "plants_and_farming",
         "survival"
     ],

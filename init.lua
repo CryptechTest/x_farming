@@ -16,276 +16,21 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-minetest.register_alias('x_farming:hog_stew', 'x_farming:fish_stew')
-
--- main class
-x_farming = {
-    hbhunger = minetest.get_modpath('hbhunger'),
-    vessels = minetest.get_modpath('vessels'),
-    bucket = minetest.get_modpath('bucket'),
-    colors = {
-        brown = '#DEB887',
-        red = '#FF8080',
-        green = '#98E698'
-    },
-    x_bonemeal = {
-        tree_defs = {
-            ['x_farming:christmas_tree_sapling'] = {
-                -- christmas tree
-                name = 'x_farming:christmas_tree_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    x_farming.grow_christmas_tree(pos)
-
-                    return true
-                end
-            },
-            ['default:sapling'] = {
-                -- apple tree
-                name = 'default:sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    default.grow_new_apple_tree(pos)
-
-                    return true
-                end
-            },
-            ['default:junglesapling'] = {
-                -- jungle tree
-                name = 'default:junglesapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    default.grow_new_jungle_tree(pos)
-
-                    return true
-                end
-            },
-            ['default:emergent_jungle_sapling'] = {
-                -- emergent jungle tree
-                name = 'default:emergent_jungle_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    default.grow_new_emergent_jungle_tree(pos)
-
-                    return true
-                end
-            },
-            ['default:acacia_sapling'] = {
-                -- acacia tree
-                name = 'default:acacia_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    default.grow_new_acacia_tree(pos)
-
-                    return true
-                end
-            },
-            ['default:aspen_sapling'] = {
-                -- aspen tree
-                name = 'default:aspen_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    default.grow_new_aspen_tree(pos)
-
-                    return true
-                end
-            },
-            ['default:pine_sapling'] = {
-                -- pine tree
-                name = 'default:pine_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    if minetest.find_node_near(pos, 1, { 'group:snowy' }) then
-                        default.grow_new_snowy_pine_tree(pos)
-                    else
-                        default.grow_new_pine_tree(pos)
-                    end
-
-                    return true
-                end
-            },
-            ['default:bush_sapling'] = {
-                -- Bush
-                name = 'default:bush_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    default.grow_bush(pos)
-
-                    return true
-                end
-            },
-            ['default:acacia_bush_sapling'] = {
-                -- Acacia bush
-                name = 'default:acacia_bush_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    default.grow_acacia_bush(pos)
-
-                    return true
-                end
-            },
-            ['default:pine_bush_sapling'] = {
-                -- Pine bush
-                name = 'default:pine_bush_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    default.grow_pine_bush(pos)
-
-                    return true
-                end
-            },
-            ['default:blueberry_bush_sapling'] = {
-                -- Blueberry bush
-                name = 'default:blueberry_bush_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    default.grow_blueberry_bush(pos)
-
-                    return true
-                end
-            },
-            ['default:papyrus'] = {
-                -- Papyrus
-                name = 'default:papyrus',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    local node = minetest.get_node(pos)
-
-                    default.grow_papyrus(pos, node)
-
-                    return true
-                end
-            },
-            ['default:large_cactus_seedling'] = {
-                -- Large Cactus
-                name = 'default:large_cactus_seedling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_sand(pos) then
-                        return false
-                    end
-
-                    default.grow_large_cactus(pos)
-
-                    return true
-                end
-            },
-            ['x_farming:kiwi_sapling'] = {
-                -- Kiwi Tree
-                name = 'x_farming:kiwi_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    x_farming.grow_kiwi_tree(pos)
-
-                    return true
-                end
-            },
-            ['x_farming:large_cactus_with_fruit_seedling'] = {
-                -- Cactus Seedling
-                name = 'x_farming:large_cactus_with_fruit_seedling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_sand(pos) then
-                        return false
-                    end
-
-                    x_farming.grow_large_cactus(pos)
-
-                    return true
-                end
-            },
-            ['x_farming:jungle_with_cocoa_sapling'] = {
-                -- Jungle Tree with Cocoa
-                name = 'x_farming:jungle_with_cocoa_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    x_farming.grow_jungle_tree(pos)
-
-                    return true
-                end
-            },
-            ['x_farming:pine_nut_sapling'] = {
-                -- Pine Nut Tree
-                name = 'x_farming:pine_nut_sapling',
-                chance = 2,
-                grow_tree = function(pos)
-                    if not x_farming.x_bonemeal.is_on_soil(pos) then
-                        return false
-                    end
-
-                    x_farming.grow_pine_nut_tree(pos)
-
-                    return true
-                end
-            },
-        }
-    },
-    allowed_crate_items = {},
-    allowed_bag_items = {},
-    registered_crates = {},
-    lbm_nodenames_crates = {}
-}
-
 local mod_start_time = minetest.get_us_time()
 local path = minetest.get_modpath('x_farming')
 
+-- Legacy backwards compatibility
+minetest.register_alias('x_farming:hog_stew', 'x_farming:fish_stew')
+
+-- MineClone2 support
+if minetest.get_modpath('mcl_core') and minetest.global_exists('mcl_core') then
+    dofile(path .. '/mod_support_mcl_aliases.lua')
+end
+
 dofile(path .. '/api.lua')
+dofile(path .. '/craftitems.lua')
+dofile(path .. '/nodes.lua')
+
 dofile(path .. '/melon.lua')
 dofile(path .. '/pumpkin.lua')
 dofile(path .. '/coffee.lua')
@@ -300,17 +45,26 @@ dofile(path .. '/kiwi_tree.lua')
 dofile(path .. '/cactus.lua')
 dofile(path .. '/strawberry.lua')
 dofile(path .. '/pine_nut.lua')
+dofile(path .. '/christmas_tree.lua')
 dofile(path .. '/stevia.lua')
 dofile(path .. '/soybean.lua')
 dofile(path .. '/salt.lua')
+dofile(path .. '/cotton.lua')
+dofile(path .. '/barley.lua')
+dofile(path .. '/bees.lua')
+--dofile(path .. '/ropes.lua')
+dofile(path .. '/rice.lua')
+dofile(path .. '/stove.lua')
+
+dofile(path .. '/tools.lua')
+dofile(path .. '/hoes.lua')
+
 dofile(path .. '/ice_fishing.lua')
-dofile(path .. '/nodes.lua')
-dofile(path .. '/christmas_tree.lua')
-dofile(path .. '/crafting.lua')
 dofile(path .. '/bonemeal.lua')
 dofile(path .. '/crates.lua')
 dofile(path .. '/bags.lua')
 dofile(path .. '/composter.lua')
+dofile(path .. '/crafting.lua')
 
 if not x_farming.vessels then
     dofile(path .. '/vessels.lua')
@@ -326,11 +80,27 @@ minetest.register_lbm({
     end
 })
 
+-- MOD support
+
+if minetest.get_modpath('default') then
+    dofile(path .. '/mod_support_default.lua')
+end
+
 -- hbhunger
 if x_farming.hbhunger ~= nil then
     if hbhunger.register_food ~= nil then
-        dofile(path .. '/register_hbhunger.lua')
+        dofile(path .. '/mod_support_hbhunger.lua')
     end
+end
+
+-- hunger_ng
+if x_farming.hunger_ng then
+    dofile(path .. '/mod_support_hunger_ng.lua')
+end
+
+-- candles_3d
+if minetest.get_modpath('candles_3d') then
+    dofile(path .. '/mod_support_candles_3d.lua')
 end
 
 -- mob

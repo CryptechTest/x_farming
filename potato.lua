@@ -17,10 +17,10 @@
 --]]
 local S = minetest.get_translator(minetest.get_current_modname())
 local minlight = 13
-local maxlight = default.LIGHT_MAX
+local maxlight = 14
 
 -- POTATO
-farming.register_plant('x_farming:potato', {
+x_farming.register_plant('x_farming:potato', {
     description = S('Planting Potato') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Planting Potato'),
     paramtype2 = 'meshoptions',
@@ -41,11 +41,20 @@ farming.register_plant('x_farming:potato', {
 })
 
 -- needed
-minetest.override_item('x_farming:potato', {
+local potato_def = {
     description = S('Potato') .. '\n' .. S('Compost chance') .. ': 65%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     short_description = S('Potato'),
-    groups = { compost = 65, hunger_amount = 2 },
+    groups = {
+        hunger_amount = 2,
+        -- X Farming
+        compost = 65,
+        -- MCL
+        food = 2,
+        eatable = 1,
+        compostability = 65,
+        smoker_cookable = 1
+    },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
@@ -53,7 +62,19 @@ minetest.override_item('x_farming:potato', {
         end
         return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
-})
+    _mcl_saturation = 0.6
+}
+
+if minetest.get_modpath('farming') then
+    potato_def.on_use = minetest.item_eat(2)
+end
+
+if minetest.get_modpath('mcl_farming') then
+    potato_def.on_place = minetest.item_eat(2)
+    potato_def.on_secondary_use = minetest.item_eat(2)
+end
+
+minetest.override_item('x_farming:potato', potato_def)
 
 -- add poisonous potato to drops
 minetest.override_item('x_farming:potato_8', {
@@ -68,25 +89,75 @@ minetest.override_item('x_farming:potato_8', {
     }
 })
 
-minetest.register_decoration({
-    name = 'x_farming:potato_8',
-    deco_type = 'simple',
-    place_on = { 'default:silver_sand' },
-    sidelen = 16,
-    noise_params = {
-        offset = -0.1,
-        scale = 0.1,
-        spread = { x = 50, y = 50, z = 50 },
-        seed = 4242,
-        octaves = 3,
-        persist = 0.7
+-- Baked Potato
+local baked_potato_def = {
+    description = S('Baked Potato') .. '\n' .. S('Compost chance') .. ': 85%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+    short_description = S('Baked Potato'),
+    groups = {
+        hunger_amount = 6 ,
+        -- X Farming
+        compost = 85,
+        -- MCL
+        food = 2,
+        eatable = 5,
+        compostability = 85
     },
-    biomes = { 'cold_desert' },
-    y_max = 31000,
-    y_min = 1,
-    decoration = 'x_farming:potato_8',
-    param2 = 3,
-})
+    inventory_image = 'x_farming_potato_baked.png',
+    _mcl_saturation = 6.0,
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then
+            return itemstack
+        end
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+    end,
+}
+
+if minetest.get_modpath('farming') then
+    baked_potato_def.on_use = minetest.item_eat(6)
+end
+
+if minetest.get_modpath('mcl_farming') then
+    baked_potato_def.on_place = minetest.item_eat(6)
+    baked_potato_def.on_secondary_use = minetest.item_eat(6)
+end
+
+minetest.register_craftitem('x_farming:bakedpotato', baked_potato_def)
+
+-- Poisonouos Potato
+local poisonouspotato_def = {
+    description = S('Poisonous Potato') .. '\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': -6'),
+    inventory_image = 'x_farming_potato_poisonous.png',
+    groups = { food = 2, eatable = 2 },
+    _mcl_saturation = 1.2,
+}
+
+if x_farming.hbhunger ~= nil or x_farming.hunger_ng ~= nil then
+    poisonouspotato_def.description = poisonouspotato_def.description .. '\n'
+        .. minetest.colorize(x_farming.colors.green, S('Poison') .. ': 5')
+end
+
+if minetest.get_modpath('farming') then
+    poisonouspotato_def.on_use = minetest.item_eat(-6)
+end
+
+if minetest.get_modpath('mcl_farming') then
+    poisonouspotato_def.on_place = minetest.item_eat(-6)
+    poisonouspotato_def.on_secondary_use = minetest.item_eat(-6)
+
+    minetest.register_on_item_eat(function(hp_change, replace_with_item, itemstack, user, pointed_thing)
+        -- 60% chance of poisoning with poisonous potato
+        if itemstack:get_name() == 'x_farming:poisonouspotato' then
+            if math.random(1, 10) >= 6 then
+                mcl_potions.poison_func(user, 1, 5)
+            end
+        end
+    end)
+end
+
+minetest.register_craftitem('x_farming:poisonouspotato', poisonouspotato_def)
 
 ---crate
 x_farming.register_crate('crate_potato_3', {
@@ -97,3 +168,53 @@ x_farming.register_crate('crate_potato_3', {
         crate_item = 'x_farming:potato'
     }
 })
+
+minetest.register_on_mods_loaded(function()
+    local deco_place_on = {}
+    local deco_biomes = {}
+
+    -- MTG
+    if minetest.get_modpath('default') then
+        table.insert(deco_place_on, 'default:silver_sand')
+        table.insert(deco_biomes, 'cold_desert')
+    end
+
+    -- Everness
+    if minetest.get_modpath('everness') then
+        table.insert(deco_place_on, 'everness:forsaken_desert_sand')
+        table.insert(deco_biomes, 'everness_forsaken_desert')
+    end
+
+    -- MCL
+    if minetest.get_modpath('mcl_core') then
+        table.insert(deco_place_on, 'mcl_core:sand')
+        table.insert(deco_biomes, 'Desert')
+    end
+
+    if next(deco_place_on) and next(deco_biomes) then
+        minetest.register_decoration({
+            name = 'x_farming:potato',
+            deco_type = 'simple',
+            place_on = deco_place_on,
+            sidelen = 16,
+            noise_params = {
+                offset = -0.1,
+                scale = 0.1,
+                spread = { x = 50, y = 50, z = 50 },
+                seed = 4242,
+                octaves = 3,
+                persist = 0.7
+            },
+            biomes = deco_biomes,
+            y_max = 31000,
+            y_min = 1,
+            decoration = {
+                'x_farming:potato_5',
+                'x_farming:potato_6',
+                'x_farming:potato_7',
+                'x_farming:potato_8',
+            },
+            param2 = 3,
+        })
+    end
+end)

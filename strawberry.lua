@@ -18,24 +18,29 @@
 local S = minetest.get_translator(minetest.get_current_modname())
 
 -- STRAWBERRY
-farming.register_plant('x_farming:strawberry', {
+x_farming.register_plant('x_farming:strawberry', {
     description = S('Strawberry Seed') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Strawberry Seed'),
     paramtype2 = 'meshoptions',
     inventory_image = 'x_farming_strawberry_seed.png',
     steps = 4,
     minlight = 13,
-    maxlight = default.LIGHT_MAX,
+    maxlight = 14,
     fertility = { 'grassland' },
     groups = { flammable = 4 },
     place_param2 = 0
 })
 
 -- needed
-minetest.override_item('x_farming:strawberry', {
+local strawberry_def = {
     description = S('Strawberry') .. '\n' .. S('Compost chance') .. ': 30%\n'
         .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
-    groups = { compost = 30, hunger_amount = 2 },
+    groups = {
+        hunger_amount = 2,
+        -- X Farming
+        compost = 30,
+        compostability = 30
+    },
     short_description = S('Strawberry'),
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
@@ -44,29 +49,18 @@ minetest.override_item('x_farming:strawberry', {
         end
         return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end
-})
+}
 
--- decorations
-for length = 1, 4 do
-    minetest.register_decoration({
-        name = 'x_farming:strawberry_' .. length,
-        deco_type = 'simple',
-        place_on = { 'default:dirt_with_coniferous_litter' },
-        sidelen = 16,
-        noise_params = {
-            offset = 0,
-            scale = 0.01,
-            spread = { x = 100, y = 100, z = 100 },
-            seed = 2,
-            octaves = 3,
-            persist = 0.7
-        },
-        biomes = { 'coniferous_forest' },
-        y_max = 30,
-        y_min = 1,
-        decoration = 'x_farming:strawberry_' .. length,
-    })
+--[[if minetest.get_modpath('farming') then
+    strawberry_def.on_use = minetest.item_eat(2)
+end--]]
+
+if minetest.get_modpath('mcl_farming') then
+    strawberry_def.on_place = minetest.item_eat(2)
+    strawberry_def.on_secondary_use = minetest.item_eat(2)
 end
+
+minetest.override_item('x_farming:strawberry', strawberry_def)
 
 ---crate
 x_farming.register_crate('crate_strawberry_3', {
@@ -77,3 +71,53 @@ x_farming.register_crate('crate_strawberry_3', {
         crate_item = 'x_farming:strawberry'
     }
 })
+
+minetest.register_on_mods_loaded(function()
+    local deco_place_on = {}
+    local deco_biomes = {}
+
+    -- MTG
+    if minetest.get_modpath('default') then
+        table.insert(deco_place_on, 'default:dirt_with_coniferous_litter')
+        table.insert(deco_biomes, 'coniferous_forest')
+    end
+
+    -- Everness
+    if minetest.get_modpath('everness') then
+        table.insert(deco_place_on, 'everness:dirt_with_crystal_grass')
+        table.insert(deco_biomes, 'everness_crystal_forest')
+    end
+
+    -- MCL
+    if minetest.get_modpath('mcl_core') then
+        table.insert(deco_place_on, 'mcl_core:podzol')
+        table.insert(deco_biomes, 'MegaSpruceTaiga')
+        table.insert(deco_biomes, 'MegaTaiga')
+    end
+
+    if next(deco_place_on) and next(deco_biomes) then
+        minetest.register_decoration({
+            name = 'x_farming:strawberry',
+            deco_type = 'simple',
+            place_on = deco_place_on,
+            sidelen = 16,
+            noise_params = {
+                offset = 0,
+                scale = 0.01,
+                spread = { x = 100, y = 100, z = 100 },
+                seed = 2,
+                octaves = 3,
+                persist = 0.7
+            },
+            biomes = deco_biomes,
+            y_max = 30,
+            y_min = 1,
+            decoration = {
+                'x_farming:strawberry_1',
+                'x_farming:strawberry_2',
+                'x_farming:strawberry_3',
+                'x_farming:strawberry_4',
+            },
+        })
+    end
+end)

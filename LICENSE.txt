@@ -453,3 +453,861 @@ RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
 FAILURE OF THE LIBRARY TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
 SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGES.
+
+### Code
+
+GNU Lesser General Public License v2.1 or later (see included LICENSE file)
+
+### Textures
+
+**CC-BY-SA-4.0, by SaKeL**
+
+- x_farming_carrot_seed.png
+- x_farming_potato_seed.png
+- x_farming_coffee.png
+- x_farming_coffee_seed.png
+- x_farming_corn_popcorn.png
+- x_farming_obsidian_soil.png
+- x_farming_obsidian_soil_wet.png
+- x_farming_obsidian_wart_seed.png
+- x_farming_corn_1.png
+- x_farming_corn_2.png
+- x_farming_corn_3.png
+- x_farming_corn_4.png
+- x_farming_corn_5.png
+- x_farming_corn_6.png
+- x_farming_corn_7.png
+- x_farming_corn_8.png
+- x_farming_corn_9.png
+- x_farming_corn_10.png
+- x_farming_corn_pop.png
+- x_farming_corn_seed.png
+- x_farming_kiwi.png
+- x_farming_kiwi_fruit.png
+- x_farming_kiwi_sapling.png
+- x_farming_cactus_fruit_bottom.png
+- x_farming_cactus_fruit_sides.png
+- x_farming_cactus_fruit_top.png
+- x_farming_cactus_fruit_item.png
+- x_farming_large_cactus_with_fruit_seedling.png
+- x_farming_large_cactus_with_fruit_seedling
+- x_farming_strawberry_seed.png
+- x_farming_strawberry.png
+- x_farming_jungleleaves.png
+- x_farming_jungle_tree.png
+- x_farming_jungle_tree_top.png
+- x_farming_jungle_wood.png
+- x_farming_pine_nut.png
+- x_farming_pine_nut_roasted.png
+- x_farming_coffee_cup_hot.png
+- x_farming_bottle_coffee.png
+- x_farming_bottle_water.png
+- x_farming_bottle_soymilk_raw.png
+- x_farming_bottle_soymilk.png
+- x_farming_donut.png
+- x_farming_donut_chocolate.png
+- x_farming_soybean.png
+- x_farming_soybean_1.png
+- x_farming_soybean_2.png
+- x_farming_soybean_3.png
+- x_farming_soybean_4.png
+- x_farming_soybean_5.png
+- x_farming_soybean_6.png
+- x_farming_soybean_7.png
+- x_farming_soybean_seed.png
+- x_farming_stevia.png
+- x_farming_stevia_1.png
+- x_farming_stevia_2.png
+- x_farming_stevia_3.png
+- x_farming_stevia_4.png
+- x_farming_stevia_5.png
+- x_farming_stevia_6.png
+- x_farming_stevia_7.png
+- x_farming_stevia_8.png
+- x_farming_stevia_seed.png
+- x_farming_x_bonemeal_bonemeal.png
+- x_farming_salt_1_side.png
+- x_farming_salt_1_top.png
+- x_farming_salt_2_side.png
+- x_farming_salt_2_top.png
+- x_farming_salt_3_side.png
+- x_farming_salt_3_top.png
+- x_farming_salt_4_side.png
+- x_farming_salt_4_top.png
+- x_farming_salt_water.png
+- x_farming_drilled_ice.png
+- x_farming_ice_auger.png
+- x_farming_icefishing_back_0.png
+- x_farming_icefishing_back_1.png
+- x_farming_icefishing_back_2.png
+- x_farming_icefishing_back_3.png
+- x_farming_icefishing_back_4.png
+- x_farming_icefishing_back_5.png
+- x_farming_icefishing_back_6.png
+- x_farming_icefishing_back_7.png
+- x_farming_icefishing_back_8.png
+- x_farming_icefishing_back_9.png
+- x_farming_icefishing_bottom.png
+- x_farming_icefishing_front_0.png
+- x_farming_icefishing_front_1.png
+- x_farming_icefishing_front_2.png
+- x_farming_icefishing_front_3.png
+- x_farming_icefishing_front_4.png
+- x_farming_icefishing_front_5.png
+- x_farming_icefishing_front_6.png
+- x_farming_icefishing_front_7.png
+- x_farming_icefishing_front_8.png
+- x_farming_icefishing_front_9.png
+- x_farming_icefishing_inv.png
+- x_farming_icefishing_left.png
+- x_farming_icefishing_right.png
+- x_farming_icefishing_top_1.png
+- x_farming_icefishing_top_2.png
+- x_farming_icefishing_top_3.png
+- x_farming_icefishing_top_4.png
+- x_farming_icefishing_top_5.png
+- x_farming_icefishing_top_6.png
+- x_farming_icefishing_top_7.png
+- x_farming_icefishing_top_8.png
+- x_farming_icefishing_top_9.png
+- x_farming_icefishing_top_animated.png
+- x_farming_icefishing_top_animated_9.png
+- x_farming_hog_stew_mesh.png
+- x_farming_beetroot_soup_mesh.png
+- x_farming_pumpkin_pie_mesh.png
+- x_farming_kiwi_fruit_mesh.png
+- x_farming_corn_popcorn_mesh.png
+- x_farming_fries_mesh.png
+- x_farming_coffee_cup_hot_mesh.png
+- x_farming_donut_mesh.png
+- x_farming_donut_chocolate_mesh.png
+- x_farming_bag_salt.png
+- x_farming_crate_beetroot_3.png
+- x_farming_crate_cactus_fruit_item_3.png
+- x_farming_crate_carrot_3.png
+- x_farming_crate_cocoa_bean_3.png
+- x_farming_crate_coffee_3.png
+- x_farming_crate_corn_3.png
+- x_farming_crate_cotton_3.png
+- x_farming_crate_fish_3.png
+- x_farming_crate_kiwi_fruit_3.png
+- x_farming_crate_melon_3.png
+- x_farming_crate_obsidian_wart_3.png
+- x_farming_crate_pine_nut_3.png
+- x_farming_crate_potato_3.png
+- x_farming_crate_pumpkin_block_3.png
+- x_farming_crate_soybean_3.png
+- x_farming_crate_stevia_3.png
+- x_farming_crate_strawberry_3.png
+- x_farming_crate_wheat_3.png
+- x_farming_fly.png
+- x_farming_composter_1.png
+- x_farming_composter_4.png
+- x_farming_composter_5.png
+- x_farming_composter_2.png
+- x_farming_composter_3.png
+- x_farming_coffee_1.png
+- x_farming_coffee_2.png
+- x_farming_coffee_3.png
+- x_farming_coffee_4.png
+- x_farming_coffee_5.png
+- x_farming_pumpkin_1.png
+- x_farming_pumpkin_2.png
+- x_farming_pumpkin_3.png
+- x_farming_pumpkin_4.png
+- x_farming_pumpkin_5.png
+- x_farming_pumpkin_6.png
+- x_farming_pumpkin_7.png
+- x_farming_pumpkin_8.png
+- x_farming_corn.png
+- x_farming_chocolate.png
+- x_farming_fries.png
+- x_farming_bag_empty.png -- Derived from Farmer's Delight by vectorwing (MIT)
+- x_farming_crate_empty.png -- Derived from Farmer's Delight by vectorwing (MIT)
+- x_farming_melon_1.png
+- x_farming_melon_2.png
+- x_farming_melon_3.png
+- x_farming_melon_4.png
+- x_farming_melon_5.png
+- x_farming_melon_6.png
+- x_farming_melon_7.png
+- x_farming_melon_8.png
+- x_farming_strawberry_1.png
+- x_farming_strawberry_2.png
+- x_farming_strawberry_3.png
+- x_farming_strawberry_4.png
+- x_farming_pine_nut_leaves.png -- Derived from texture Pixel Perfection by XSSheep (CC-BY-SA-4.0)
+- x_farming_x_bonemeal_particles.png -- Derived from texture Pixel Perfection by XSSheep (CC-BY-SA-4.0)
+- x_farming_salt.png
+- x_farming_kiwi_leaves.png -- Derived from texture by paramat (CC BY-SA 3.0)
+- x_farming_junglesapling.png -- Derived from texture by PilzAdam (CC BY-SA 3.0)
+- x_farming_pine_nut_sapling.png -- Derived from texture by Splizard (CC BY-SA 3.0)
+- x_farming_salt_1_bottom.png -- Derived from a texture by random-geek (CC BY-SA 3.0) -- Derived from texture by Neuromancer (CC BY-SA 3.0)
+- x_farming_fish_woodskip.png
+- x_farming_fish_wolffish.png
+- x_farming_fish_whitefish.png
+- x_farming_fish_purple_seashroom.png
+- x_farming_fish_black_seashroom.png
+- x_farming_fish_blue_seashroom.png
+- x_farming_fish_brown_seashroom.png
+- x_farming_fish_cyan_seashroom.png
+- x_farming_fish_gray_seashroom.png
+- x_farming_fish_green_seashroom.png
+- x_farming_fish_light_gray_seashroom.png
+- x_farming_fish_lime_seashroom.png
+- x_farming_fish_magenta_seashroom.png
+- x_farming_fish_orange_seashroom.png
+- x_farming_fish_pink_seashroom.png
+- x_farming_fish_red_seashroom.png
+- x_farming_fish_white_seashroom.png
+- x_farming_fish_yellow_seashroom.png
+- x_farming_fish_white_bullhead.png
+- x_farming_fish_cold_ocean_hermit_crab.png
+- x_farming_fish_frozen_ocean_hermit_crab.png
+- x_farming_fish_lukewarm_ocean_hermit_crab.png
+- x_farming_fish_ocean_hermit_crab.png
+- x_farming_fish_warm_ocean_hermit_crab.png
+- x_farming_fish_walleye.png
+- x_farming_fish_vampire_squid.png
+- x_farming_fish_true_goldfish.png
+- x_farming_fish_totemfish.png
+- x_farming_fish_tilapia.png
+- x_farming_fish_tench.png
+- x_farming_fish_tancho_koi.png
+- x_farming_fish_mother_moon.png
+- x_farming_fish_swordfish.png
+- x_farming_fish_desert_frog.png
+- x_farming_fish_jungle_frog.png
+- x_farming_fish_swamp_frog.png
+- x_farming_fish_swamp_darter.png
+- x_farming_fish_sunfish.png
+- x_farming_fish_sturgeon.png
+- x_farming_fish_stingray.png
+- x_farming_fish_sterlet.png
+- x_farming_fish_smallmouth_bass.png
+- x_farming_fish_largemouth_bass.png
+- x_farming_fish_slimefish.png
+- x_farming_fish_skykoi.png
+- x_farming_fish_skullfin.png
+- x_farming_fish_rusty_skullfin.png
+- x_farming_fish_skate.png
+- x_farming_fish_shrimp.png
+- x_farming_fish_sea_cucumber.png
+- x_farming_fish_sawfish.png
+- x_farming_fish_sardine.png
+- x_farming_fish_sablefish.png
+- x_farming_fish_rosefish.png
+- x_farming_fish_rohu.png
+- x_farming_fish_rockfish.png
+- x_farming_fish_redbreast_sunfish.png
+- x_farming_fish_red_snapper.png
+- x_farming_fish_red_mullet.png
+- x_farming_fish_rainbowfish.png
+- x_farming_fish_rainbow_trout.png
+- x_farming_fish_pumpkinseed.png
+- x_farming_fish_prismfish.png
+- x_farming_fish_piranha.png
+- x_farming_fish_pike.png
+- x_farming_fish_piglish.png
+- x_farming_fish_perch.png
+- x_farming_fish_pearlwog.png
+- x_farming_fish_pearl_isopod.png
+- x_farming_fish_paddlefish.png
+- x_farming_fish_oscar.png
+- x_farming_fish_octopus.png
+- x_farming_fish_obster.png
+- x_farming_fish_lobster.png
+- x_farming_fish_neon_tetra.png
+- x_farming_fish_mud_flounder.png
+- x_farming_fish_minnow.png
+- x_farming_fish_manta_ray.png
+- x_farming_fish_magma_slimefish.png
+- x_farming_fish_lingcod.png
+- x_farming_fish_leerfish.png
+- x_farming_fish_leech.png
+- x_farming_fish_lava_eel.png
+- x_farming_fish_albacore.png
+- x_farming_fish_anchovy.png
+- x_farming_fish_angelfish.png
+- x_farming_fish_angler.png
+- x_farming_fish_armored_catfish.png
+- x_farming_fish_arrow_squid.png
+- x_farming_fish_barracuda.png
+- x_farming_fish_blobfish.png
+- x_farming_fish_bream.png
+- x_farming_fish_burbot.png
+- x_farming_fish_carp.png
+- x_farming_fish_catfish.png
+- x_farming_fish_catla.png
+- x_farming_fish_chorus_snail.png
+- x_farming_fish_chub.png
+- x_farming_fish_clam.png
+- x_farming_fish_conger.png
+- x_farming_fish_congo_tiger_fish.png
+- x_farming_fish_convict_cichlid.png
+- x_farming_fish_crab.png
+- x_farming_fish_crayfish.png
+- x_farming_fish_damselfish.png
+- x_farming_fish_danios.png
+- x_farming_fish_desert_sunfish.png
+- x_farming_fish_diamond_angler.png
+- x_farming_fish_dwarf_caiman.png
+- x_farming_fish_eel.png
+- x_farming_fish_electric_eel.png
+- x_farming_fish_endray.png
+- x_farming_fish_father_sun.png
+- x_farming_fish_flier.png
+- x_farming_fish_floral_faefish.png
+- x_farming_fish_flounder.png
+- x_farming_fish_fourhorn_sculpin.png
+- x_farming_fish_frozen_boneminnow.png
+- x_farming_fish_gar.png
+- x_farming_fish_giant_moray.png
+- x_farming_fish_goldeye.png
+- x_farming_fish_goldfish.png
+- x_farming_fish_grass_pickerel.png
+- x_farming_fish_guppy.png
+- x_farming_fish_hagfish.png
+- x_farming_fish_halibut.png
+- x_farming_fish_herring.png
+- x_farming_fish_illager_ghostfish.png
+- x_farming_fish_ironfish.png
+- x_farming_fish_koi.png
+- x_farming_fish_lamprey.png
+- x_farming_cactus_brick.png -- Derived from a texture by Calinou (CC BY-SA 3.0)
+- x_farming_cooked_mask.png
+- x_farming_scarecrow_1_item.png
+- x_farming_scarecrow_1.png
+- x_farming_christmas_tree_leaves_animated.png  -- Derived from texture by Splizard (CC BY-SA 3.0)
+- x_farming_christmas_tree_leaves_decorated.png -- Derived from texture by Splizard (CC BY-SA 3.0)
+- x_farming_christmas_tree_sapling.png
+- x_farming_christmas_tree_star.png
+- x_farming_scarecrow_2.png
+- x_farming_barley.png
+- x_farming_barley_1.png
+- x_farming_barley_2.png
+- x_farming_barley_3.png
+- x_farming_barley_4.png
+- x_farming_barley_5.png
+- x_farming_barley_6.png
+- x_farming_barley_7.png
+- x_farming_barley_8.png
+- x_farming_barley_seed.png
+- x_farming_barley_stack_side.png
+- x_farming_barley_stack_top.png
+- x_farming_bread.png
+- x_farming_cotton.png
+- x_farming_cotton_1.png
+- x_farming_cotton_2.png
+- x_farming_cotton_3.png
+- x_farming_cotton_4.png
+- x_farming_cotton_5.png
+- x_farming_cotton_6.png
+- x_farming_cotton_7.png
+- x_farming_cotton_8.png
+- x_farming_cotton_seed.png
+- x_farming_crate_barley_3.png
+- x_farming_crate_cotton2_3.png
+- x_farming_flour.png
+- x_farming_string.png
+- x_farming_tool_steelhoe.png
+- x_farming_tool_stonehoe.png
+- x_farming_tool_woodhoe.png
+- x_farming_pine_nut_tree.png
+- x_farming_pine_nut_tree_top.png
+- x_farming_pine_nut_wood.png
+- x_farming_kiwi_tree.png
+- x_farming_kiwi_tree_top.png
+- x_farming_kiwi_tree_wood.png
+- x_farming_beetroot_1.png
+- x_farming_beetroot_2.png
+- x_farming_beetroot_3.png
+- x_farming_beetroot_4.png
+- x_farming_beetroot_5.png
+- x_farming_beetroot_6.png
+- x_farming_beetroot_7.png
+- x_farming_beetroot_8.png
+- x_farming_beetroot.png
+- x_farming_beetroot_seed.png
+- x_farming_beetroot_soup.png
+- x_farming_bowl.png
+- x_farming_carrot_1.png
+- x_farming_carrot_2.png
+- x_farming_carrot_3.png
+- x_farming_carrot_4.png
+- x_farming_carrot_5.png
+- x_farming_carrot_6.png
+- x_farming_carrot_7.png
+- x_farming_carrot_8.png
+- x_farming_carrot_golden.png
+- x_farming_carrot.png
+- x_farming_fish_stew.png
+- x_farming_potato_1.png
+- x_farming_potato_2.png
+- x_farming_potato_3.png
+- x_farming_potato_4.png
+- x_farming_potato_5.png
+- x_farming_potato_6.png
+- x_farming_potato_7.png
+- x_farming_potato_8.png
+- x_farming_potato_baked.png
+- x_farming_potato.png
+- x_farming_potato_poisonous.png
+- x_farming_obsidian_wart_1.png
+- x_farming_obsidian_wart_2.png
+- x_farming_obsidian_wart_3.png
+- x_farming_obsidian_wart_4.png
+- x_farming_obsidian_wart_5.png
+- x_farming_obsidian_wart_6.png
+- x_farming_obsidian_wart.png
+- x_farming_wart_block.png
+- x_farming_wart_brick_block.png
+- x_farming_wart_brick.png
+- x_farming_wartrack.png
+- x_farming_wart_red_brick_block.png
+- x_farming_cookie.png
+- x_farming_sugar.png
+- x_farming_cocoa_top_1.png
+- x_farming_cocoa_right_1.png
+- x_farming_cocoa_left_1.png
+- x_farming_cocoa_front_1.png
+- x_farming_cocoa_bottom_1.png
+- x_farming_cocoa_left_2.png
+- x_farming_cocoa_top_2.png
+- x_farming_cocoa_bottom_2.png
+- x_farming_cocoa_front_2.png
+- x_farming_cocoa_right_2.png
+- x_farming_cocoa_right_3.png
+- x_farming_cocoa_front_3.png
+- x_farming_cocoa_top_3.png
+- x_farming_cocoa_bottom_3.png
+- x_farming_cocoa_left_3.png
+- x_farming_cocoa_bean
+- x_farming_melon_seed.png
+- x_farming_melon_fruit_side.png
+- x_farming_melon_fruit_top.png
+- x_farming_melon_fruit_bottom.png
+- x_farming_melon.png
+- x_farming_golden_melon.png
+- x_farming_pumpkin_fruit_side_off.png
+- x_farming_pumpkin_fruit_side_on.png
+- x_farming_pumpkin_fruit_side.png
+- x_farming_pumpkin_fruit_top.png
+- x_farming_pumpkin_fruit_bottom.png
+- x_farming_pumpkin_pie.png
+- x_farming_pumpkin_seed.png
+- x_farming_bee_hive_bottom.png
+- x_farming_bee_hive_front.png
+- x_farming_bee_hive_saturated_overlay.png
+- x_farming_bee_hive_side.png
+- x_farming_bee_hive_top.png
+- x_farming_bee_mesh_animated.png
+- x_farming_bottle_honey.png
+- x_farming_default_particle.png
+- x_farming_honey_block_mesh.png
+- x_farming_honeycomb.png
+- x_farming_honeycomb_block.png
+- x_farming_honeycomb_saw.png
+- x_farming_jar_empty.png
+- x_farming_jar_with_bee.png
+- x_farming_candle_flame_animated.png
+- x_farming_candle_item.png
+- x_farming_candle_mesh.png
+- x_farming_candle_no_flame.png
+- x_farming_rope.png
+- x_farming_rope_item.png
+- x_farming_rope_fence.png
+- x_farming_rope_fence_item.png
+- x_farming_safety_net.png
+- x_farming_safety_net_side.png
+- x_farming_pillow_violet.png
+- x_farming_pillow_pink.png
+- x_farming_pillow_yellow.png
+- x_farming_pillow_white.png
+- x_farming_pillow_light_blue.png
+- x_farming_pillow_green.png
+- x_farming_pillow_orange.png
+- x_farming_pillow_red.png
+- x_farming_pillow_blue.png
+- x_farming_pillow_magenta.png
+- x_farming_pillow_cyan.png
+- x_farming_pillow_dark_green.png
+- x_farming_pillow_brown.png
+- x_farming_pillow_grey.png
+- x_farming_pillow_dark_grey.png
+- x_farming_pillow_black.png
+- x_farming_bag_rice_grains.png
+- x_farming_crate_rice_3.png
+- x_farming_rice.png
+- x_farming_rice_1.png
+- x_farming_rice_2.png
+- x_farming_rice_3.png
+- x_farming_rice_4.png
+- x_farming_rice_5.png
+- x_farming_rice_6.png
+- x_farming_rice_7.png
+- x_farming_rice_8.png
+- x_farming_rice_grains.png
+- x_farming_rice_seed.png
+- x_farming_rice_seed_inv.png
+- x_farming_rice_stack_bottom.png
+- x_farming_rice_stack_side.png
+- x_farming_rice_stack_top.png
+- x_farming_silt_loam_soil.png
+- x_farming_stove_front.png
+- x_farming_stove_front_animated.png
+- x_farming_stove_item_smoke_particle.png
+- x_farming_stove_side.png
+- x_farming_stove_top.png
+- x_farming_stove_top_animated.png
+- x_farming_sushi_maki.png
+- x_farming_sushi_nigiri.png
+- x_farming_silt_loam_brick.png
+- x_farming_silt_loam_brick_block.png
+- x_farming_baked_fish_item.png
+- x_farming_baked_fish_mesh.png
+- x_farming_baked_fish_mesh_1.png
+- x_farming_baked_fish_mesh_2.png
+- x_farming_baked_fish_mesh_3.png
+- x_farming_baked_fish_mesh_4.png
+- x_farming_baked_fish_mesh_5.png
+- x_farming_bowl_baked_fish.png
+- x_farming_bowl_french_potatoes.png
+- x_farming_french_potatoes_item.png
+- x_farming_french_potatoes_mesh.png
+- x_farming_french_potatoes_mesh_1.png
+- x_farming_french_potatoes_mesh_2.png
+- x_farming_french_potatoes_mesh_3.png
+- x_farming_french_potatoes_mesh_4.png
+- x_farming_french_potatoes_mesh_5.png
+- x_farming_bowl_melon_slush.png
+- x_farming_melon_slush_item.png
+- x_farming_melon_slush_mesh_1.png
+- x_farming_melon_slush_mesh_2.png
+- x_farming_melon_slush_mesh_3.png
+- x_farming_melon_slush_mesh_4.png
+- x_farming_melon_slush_mesh_5.png
+- x_farming_melon_slush_mesh.png
+- x_farming_chocolate_pie_item.png
+- x_farming_chocolate_pie_mesh_1.png
+- x_farming_chocolate_pie_mesh_2.png
+- x_farming_chocolate_pie_mesh_3.png
+- x_farming_chocolate_pie_mesh_4.png
+- x_farming_honey_kiwi_pie_item.png
+- x_farming_honey_kiwi_pie_mesh_1.png
+- x_farming_honey_kiwi_pie_mesh_2.png
+- x_farming_honey_kiwi_pie_mesh_3.png
+- x_farming_honey_kiwi_pie_mesh_4.png
+- x_farming_slice_chocolate_pie.png
+- x_farming_slice_honey_kiwi_pie.png
+- x_farming_slice_strawberry_pie.png
+- x_farming_strawberry_pie_item.png
+- x_farming_strawberry_pie_mesh_1.png
+- x_farming_strawberry_pie_mesh_2.png
+- x_farming_strawberry_pie_mesh_3.png
+- x_farming_strawberry_pie_mesh_4.png
+- x_farming_honey_block_item.png
+
+**CC-BY-SA-3.0, modified by Thomas-S**
+
+- x_farming_vessels_glass_bottle.png
+
+**CC-BY-SA-3.0, BlockMen**
+
+- x_farming_gui_hb_bg.png
+
+### Sound
+
+**CC-BY-3.0, by MaxDemianAGL**, https://freesound.org
+
+- x_farming_x_bonemeal_grow.ogg
+
+**CC-BY-3.0, by Angel_Perez_Grandi**, https://freesound.org
+
+- x_farming_ice_dug.ogg
+
+**CC0-1.0, by felix.blume**, https://freesound.org/people/felix.blume/sounds/583040/
+
+- x_farming_bee.1.ogg
+- x_farming_bee.2.ogg
+- x_farming_bee.3.ogg
+- x_farming_bee.4.ogg
+- x_farming_bee.5.ogg
+- x_farming_bee.6.ogg
+- x_farming_bee.7.ogg
+
+**CC0-1.0, by niittymaa**, https://freesound.org/people/niittymaa/sounds/666969/
+
+- x_farming_slime_footstep.1.ogg
+- x_farming_slime_footstep.2.ogg
+- x_farming_slime_footstep.3.ogg
+- x_farming_slime_footstep.4.ogg
+
+**CC0-1.0, by EminYILDIRIM**, https://freesound.org/people/EminYILDIRIM/sounds/544636/
+
+- x_farming_slime_dug.1.ogg
+- x_farming_slime_dug.2.ogg
+- x_farming_slime_dug.3.ogg
+
+**CC0-1.0, by jtap97**, https://freesound.org/people/jtap97/sounds/448885/
+
+- x_farming_slime_dig.1.ogg
+- x_farming_slime_dig.2.ogg
+- x_farming_slime_dig.3.ogg
+
+**CC0-1.0, by kyles**, https://freesound.org
+
+- x_farming_dirt_hit.1.ogg
+- x_farming_dirt_hit.2.ogg
+- x_farming_dirt_hit.3.ogg
+
+**CC-BY-4.0, by RICHERlandTV**, https://freesound.org
+
+- x_farming_wood_place.1.ogg
+- x_farming_wood_place.2.ogg
+- x_farming_wood_place.3.ogg
+
+**CC0-1.0, by igroglaz**, https://freesound.org
+
+- x_farming_wood_hit.1.ogg
+- x_farming_wood_hit.2.ogg
+- x_farming_wood_hit.3.ogg
+- x_farming_wood_hit.4.ogg
+- x_farming_wood_hit.5.ogg
+- x_farming_wood_hit.6.ogg
+
+**CC0-1.0, by Fission9**, https://freesound.org
+
+- x_farming_dirt_footstep.1.ogg
+- x_farming_dirt_footstep.2.ogg
+- x_farming_dirt_footstep.3.ogg
+- x_farming_dirt_footstep.4.ogg
+- x_farming_wood_footstep.1.ogg
+- x_farming_wood_footstep.2.ogg
+- x_farming_wood_footstep.3.ogg
+- x_farming_wood_footstep.4.ogg
+- x_farming_wood_footstep.5.ogg
+- x_farming_wood_footstep.6.ogg
+
+**CC-BY-4.0, by HerbertBoland**, https://freesound.org/people/AtevonHes/sounds/454783/
+
+- x_farming_tool_breaks.1.ogg
+- x_farming_tool_breaks.2.ogg
+- x_farming_tool_breaks.3.ogg
+
+**CC-BY-3.0, by Mito551**, https://freesound.org
+
+- x_farming_thin_glass_footstep.ogg
+
+**CC-BY-4.0, by F.M.Audio**, https://freesound.org
+
+- x_farming_stone_place.1.ogg
+- x_farming_stone_place.2.ogg
+- x_farming_stone_place.3.ogg
+- x_farming_stone_place.4.ogg
+
+
+**CC0-1.0, by lolamadeus**, https://freesound.org
+
+- x_farming_stone_hit.1.ogg
+- x_farming_stone_hit.2.ogg
+- x_farming_stone_hit.3.ogg
+
+**CC0-1.0, by Nox_Sound**, https://freesound.org
+
+- x_farming_stone_dug.1.ogg
+- x_farming_stone_dug.2.ogg
+- x_farming_stone_dug.3.ogg
+- x_farming_stone_footstep.1.ogg
+- x_farming_stone_footstep.2.ogg
+- x_farming_stone_footstep.3.ogg
+- x_farming_stone_footstep.4.ogg
+- x_farming_stone_footstep.5.ogg
+
+**CC-BY-3.0, by Coral_Island_Studios**, https://freesound.org
+
+- x_farming_sand_place.1.ogg
+- x_farming_sand_place.2.ogg
+- x_farming_sand_place.3.ogg
+- x_farming_sand_place.4.ogg
+- x_farming_sand_place.5.ogg
+
+**CC0-1.0, by Lukeo135**, https://freesound.org
+
+- x_farming_sand_hit.1.ogg
+- x_farming_sand_hit.2.ogg
+- x_farming_sand_hit.3.ogg
+
+**CC0-1.0, by pan14**, https://freesound.org
+
+- x_farming_sand_footstep.1.ogg
+- x_farming_sand_footstep.2.ogg
+- x_farming_sand_footstep.3.ogg
+
+**CC0-1.0, by schneidi67**, https://freesound.org
+
+- x_farming_sand_dug.1.ogg
+- x_farming_sand_dug.2.ogg
+- x_farming_sand_dug.3.ogg
+
+**CC0-1.0, by vgraham1**, https://freesound.org
+
+- x_farming_leaves_place.1.ogg
+- x_farming_leaves_place.2.ogg
+
+**CC-BY-4.0, by Abacagi**, https://freesound.org
+
+- x_farming_leaves_hit.1.ogg
+- x_farming_leaves_hit.2.ogg
+
+**CC-BY-4.0, by elektroproleter**, https://freesound.org
+
+- x_farming_leaves_footstep.1.ogg
+- x_farming_leaves_footstep.2.ogg
+- x_farming_leaves_footstep.3.ogg
+- x_farming_leaves_footstep.4.ogg
+
+**CC-BY-4.0, by JanKoehl**, https://freesound.org
+
+- x_farming_leaves_dug.1.ogg
+- x_farming_leaves_dug.2.ogg
+
+**CC-BY-4.0, by EminYILDIRIM**, https://freesound.org
+
+- x_farming_ice_hit.1.ogg
+- x_farming_ice_hit.2.ogg
+- x_farming_ice_hit.3.ogg
+- x_farming_ice_hit.4.ogg
+
+**CC-BY-4.0, by InspectorJ**, https://freesound.org
+
+- x_farming_ice_footstep.1.ogg
+- x_farming_ice_footstep.2.ogg
+- x_farming_ice_footstep.3.ogg
+- x_farming_ice_footstep.4.ogg
+
+**CC0-1.0, by Nox_Sound**, https://freesound.org
+
+- x_farming_grass_hit.1.ogg
+- x_farming_grass_hit.3.ogg
+- x_farming_grass_hit.2.ogg
+
+**CC0-1.0, by Yuval**, https://freesound.org
+
+- x_farming_grass_footstep.1.ogg
+- x_farming_grass_footstep.2.ogg
+- x_farming_grass_footstep.3.ogg
+
+**CC0-1.0, by Robson220pl**, https://freesound.org
+
+- x_farming_glass_place.1.ogg
+- x_farming_glass_place.2.ogg
+- x_farming_glass_place.3.ogg
+
+**CC-BY-3.0, by cmusounddesign**, http://www.freesound.org/people/cmusounddesign/sounds/71947/
+
+- x_farming_break_thin_glass.1.ogg
+
+**CC-BY-3.0, by Tomlija**, http://www.freesound.org/people/Tomlija/sounds/97669/
+
+- x_farming_break_thin_glass.2.ogg
+
+**CC-BY-3.0, by lsprice**, http://www.freesound.org/people/lsprice/sounds/88808/
+
+- x_farming_break_thin_glass.3.ogg
+
+**CC0-1.0, by 16FThumaF**, https://freesound.org/people/16FThumaF/sounds/499020/
+
+- x_farming_extinguish_candle.ogg
+
+**CC0-1.0, by bahaish**, https://freesound.org/people/bahaish/sounds/145786/
+
+- x_farming_rope_footstep.1.ogg
+- x_farming_rope_footstep.2.ogg
+- x_farming_rope_footstep.3.ogg
+- x_farming_rope_footstep.4.ogg
+
+**CC0-1.0, by dansotak**, https://freesound.org/people/dansotak/sounds/137711/
+
+- x_farming_rope_hit.1.ogg
+- x_farming_rope_hit.2.ogg
+- x_farming_rope_hit.3.ogg
+- x_farming_rope_hit.4.ogg
+
+**CC-BY-4.0, by Benboncan**,
+https://freesound.org/people/Benboncan/sounds/78248/
+https://freesound.org/people/Benboncan/sounds/78249/
+https://freesound.org/people/Benboncan/sounds/78250/
+
+- x_farming_rope_dug.1.ogg
+- x_farming_rope_dug.2.ogg
+- x_farming_rope_dug.3.ogg
+
+**CC0-1.0, by cmorris035**, https://freesound.org/people/cmorris035/sounds/207275/
+
+- x_farming_pillow_footstep.1.ogg
+- x_farming_pillow_footstep.2.ogg
+- x_farming_pillow_footstep.3.ogg
+- x_farming_pillow_footstep.4.ogg
+- x_farming_pillow_dug.1.ogg
+- x_farming_pillow_dug.2.ogg
+- x_farming_pillow_dug.3.ogg
+
+**CC0-1.0, by Jay_You**, https://freesound.org/people/Jay_You/sounds/538744/
+
+- x_farming_pillow_hit.1.ogg
+- x_farming_pillow_hit.2.ogg
+- x_farming_pillow_hit.3.ogg
+- x_farming_pillow_hit.4.ogg
+
+**CC-BY-3.0, by nebulousflynn**, https://freesound.org/people/nebulousflynn/sounds/269062/
+
+- x_farming_stove_active.ogg
+
+**CC0-1.0, by ToniTobe**, https://freesound.org/people/ToniTobe/sounds/233294/
+
+- x_farming_stove_sizzle.1.ogg
+- x_farming_stove_sizzle.3.ogg
+- x_farming_stove_sizzle.2.ogg
+
+**CC-BY-3.0, by Quistard**, https://freesound.org/people/Quistard/sounds/240234/
+
+- x_farming_stove_sizzle_put.1.ogg
+- x_farming_stove_sizzle_put.2.ogg
+- x_farming_stove_sizzle_put.3.ogg
+
+**CC-BY-3.0, by youandbiscuitme**,
+https://freesound.org/people/youandbiscuitme/sounds/258248/
+https://freesound.org/people/youandbiscuitme/sounds/258247/
+https://freesound.org/people/youandbiscuitme/sounds/258246/
+
+- x_farming_wooden_bowl.1.ogg
+- x_farming_wooden_bowl.2.ogg
+- x_farming_wooden_bowl.3.ogg
+
+### Models
+
+**CC-BY-SA-4.0, by SaKeL**
+
+- x_farming_hog_stew.obj
+- x_farming_beetroot_soup.obj
+- x_farming_pumpkin_pie.obj
+- x_farming_kiwi_fruit.obj
+- x_farming_corn_popcorn.obj
+- x_farming_fries.obj
+- x_farming_coffee_cup_hot.obj
+- x_farming_donut.obj
+- x_farming_crate.obj
+- x_farming_bag.obj
+- x_farming_scarecrow.obj
+- x_farming_scarecrow_2.obj
+- x_farming_bee.obj
+- x_farming_honey.obj
+- x_farming_candle_1.obj
+- x_farming_candle_2.obj
+- x_farming_candle_3.obj
+- x_farming_candle_4.obj
+- x_farming_baked_fish.obj
+- x_farming_french_potatoes.obj
+- x_farming_melon_slush.obj
+- x_farming_pie.obj

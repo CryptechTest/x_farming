@@ -79,9 +79,9 @@ mts_save("x_farming_kiwi_tree_from_sapling", {
 
 -- Mapgen Large cactus with Fruit
 
-local C = {name = "default:cactus", prob = 255, param2 = 20}
-local R = {name = "default:cactus", prob = 255, param2 = 20, force_place = true}
-local E = {name = "default:cactus", prob = 127, param2 = 20}
+local C = {name = "x_farming:cactus", prob = 255, param2 = 20}
+local R = {name = "x_farming:cactus", prob = 255, param2 = 20, force_place = true}
+local E = {name = "x_farming:cactus", prob = 127, param2 = 20}
 local FR = {name = "x_farming:cactus_fruit", prob = 170, param2 = 20}
 
 mts_save("x_farming_large_cactus", {

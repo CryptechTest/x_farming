@@ -18,14 +18,14 @@
 local S = minetest.get_translator(minetest.get_current_modname())
 
 -- COFFEE
-farming.register_plant('x_farming:coffee', {
+x_farming.register_plant('x_farming:coffee', {
     description = S('Coffee Seed') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Coffee Seed'),
     paramtype2 = 'meshoptions',
     inventory_image = 'x_farming_coffee_seed.png',
     steps = 5,
     minlight = 13,
-    maxlight = default.LIGHT_MAX,
+    maxlight = 14,
     fertility = { 'grassland' },
     groups = { flammable = 4 },
     place_param2 = 0,
@@ -35,23 +35,32 @@ farming.register_plant('x_farming:coffee', {
 minetest.override_item('x_farming:coffee', {
     description = S('Coffee bean') .. '\n' .. S('Compost chance') .. ': 50%',
     short_description = S('Coffee bean'),
-    groups = { compost = 50 }
+    groups = {
+        -- MTG
+        compost = 50,
+        -- MCL
+        compostability = 50,
+    }
 })
 
--- hot cup of coffee
-local coffee_cup_hot_desc = S('Hot Cup of Coffee') .. '\n'
-    .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6')
+minetest.register_craftitem('x_farming:bottle_coffee', {
+    description = S('Coffee Bottle'),
+    tiles = { 'x_farming_bottle_coffee.png' },
+    inventory_image = 'x_farming_bottle_coffee.png',
+    wield_image = 'x_farming_bottle_coffee.png',
+    groups = { vessel = 1 },
+})
 
-if x_farming.hbhunger ~= nil then
-    coffee_cup_hot_desc = coffee_cup_hot_desc .. '\n' .. minetest.colorize(x_farming.colors.red, S('Heal') .. ': 4')
-end
-
-minetest.register_node('x_farming:coffee_cup_hot', {
-    description = coffee_cup_hot_desc,
-    short_description = coffee_cup_hot_desc,
+-- Hot cup of coffee
+local coffee_cup_hot_def = {
+    description = S('Hot Cup of Coffee') .. '\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+    short_description = S('Hot Cup of Coffee') .. '\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     drawtype = 'mesh',
     mesh = 'x_farming_coffee_cup_hot.obj',
     tiles = { 'x_farming_coffee_cup_hot_mesh.png' },
+    use_texture_alpha = 'clip',
     inventory_image = 'x_farming_coffee_cup_hot.png',
     wield_image = 'x_farming_coffee_cup_hot.png',
     paramtype = 'light',
@@ -66,7 +75,6 @@ minetest.register_node('x_farming:coffee_cup_hot', {
         type = 'fixed',
         fixed = { -0.25, -0.5, -0.4, 0.25, 0, 0.25 }
     },
-    groups = { vessel = 1, dig_immediate = 3, attached_node = 1, hunger_amount = 6 },
     on_use = function(itemstack, user, pointed_thing)
         local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
@@ -74,31 +82,40 @@ minetest.register_node('x_farming:coffee_cup_hot', {
         end
         return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
-    sounds = default.node_sound_glass_defaults(),
-    sunlight_propagates = true
-})
-
-minetest.register_decoration({
-    name = 'x_farming:coffee_5',
-    deco_type = 'simple',
-    place_on = { 'default:dry_dirt_with_dry_grass' },
-    sidelen = 16,
-    noise_params = {
-        offset = -0.1,
-        scale = 0.1,
-        spread = { x = 50, y = 50, z = 50 },
-        seed = 4242,
-        octaves = 3,
-        persist = 0.7
+    groups = {
+        hunger_amount = 6,
+        -- MTG
+        vessel = 1,
+        dig_immediate = 3,
+        attached_node = 1,
+        -- MCL
+        food = 3,
+        eatable = 6,
+        handy = 1,
+        deco_block = 1,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1
     },
-    biomes = { 'savanna' },
-    y_max = 31000,
-    y_min = 1,
-    decoration = 'x_farming:coffee_5',
-    param2 = 3,
-})
+    sounds = x_farming.node_sound_thin_glass_defaults(),
+    sunlight_propagates = true,
+    -- MCL
+    _mcl_saturation = 0.6,
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+}
 
----crate
+if x_farming.hbhunger ~= nil or x_farming.hunger_ng ~= nil then
+    coffee_cup_hot_def.description = coffee_cup_hot_def.description .. '\n' .. minetest.colorize(x_farming.colors.red, S('Heal') .. ': 4')
+    coffee_cup_hot_def.short_description = coffee_cup_hot_def.short_description .. '\n' .. minetest.colorize(x_farming.colors.red, S('Heal') .. ': 4')
+end
+
+if minetest.get_modpath('mcl_farming') then
+    coffee_cup_hot_def.on_secondary_use = minetest.item_eat(6)
+end
+
+minetest.register_node('x_farming:coffee_cup_hot', coffee_cup_hot_def)
+
+-- Crate
 x_farming.register_crate('crate_coffee_3', {
     description = S('Coffee Crate'),
     short_description = S('Coffee Crate'),
@@ -107,3 +124,52 @@ x_farming.register_crate('crate_coffee_3', {
         crate_item = 'x_farming:coffee'
     }
 })
+
+minetest.register_on_mods_loaded(function()
+    local deco_place_on = {}
+    local deco_biomes = {}
+
+    -- MTG
+    if minetest.get_modpath('default') then
+        table.insert(deco_place_on, 'default:dry_dirt_with_dry_grass')
+        table.insert(deco_biomes, 'savanna')
+    end
+
+    -- Everness
+    if minetest.get_modpath('everness') then
+        table.insert(deco_place_on, 'everness:dry_dirt_with_dry_grass')
+        table.insert(deco_biomes, 'everness_baobab_savanna')
+    end
+
+    -- MCL
+    if minetest.get_modpath('mcl_core') then
+        table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
+        table.insert(deco_biomes, 'Savanna')
+    end
+
+    if next(deco_place_on) and next(deco_biomes) then
+        minetest.register_decoration({
+            name = 'x_farming:coffee',
+            deco_type = 'simple',
+            place_on = deco_place_on,
+            sidelen = 16,
+            noise_params = {
+                offset = -0.1,
+                scale = 0.1,
+                spread = { x = 50, y = 50, z = 50 },
+                seed = 4242,
+                octaves = 3,
+                persist = 0.7
+            },
+            biomes = deco_biomes,
+            y_max = 31000,
+            y_min = 1,
+            decoration = {
+                'x_farming:coffee_3',
+                'x_farming:coffee_4',
+                'x_farming:coffee_5',
+            },
+            param2 = 3,
+        })
+    end
+end)
