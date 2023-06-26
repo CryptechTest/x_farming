@@ -109,7 +109,7 @@ minetest.register_craft({
 		{ "vessels:glass_bottle",   "vessels:glass_bottle" }
 	},
 	replacements = {
-		{ "vessels:glass_soymilk", "vessels:drinking_glass 4" }
+		{ "x_farming:glass_soymilk", "vessels:drinking_glass 4" }
 	}
 })
 
