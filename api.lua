@@ -2857,7 +2857,11 @@ function x_farming.register_pie(name, def)
                 hbhunger.eat(_def.item_eat, nil, ItemStack({ name = 'x_farming:' .. name .. '_1' }), clicker, pointed_thing)
                 sound_name = nil
             elseif minetest.get_modpath('stamina') then
-                stamina.change_saturation(clicker, _def.item_eat)
+                if stamina.change_saturation then
+                    stamina.change_saturation(clicker, _def.item_eat)
+                elseif stamina.change then
+                    stamina.change(clicker, _def.item_eat)
+                end
                 sound_name = 'stamina_eat'
             elseif minetest.get_modpath('mcl_hunger') then
                 local h = mcl_hunger.get_hunger(clicker)
