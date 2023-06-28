@@ -158,7 +158,8 @@ minetest.register_node('x_farming:kiwi_sapling', {
 
 -- fruit - for marker only
 minetest.register_node('x_farming:kiwi', {
-    description = S('Kiwi'),
+    description = S('Kiwi') .. '\n' .. S('Compost chance') .. ': 30%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     short_description = S('Kiwi'),
     drawtype = 'plantlike',
     visual_scale = 0.5,
@@ -182,6 +183,7 @@ minetest.register_node('x_farming:kiwi', {
         fixed = { -3 / 16, -7 / 16, -3 / 16, 3 / 16, 4 / 16, 3 / 16 }
     },
     groups = {
+        hunger_amount = 2,
         -- MTG
         fleshy = 3,
         dig_immediate = 3,
@@ -210,6 +212,13 @@ minetest.register_node('x_farming:kiwi', {
             minetest.set_node(pos, { name = 'x_farming:kiwi_mark' })
             minetest.get_node_timer(pos):start(math.random(300, 1500))
         end
+    end,
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then
+            return itemstack
+        end
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
 })
 
