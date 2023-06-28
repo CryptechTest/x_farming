@@ -33,7 +33,8 @@ minetest.register_craftitem('x_farming:flour', {
 -- Bread
 
 local bread_def = {
-    description = S('Barley Bread'),
+    description = S('Barley Bread') .. '\n' .. S('Compost chance') .. ': 85%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 5'),
     inventory_image = 'x_farming_bread.png',
     groups = {
         -- MTG
@@ -82,7 +83,8 @@ minetest.register_craftitem('x_farming:bottle_water', {
 
 -- Bottle Honey
 local bottle_honey_def = {
-    description = S('Honey Bottle'),
+    description = S('Honey Bottle') .. '\n' ..
+        minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     tiles = { 'x_farming_bottle_honey.png' },
     inventory_image = 'x_farming_bottle_honey.png',
     wield_image = 'x_farming_bottle_honey.png',
@@ -144,9 +146,11 @@ minetest.register_craftitem('x_farming:rice_grains', {
 
 -- Sushi
 local sushi_maki_def = {
-    description = S('Sushi Maki'),
+    description = S('Sushi Maki') .. '\n' .. S('Compost chance') .. ': 85%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 5'),
     inventory_image = 'x_farming_sushi_maki.png',
     groups = {
+        hunger_amount = 5,
         -- MTG
         flammable = 2,
         -- MCL
@@ -155,10 +159,18 @@ local sushi_maki_def = {
         compostability = 85
     },
     _mcl_saturation = 6.0,
+
 }
 
 if minetest.get_modpath('farming') then
-    sushi_maki_def.on_use = minetest.item_eat(5)
+    sushi_maki_def.on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then
+            return itemstack
+        end
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+    end
+    --sushi_maki_def.on_use = minetest.item_eat(5)
 end
 
 if minetest.get_modpath('mcl_farming') then
@@ -169,9 +181,11 @@ end
 minetest.register_craftitem('x_farming:sushi_maki', sushi_maki_def)
 
 local sushi_nigiri_def = {
-    description = S('Sushi Nigiri'),
+    description = S('Sushi Nigiri') .. '\n' .. S('Compost chance') .. ': 85%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
     inventory_image = 'x_farming_sushi_nigiri.png',
     groups = {
+        hunger_amount = 3,
         -- MTG
         flammable = 2,
         -- MCL
@@ -183,7 +197,14 @@ local sushi_nigiri_def = {
 }
 
 if minetest.get_modpath('farming') then
-    sushi_nigiri_def.on_use = minetest.item_eat(3)
+    sushi_maki_def.on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then
+            return itemstack
+        end
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+    end
+    --sushi_nigiri_def.on_use = minetest.item_eat(3)
 end
 
 if minetest.get_modpath('mcl_farming') then
