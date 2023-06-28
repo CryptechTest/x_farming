@@ -22,9 +22,19 @@ local rand = PcgRandom(tonumber(tostring(os.time()):reverse():sub(1, 9)))
 local function update_hive_infotext(pos)
     local meta = minetest.get_meta(pos)
     local data = minetest.deserialize(meta:get_string('x_farming'))
+    local tod = minetest.get_timeofday()
+    local is_day = false
+
+    if tod > 0.2 and tod < 0.805 then
+        is_day = true
+    end
 
     if data then
-        local text = 'Occupancy: ' .. data.occupancy .. ' / 3\n'
+        local text = ""
+        if not is_day then
+            text = "The Bees are Sleeping." .. "\n"
+        end
+        text = text .. 'Occupancy: ' .. data.occupancy .. ' / 3\n'
             .. 'Saturation: ' .. data.saturation .. ' / 5'
         meta:set_string('infotext', text)
     end
@@ -62,7 +72,12 @@ local function tick_hive(pos)
 end
 -- how often a growth failure tick is retried (e.g. too dark)
 local function tick_bee(pos)
-    minetest.get_node_timer(pos):start(math.random(90, 150))
+    local light_level = minetest.get_node_light(pos)
+    if light_level > 14 then
+        minetest.get_node_timer(pos):start(math.random(90, 150))
+    else
+        minetest.get_node_timer(pos):start(math.random(40, 90))
+    end
 end
 
 local function is_valid_hive_position(pos, params)
@@ -118,8 +133,8 @@ local function get_valid_hive_position(pos_hive, pos_bee)
 
     -- Find neighboring bee hive position
     local hive_positions = minetest.find_nodes_in_area(
-        vector.add(pos_bee, 5),
-        vector.subtract(pos_bee, 5),
+        vector.add(pos_bee, x_farming.beehive_distance),
+        vector.subtract(pos_bee, x_farming.beehive_distance),
         { 'group:bee_hive' }
     )
 
@@ -177,9 +192,9 @@ minetest.register_node('x_farming:bee_hive', {
         end
 
         local flower_positions = minetest.find_nodes_in_area_under_air(
-            vector.add(pos, 5),
-            vector.subtract(pos, 5),
-            { 'group:flower' }
+            vector.add(pos, x_farming.beehive_distance),
+            vector.subtract(pos, x_farming.beehive_distance),
+            { 'group:flower', 'group:bees_pollinate_crop' }
         )
 
         if not flower_positions then
@@ -191,12 +206,13 @@ minetest.register_node('x_farming:bee_hive', {
             local pos_bee = vector.new(random_pos.x, random_pos.y + 1, random_pos.z)
             local tod = minetest.get_timeofday()
             local is_day = false
+            local light_level = minetest.get_node_light(pos_bee)
 
-            if tod > 0.2 and tod < 0.805 then
+            if tod > 0.2 and tod < 0.710 then
                 is_day = true
             end
 
-            if data_hive and data_hive.occupancy > 0 and is_day then
+            if data_hive and data_hive.occupancy > 0 and is_day and light_level > 13 then
                 local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), minetest.facedir_to_dir(node.param2))
 
                 -- Send bee out
@@ -275,9 +291,9 @@ minetest.register_node('x_farming:bee_hive', {
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         local data = minetest.deserialize(oldmetadata.fields.x_farming)
         local positions = minetest.find_nodes_in_area_under_air(
-            vector.add(pos, 5),
-            vector.subtract(pos, 5),
-            { 'group:flower', 'group:flora' }
+            vector.add(pos, x_farming.beehive_distance),
+            vector.subtract(pos, x_farming.beehive_distance),
+            { 'group:flower', 'group:flora', 'group:bees_pollinate_crop' }
         )
 
         if positions and #positions > 0 and data.occupancy and data.occupancy > 0 then
@@ -397,9 +413,9 @@ minetest.register_node('x_farming:bee_hive_saturated', {
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         local data = minetest.deserialize(oldmetadata.fields.x_farming)
         local positions = minetest.find_nodes_in_area_under_air(
-            vector.add(pos, 5),
-            vector.subtract(pos, 5),
-            { 'group:flower', 'group:flora' }
+            vector.add(pos, x_farming.beehive_distance),
+            vector.subtract(pos, x_farming.beehive_distance),
+            { 'group:flower', 'group:flora', 'group:bees_pollinate_crop' }
         )
 
         if positions and #positions > 0 and data.occupancy and data.occupancy > 0 then
@@ -513,6 +529,15 @@ minetest.register_node('x_farming:bee', {
                 data_hive.saturation = data_hive.saturation + 1
             end
 
+            if minetest.get_item_group(flower_node.name, 'farmable') > 0 then
+                if data_hive.saturation < 5 then
+                    data_hive.saturation = data_hive.saturation + 1
+                end
+                local crop_pos = {x = pos.x, y = pos.y - 1, z = pos.z}
+                x_farming.grow_plant(crop_pos)
+                x_farming.x_bonemeal.particle_effect(crop_pos)
+            end
+
             if data_hive.saturation >= 5 then
                 minetest.swap_node(pos_hive, { name = 'x_farming:bee_hive_saturated', param2 = node_hive.param2 })
             end
@@ -589,7 +614,7 @@ minetest.register_globalstep(function(dtime)
     local tod = minetest.get_timeofday()
     local is_day = false
 
-    if tod > 0.2 and tod < 0.805 then
+    if tod > 0.2 and tod < 0.710 then
         is_day = true
     end
 
@@ -601,19 +626,22 @@ minetest.register_globalstep(function(dtime)
         end
 
         local flower_positions = minetest.find_nodes_in_area_under_air(
-            vector.add(spawnpos, 5),
-            vector.subtract(spawnpos, 5),
-            { 'group:flower' }
+            vector.add(spawnpos, x_farming.beehive_distance),
+            vector.subtract(spawnpos, x_farming.beehive_distance),
+            { 'group:flower', 'group:bees_pollinate_crop' }
         )
 
         if flower_positions and #flower_positions > 1 then
             local rand_pos = flower_positions[rand:next(1, #flower_positions)]
             local bee_pos = vector.new(rand_pos.x, rand_pos.y + 1, rand_pos.z)
+            local light_level = minetest.get_node_light(bee_pos)
 
-            minetest.swap_node(bee_pos, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
-            tick_bee(spawnpos)
+            if rand_pos.y > 0 and light_level > 10 then
+                minetest.swap_node(bee_pos, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
+                tick_bee(bee_pos)
 
-            minetest.log('action', '[x_farming] Added Bee at ' .. minetest.pos_to_string(bee_pos))
+                minetest.log('action', '[x_farming] Added Bee at ' .. minetest.pos_to_string(bee_pos))
+            end
         end
     end
 end)

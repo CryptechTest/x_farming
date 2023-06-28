@@ -29,6 +29,7 @@ x_farming = {
         red = '#FF8080',
         green = '#98E698'
     },
+    beehive_distance = minetest.setting_get("x_farming.beehive_radius") or 5,
     x_bonemeal = {
         tree_defs = {
             ['x_farming:christmas_tree_sapling'] = {
@@ -928,6 +929,7 @@ x_farming.register_plant = function(name, def)
             }
         }
         local nodegroups = {
+            farmable = 1,
             -- MTG
             snappy = 3,
             flammable = 2,
@@ -943,6 +945,10 @@ x_farming.register_plant = function(name, def)
             dig_by_piston = 1
         }
         nodegroups[pname] = i
+
+        if i < def.steps and i > 1 then
+            nodegroups['bees_pollinate_crop'] = 1
+        end
 
         if def.groups then
             for group, value in pairs(def.groups) do
