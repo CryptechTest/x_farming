@@ -250,7 +250,6 @@ local hive_on_rightclick = function(pos, node, clicker, itemstack, pointed_thing
             ItemStack({ name = 'x_farming:bottle_honey' })
         )
 
-        --minetest.swap_node(pos, { name = 'x_farming:bee_hive', param2 = node.param2 })
         hive_node_swap(pos, data.saturation - 5, node.param2)
 
         minetest.sound_play('x_farming_bee', {
@@ -278,7 +277,6 @@ local hive_on_rightclick = function(pos, node, clicker, itemstack, pointed_thing
             ItemStack({ name = 'x_farming:honeycomb' })
         )
 
-        --minetest.swap_node(pos, { name = 'x_farming:bee_hive', param2 = node.param2 })
         hive_node_swap(pos, data.saturation - 5, node.param2)
 
         minetest.sound_play('x_farming_bee', {
@@ -287,7 +285,10 @@ local hive_on_rightclick = function(pos, node, clicker, itemstack, pointed_thing
 
         bee_particles(pos_hive_front)
 
-        data.saturation = 0
+        data.saturation = data.saturation - 5
+        if data.saturation < 0 then
+            data.saturation = 0
+        end
         meta:set_string('x_farming', minetest.serialize(data))
         update_hive_infotext(pos)
 
@@ -640,7 +641,6 @@ minetest.register_node('x_farming:bee', {
             end
 
             if data_hive.saturation >= 5 then
-                --minetest.swap_node(pos_hive, { name = 'x_farming:bee_hive_saturated', param2 = node_hive.param2 })
                 hive_node_swap(pos_hive, data_hive.saturation, node_hive.param2)
             end
         end
