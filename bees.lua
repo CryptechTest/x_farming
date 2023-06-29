@@ -255,7 +255,7 @@ local hive_on_rightclick = function(pos, node, clicker, itemstack, pointed_thing
         return itemstack
     end
 
-    if stack_name == 'vessels:glass_bottle' or stack_name == 'x_farming:glass_bottle' and data.saturation >= 5 then
+    if (stack_name == 'vessels:glass_bottle' or stack_name == 'x_farming:glass_bottle') and data.saturation >= 5 then
         -- Fill bottle with honey and return it
         itemstack:take_item()
 
