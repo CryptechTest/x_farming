@@ -200,13 +200,16 @@ local hive_on_timer = function(pos, elapsed)
     )
     local flower_positions = {}
     for _, flwr in ipairs(_flower_positions) do
-        local node_above = minetest.get_node(vector.new(flwr.x, flwr.y + 1, flwr.z))
-        local below_pos = vector.new(flwr.x, flwr.y - 1, flwr.z)
         local light_level = minetest.get_node_light(flwr)
+        local above_pos = vector.new(flwr.x, flwr.y + 1, flwr.z)
+        local below_pos = vector.new(flwr.x, flwr.y - 1, flwr.z)
+        local node_above = minetest.get_node(above_pos)
+        local nname_above = minetest.get_node(above_pos).name
         local nname_below = minetest.get_node(below_pos).name
 
+
         if (node_above.name == "air" or node_above.name == "technic:dummy_light_source" or
-            minetest.get_item_group(nname_below, 'atmosphere') > 1) and light_level > 11 and
+            minetest.get_item_group(nname_above, 'atmosphere') > 1) and light_level > 11 and
             minetest.get_item_group(nname_below, 'soil') > 0 then
             table.insert(flower_positions, flwr)
         end
