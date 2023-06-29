@@ -345,7 +345,7 @@ minetest.register_craft({
 -- Honey Sticks
 minetest.register_craft({
     type = 'shapeless',
-    output = 'x_farming:honey_stick 4',
+    output = 'x_farming:honey_sticks 4',
     recipe = { 'default:paper', 'group:food_sugar', 'x_farming:bottle_honey' }
 })
 
