@@ -354,7 +354,7 @@ x_farming.register_leafdecay({
 minetest.register_craft({
     output = 'x_farming:large_cactus_with_fruit_seedling',
     recipe = {{'', 'x_farming:cactus_fruit_item', ''},
-              {'x_farming:cactus_fruit_item', 'x_farming:cactus', 'x_farming:cactus_fruit_item'},
+              {'x_farming:cactus_fruit_item', 'group:cactus', 'x_farming:cactus_fruit_item'},
               {'', 'x_farming:cactus_fruit_item', ''}}
 })
 
