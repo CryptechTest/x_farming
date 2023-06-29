@@ -31,11 +31,15 @@ local function update_hive_infotext(pos)
 
     if data then
         local text = ""
-        if not is_day then
-            text = "The Bees are Sleeping." .. "\n"
+        if not is_day and data.occupancy > 0 then
+            text = "The Bees are sleeping." .. "\n"
+        elseif data.occupancy >= 3 then
+            text = "The Bees are busy." .. "\n"
+        elseif data.saturation >= 16 then
+            text = "The Bees are teeming."
         end
         text = text .. 'Occupancy: ' .. data.occupancy .. ' / 3\n'
-            .. 'Saturation: ' .. data.saturation .. ' / 5'
+            .. 'Saturation: ' .. data.saturation .. ' / 16'
         meta:set_string('infotext', text)
     end
 end
@@ -148,6 +152,18 @@ local function get_valid_hive_position(pos_hive, pos_bee)
     return valid_pos
 end
 
+-- Hive give item
+local hive_give_item = function(player, pos, stack)
+    minetest.after(0, function()
+        local inv = player:get_inventory()
+        if inv:room_for_item("main", stack) then
+            inv:add_item("main", stack)
+        else
+            minetest.add_item(pos, stack)
+        end
+    end)
+end
+
 -- Hive switcher
 local hive_node_swap = function(pos, saturation, param2)
     if saturation >= 15 then
@@ -245,10 +261,7 @@ local hive_on_rightclick = function(pos, node, clicker, itemstack, pointed_thing
 
         local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), minetest.facedir_to_dir(node.param2))
 
-        minetest.add_item(
-            pos_hive_front,
-            ItemStack({ name = 'x_farming:bottle_honey' })
-        )
+        hive_give_item(clicker, pos_hive_front, ItemStack({ name = 'x_farming:bottle_honey' }))
 
         hive_node_swap(pos, data.saturation - 5, node.param2)
 
@@ -272,10 +285,7 @@ local hive_on_rightclick = function(pos, node, clicker, itemstack, pointed_thing
 
         local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), minetest.facedir_to_dir(node.param2))
 
-        minetest.add_item(
-            pos_hive_front,
-            ItemStack({ name = 'x_farming:honeycomb' })
-        )
+        hive_give_item(clicker, pos_hive_front, ItemStack({ name = 'x_farming:honeycomb' }))
 
         hive_node_swap(pos, data.saturation - 5, node.param2)
 
@@ -304,6 +314,8 @@ local hive_on_rightclick = function(pos, node, clicker, itemstack, pointed_thing
         meta:set_string('x_farming', minetest.serialize(data))
         update_hive_infotext(pos)
         itemstack:take_item()
+        local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), minetest.facedir_to_dir(node.param2))
+        hive_give_item(clicker, pos_hive_front, ItemStack({ name = 'x_farming:jar_empty' }))
 
         minetest.sound_play('x_farming_bee', {
             pos = pos,
@@ -321,6 +333,7 @@ end
 minetest.register_node('x_farming:bee_hive', {
     description = S('Bee Hive'),
     short_description = S('Bee Hive'),
+    _tt_help = S("Houses Bees to produce Honey"),
     tiles = {
         'x_farming_bee_hive_top.png',
         'x_farming_bee_hive_bottom.png',
@@ -694,7 +707,7 @@ minetest.register_node('x_farming:bee', {
         if stack_name == 'x_farming:jar_empty' then
             itemstack:take_item()
             minetest.remove_node(pos)
-            minetest.add_item(vector.new(pos.x, pos.y + 0.3, pos.z), ItemStack({ name = 'x_farming:jar_with_bee' }))
+            hive_give_item(clicker, vector.new(pos.x, pos.y + 0.3, pos.z), ItemStack({ name = 'x_farming:jar_with_bee' }))
 
             minetest.sound_play('x_farming_bee', {
                 pos = pos,
