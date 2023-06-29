@@ -188,11 +188,6 @@ local hive_on_timer = function(pos, elapsed)
         return
     end
 
-    --[[local flower_positions = minetest.find_nodes_in_area_under_air(
-        vector.add(pos, x_farming.beehive_distance),
-        vector.subtract(pos, x_farming.beehive_distance),
-        { 'group:flower', 'group:bees_pollinate_crop' }
-    )--]]
     local _flower_positions = minetest.find_nodes_in_area(
         vector.add(pos, x_farming.beehive_distance),
         vector.subtract(pos, x_farming.beehive_distance),
@@ -206,7 +201,6 @@ local hive_on_timer = function(pos, elapsed)
         local node_above = minetest.get_node(above_pos)
         local nname_above = minetest.get_node(above_pos).name
         local nname_below = minetest.get_node(below_pos).name
-
 
         if (node_above.name == "air" or node_above.name == "technic:dummy_light_source" or
             minetest.get_item_group(nname_above, 'atmosphere') > 1) and light_level > 11 and
