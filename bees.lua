@@ -204,12 +204,15 @@ local hive_on_timer = function(pos, elapsed)
         local tod = minetest.get_timeofday()
         local is_day = false
         local light_level = minetest.get_node_light(pos_bee)
+        local below_pos = vector.new(random_pos.x, random_pos.y - 1, random_pos.z)
+        local nname_below = minetest.get_node(below_pos).name
 
         if tod > 0.2 and tod < 0.710 then
             is_day = true
         end
 
-        if data_hive and data_hive.occupancy > 0 and is_day and light_level > 13 then
+        if data_hive and data_hive.occupancy > 0 and is_day and light_level > 11
+                and minetest.get_item_group(nname_below, 'soil') > 0  then
             local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), minetest.facedir_to_dir(node.param2))
 
             -- Send bee out
@@ -753,7 +756,7 @@ minetest.register_globalstep(function(dtime)
             local nname_below = minetest.get_node(below_pos).name
             local light_level = minetest.get_node_light(bee_pos)
 
-            if rand_pos.y > 0 and light_level > 10 and minetest.get_item_group(nname_below, 'soil') > 0 then
+            if rand_pos.y > -10 and light_level > 10 and minetest.get_item_group(nname_below, 'soil') > 0 then
                 minetest.swap_node(bee_pos, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
                 tick_bee(bee_pos)
 
