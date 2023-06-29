@@ -336,6 +336,19 @@ minetest.register_craft({
     recipe = { 'group:food_milk_glass', 'group:food_sugar', 'group:food_flour', 'x_farming:cocoa_bean' }
 })
 
+minetest.register_craft({
+    type = 'shapeless',
+    output = 'x_farming:donut_honey_glazed 2',
+    recipe = { 'group:food_milk_glass', 'group:food_sugar', 'group:food_flour', 'x_farming:bottle_honey' }
+})
+
+-- Honey Sticks
+minetest.register_craft({
+    type = 'shapeless',
+    output = 'x_farming:honey_stick 4',
+    recipe = { 'default:paper', 'group:food_sugar', 'x_farming:bottle_honey' }
+})
+
 -- Fries
 
 minetest.register_craft({

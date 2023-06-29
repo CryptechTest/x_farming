@@ -142,6 +142,68 @@ end
 
 minetest.register_node('x_farming:donut_chocolate', donut_chocolate_def)
 
+-- honey donut
+local donut_glazed_def = {
+    description = S('Honey Glazed Donut') .. '\n' .. S('Compost chance') .. ': 87%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 5'),
+    short_description = S('Glazed Donut'),
+    drawtype = 'mesh',
+    mesh = 'x_farming_donut.obj',
+    tiles = { 'x_farming_donut_honey_glazed_mesh.png' },
+    use_texture_alpha = 'clip',
+    inventory_image = 'x_farming_donut_honey_glazed.png',
+    wield_image = 'x_farming_donut_honey_glazed.png',
+    paramtype = 'light',
+    is_ground_content = false,
+    walkable = true,
+    selection_box = {
+        type = 'fixed',
+        fixed = { -0.25, -0.5, -0.25, 0.25, -0.35, 0.25 }
+    },
+    collision_box = {
+        type = 'fixed',
+        fixed = { -0.25, -0.5, -0.25, 0.25, -0.35, 0.25 }
+    },
+    groups = {
+        hunger_amount = 5,
+        -- MTG
+        dig_immediate = 3,
+        compost = 87,
+        -- MCL
+        handy = 1,
+        shearsy = 1,
+        deco_block = 1,
+        non_mycelium_plant = 1,
+        fire_encouragement = 60,
+        fire_flammability = 100,
+        dig_by_water = 1,
+        destroy_by_lava_flow = 1,
+        compostability = 85,
+        food = 2,
+        eatable = 1,
+        -- ALL
+        flammable = 2,
+        attached_node = 1,
+    },
+    _mcl_blast_resistance = 0,
+    _mcl_hardness = 0,
+    sounds = x_farming.node_sound_leaves_defaults(),
+    on_use = function(itemstack, user, pointed_thing)
+        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        if hunger_amount == 0 then
+            return itemstack
+        end
+        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+    end,
+    sunlight_propagates = true
+}
+
+if minetest.get_modpath('mcl_farming') then
+    donut_glazed_def.on_secondary_use = minetest.item_eat(5)
+end
+
+minetest.register_node('x_farming:donut_honey_glazed', donut_glazed_def)
+
 -- Fries
 local fries_def = {
     description = S('Fries') .. '\n' .. S('Compost chance') .. ': 85%\n'

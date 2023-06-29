@@ -89,6 +89,7 @@ local bottle_honey_def = {
     inventory_image = 'x_farming_bottle_honey.png',
     wield_image = 'x_farming_bottle_honey.png',
     groups = {
+        hunger_amount = 6,
         -- MCL
         craftitem = 1,
         food = 3,
@@ -123,6 +124,28 @@ minetest.register_craftitem('x_farming:honeycomb', {
     description = S('Honeycomb'),
     inventory_image = 'x_farming_honeycomb.png',
 })
+
+-- Honey Sticks
+local sticks_honey_def = {
+    description = S('Honey Sticks') .. '\n' ..
+        minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
+    tiles = { 'x_farming_honey_sticks.png' },
+    inventory_image = 'x_farming_honey_sticks.png',
+    wield_image = 'x_farming_honey_sticks.png',
+    wield_scale = 0.4,
+    groups = {
+        hunger_amount = 2,
+        -- MCL
+        craftitem = 1,
+        food = 3,
+        eatable = 6,
+        can_eat_when_full = 1
+    },
+    _mcl_saturation = 1.0,
+    on_use = minetest.item_eat(2, 'default:paper'),
+}
+
+minetest.register_craftitem('x_farming:honey_sticks', sticks_honey_def)
 
 -- Jar empty
 minetest.register_craftitem('x_farming:jar_empty', {
