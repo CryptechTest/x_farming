@@ -188,11 +188,29 @@ local hive_on_timer = function(pos, elapsed)
         return
     end
 
-    local flower_positions = minetest.find_nodes_in_area_under_air(
+    --[[local flower_positions = minetest.find_nodes_in_area_under_air(
+        vector.add(pos, x_farming.beehive_distance),
+        vector.subtract(pos, x_farming.beehive_distance),
+        { 'group:flower', 'group:bees_pollinate_crop' }
+    )--]]
+    local _flower_positions = minetest.find_nodes_in_area(
         vector.add(pos, x_farming.beehive_distance),
         vector.subtract(pos, x_farming.beehive_distance),
         { 'group:flower', 'group:bees_pollinate_crop' }
     )
+    local flower_positions = {}
+    for _, flwr in ipairs(_flower_positions) do
+        local node_above = minetest.get_node(vector.new(flwr.x, flwr.y + 1, flwr.z))
+        local below_pos = vector.new(flwr.x, flwr.y - 1, flwr.z)
+        local light_level = minetest.get_node_light(flwr)
+        local nname_below = minetest.get_node(below_pos).name
+
+        if (node_above.name == "air" or node_above.name == "technic:dummy_light_source" or
+            minetest.get_item_group(nname_below, 'atmosphere') > 1) and light_level > 11 and
+            minetest.get_item_group(nname_below, 'soil') > 0 then
+            table.insert(flower_positions, flwr)
+        end
+    end
 
     if not flower_positions then
         tick_hive(pos)
@@ -203,16 +221,12 @@ local hive_on_timer = function(pos, elapsed)
         local pos_bee = vector.new(random_pos.x, random_pos.y + 1, random_pos.z)
         local tod = minetest.get_timeofday()
         local is_day = false
-        local light_level = minetest.get_node_light(pos_bee)
-        local below_pos = vector.new(random_pos.x, random_pos.y - 1, random_pos.z)
-        local nname_below = minetest.get_node(below_pos).name
 
         if tod > 0.2 and tod < 0.710 then
             is_day = true
         end
 
-        if data_hive and data_hive.occupancy > 0 and is_day and light_level > 11
-                and minetest.get_item_group(nname_below, 'soil') > 0  then
+        if data_hive and data_hive.occupancy > 0 and is_day then
             local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), minetest.facedir_to_dir(node.param2))
 
             -- Send bee out
