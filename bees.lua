@@ -238,11 +238,11 @@ local can_bee_use_flower = function(pos)
 end
 
 local bee_tick_flower = function(pos)
-    local cooldown = math.random(50, 200)
+    local cooldown = math.random(150, 330)
     local flower_meta = minetest.get_meta(pos)
     if can_bee_use_flower(pos) then
         flower_meta:set_int("last_bee_time", os.time() + cooldown)
-        flower_meta:set_int("last_bee_tick", cooldown)
+        --flower_meta:set_int("last_bee_tick", cooldown)
     end
 end
 
@@ -882,7 +882,7 @@ minetest.register_abm({
     nodenames = {"x_farming:bee"},
     neighbors = {"group:flower", "group:farmable"},
     interval = 5,
-    chance = 2,
+    chance = 3,
     min_y = -11000,
     action = function(pos, node)
         local bee_pos = {x = pos.x, y = pos.y + 0.2, z = pos.z}
