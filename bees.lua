@@ -753,7 +753,7 @@ minetest.register_node('x_farming:bee', {
         local flower_pollinated = false
         if flower_node then
             if minetest.get_item_group(flower_node.name, 'flower') > 0 and data_hive.saturation < 16 then
-                if math.random(0, 2) <= 0 then
+                if math.random(0, 3) <= 0 then
                     data_hive.saturation = data_hive.saturation + 1
                     flower_pollinated = true
                 end
@@ -822,7 +822,7 @@ minetest.register_node('x_farming:bee', {
     on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
         local stack_name = itemstack:get_name()
 
-        if minetest.is_protected(pos, clicker) then
+        if minetest.is_protected(pos, clicker:get_player_name()) then
             -- Hurt player when unable to capture bee
             local armor_groups = puncher:get_armor_groups()
             local damage = 3
