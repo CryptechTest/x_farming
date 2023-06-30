@@ -35,6 +35,8 @@ local function update_hive_infotext(pos)
             text = "The Bees are sleeping." .. "\n"
         elseif data.saturation >= 15 then
             text = "The Bees are teeming." .. "\n"
+        elseif data.saturation >= 7 then
+            text = "The Bees are happy." .. "\n"
         elseif data.occupancy >= 3 then
             text = "The Bees are busy." .. "\n"
         end
@@ -63,7 +65,7 @@ end
 
 local function honey_particle(pos, params)
     local amount = 15
-    local minsize = 1
+    local minsize = 0.5
     local maxsize = 1
     local move_up = true
     if params then
@@ -96,8 +98,8 @@ local function honey_particle(pos, params)
         minsize = minsize,
         maxsize = maxsize,
         minexptime = 0.5,
-        maxexptime = 1.3,
-        texture = 'x_farming_default_particle.png^[colorize:#ffc137:192',
+        maxexptime = 1.5,
+        texture = 'x_farming_default_particle.png^[colorize:#ffc137:160',
         collisiondetection = true,
         glow = 8
     })
@@ -231,18 +233,20 @@ end
 local can_bee_use_flower = function(pos)
     local flower_meta = minetest.get_meta(pos)
     local has_timer = flower_meta:get_int("last_bee_time") > 0
-    if has_timer == false or os.time() - (flower_meta:get_int("last_bee_time") or 0) > 0 then
+    local ttime = os.time() - (flower_meta:get_int("last_bee_time") or 0)
+    flower_meta:set_int("last_bee_tick", ttime)
+    if has_timer == false or ttime > 0 then
         return true
     end
     return false
 end
 
 local bee_tick_flower = function(pos)
-    local cooldown = math.random(150, 330)
+    local cooldown = math.random(200, 500)
     local flower_meta = minetest.get_meta(pos)
     if can_bee_use_flower(pos) then
         flower_meta:set_int("last_bee_time", os.time() + cooldown)
-        --flower_meta:set_int("last_bee_tick", cooldown)
+        flower_meta:set_int("last_bee_tick", 0)
     end
 end
 
@@ -818,6 +822,24 @@ minetest.register_node('x_farming:bee', {
     on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
         local stack_name = itemstack:get_name()
 
+        if minetest.is_protected(pos, clicker) then
+            -- Hurt player when unable to capture bee
+            local armor_groups = puncher:get_armor_groups()
+            local damage = 3
+            if armor_groups.fleshy then
+                damage = math.round((2 * 100) / armor_groups.fleshy)
+            end
+            clicker:punch(clicker, 1, {
+                full_punch_interval = 1,
+                damage_groups = { fleshy = damage },
+            }, nil)
+
+            minetest.sound_play('x_farming_bee', {
+                pos = pos,
+            })
+            return itemstack
+        end
+
         if stack_name == 'x_farming:jar_empty' then
             itemstack:take_item()
             minetest.remove_node(pos)
@@ -886,6 +908,6 @@ minetest.register_abm({
     min_y = -11000,
     action = function(pos, node)
         local bee_pos = {x = pos.x, y = pos.y + 0.2, z = pos.z}
-        honey_particle(bee_pos, { amount = math.random(1, 5), minsize = 0.4, maxsize = 0.7, move_up = false})
+        honey_particle(bee_pos, { amount = math.random(1, 5), minsize = 0.1, maxsize = 0.4, move_up = false})
     end
 })
