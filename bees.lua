@@ -33,10 +33,10 @@ local function update_hive_infotext(pos)
         local text = ""
         if not is_day and data.occupancy > 0 then
             text = "The Bees are sleeping." .. "\n"
+        elseif data.saturation >= 15 then
+            text = "The Bees are teeming." .. "\n"
         elseif data.occupancy >= 3 then
             text = "The Bees are busy." .. "\n"
-        elseif data.saturation >= 16 then
-            text = "The Bees are teeming."
         end
         text = text .. 'Occupancy: ' .. data.occupancy .. ' / 3\n'
             .. 'Saturation: ' .. data.saturation .. ' / 16'
@@ -61,6 +61,48 @@ local function bee_particles(pos)
     })
 end
 
+local function honey_particle(pos, params)
+    local amount = 15
+    local minsize = 1
+    local maxsize = 1
+    local move_up = true
+    if params then
+        if params.amount then
+            amount = params.amount
+        end
+        if params.minsize then
+            minsize = params.minsize
+        end
+        if params.maxsize then
+            maxsize = params.maxsize
+        end
+        if params.move_up ~= nil then
+            move_up = params.move_up
+        end
+    end
+    local y_vel = 1
+    if not move_up then
+        y_vel = -1
+    end
+    minetest.add_particlespawner({
+        amount = amount,
+        time = 0.1,
+        minpos = { x = pos.x - 0.1, y = pos.y - 0.20, z = pos.z - 0.1 },
+        maxpos = { x = pos.x + 0.1, y = pos.y - 0.25, z = pos.z + 0.1 },
+        minvel = { x = -0.25, y = -0, z = -0.25 },
+        maxvel = { x = 0.25, y = -0, z = 0.25 },
+        minacc = { x = -0.45, y = y_vel, z = -0.45 },
+        maxacc = { x = 0.45, y = y_vel * 2, z = 0.45 },
+        minsize = minsize,
+        maxsize = maxsize,
+        minexptime = 0.5,
+        maxexptime = 1.3,
+        texture = 'x_farming_default_particle.png^[colorize:#ffc137:192',
+        collisiondetection = true,
+        glow = 8
+    })
+end
+
 local function update_bee_infotext(pos)
     local meta = minetest.get_meta(pos)
     local data = minetest.deserialize(meta:get_string('x_farming'))
@@ -71,8 +113,16 @@ local function update_bee_infotext(pos)
 end
 
 -- how often node timers for plants will tick, +/- some random value
-local function tick_hive(pos)
-    minetest.get_node_timer(pos):start(math.random(15, 25))
+local function tick_hive(pos, params)
+    local min = 15
+    local max = 25
+    if params and params.min then
+        min = params.min
+    end
+    if params and params.max then
+        max = params.max
+    end
+    minetest.get_node_timer(pos):start(math.random(min, max))
 end
 -- how often a growth failure tick is retried (e.g. too dark)
 local function tick_bee(pos)
@@ -177,6 +227,25 @@ local hive_node_swap = function(pos, saturation, param2)
     end
 end
 
+-- Flower cooldown
+local can_bee_use_flower = function(pos)
+    local flower_meta = minetest.get_meta(pos)
+    local has_timer = flower_meta:get_int("last_bee_time") > 0
+    if has_timer == false or os.time() - (flower_meta:get_int("last_bee_time") or 0) > 0 then
+        return true
+    end
+    return false
+end
+
+local bee_tick_flower = function(pos)
+    local cooldown = math.random(50, 200)
+    local flower_meta = minetest.get_meta(pos)
+    if can_bee_use_flower(pos) then
+        flower_meta:set_int("last_bee_time", os.time() + cooldown)
+        flower_meta:set_int("last_bee_tick", cooldown)
+    end
+end
+
 -- Hive timer
 local hive_on_timer = function(pos, elapsed)
     -- Hive data
@@ -202,11 +271,19 @@ local hive_on_timer = function(pos, elapsed)
         local nname_above = minetest.get_node(above_pos).name
         local nname_below = minetest.get_node(below_pos).name
 
-        if (node_above.name == "air" or node_above.name == "technic:dummy_light_source" or
+        local flower_open = true
+        if minetest.get_item_group(nname_below, 'group:flower') > 0 then
+            if not can_bee_use_flower(flwr) then
+                flower_open = false
+            end
+        end
+
+        if (flower_open and node_above.name == "air" or node_above.name == "technic:dummy_light_source" or
             minetest.get_item_group(nname_above, 'atmosphere') > 1) and light_level > 11 and
             minetest.get_item_group(nname_below, 'soil') > 0 then
             table.insert(flower_positions, flwr)
         end
+
     end
 
     if not flower_positions then
@@ -245,6 +322,9 @@ local hive_on_timer = function(pos, elapsed)
                 pos_hive = vector.new(pos):to_string()
             }
 
+            -- Tick flower cooldown
+            bee_tick_flower(random_pos)
+
             meta_bee:set_string('x_farming', minetest.serialize(data_bee))
             meta_hive:set_string('x_farming', minetest.serialize(data_hive))
 
@@ -256,6 +336,15 @@ local hive_on_timer = function(pos, elapsed)
     if data_hive and data_hive.occupancy > 0 then
         tick_hive(pos)
     end
+end
+
+-- Saturated Hive timer
+local hive_saturated_on_timer = function(pos, elapsed)
+    if data_hive.occupancy == 0 then
+        return
+    end
+    update_hive_infotext(pos)
+    tick_hive(pos, {min = 20, max = 45})
 end
 
 -- Hive interact
@@ -566,6 +655,7 @@ minetest.register_node('x_farming:bee_hive_saturated_2', {
     sounds = x_farming.node_sound_wood_defaults(),
     on_rightclick = hive_on_rightclick,
     after_dig_node = hive_after_dig_node,
+    on_timer = hive_saturated_on_timer,
 })
 
 -- Bee
@@ -653,14 +743,17 @@ minetest.register_node('x_farming:bee', {
 
         local flower_node = minetest.get_node(vector.new(pos.x, pos.y - 1, pos.z))
 
+        local flower_pollinated = false
         if flower_node then
             if minetest.get_item_group(flower_node.name, 'flower') > 0 and data_hive.saturation < 16 then
-                data_hive.saturation = data_hive.saturation + 1
-            end
-
-            if minetest.get_item_group(flower_node.name, 'farmable') > 0 then
+                if math.random(0, 2) <= 0 then
+                    data_hive.saturation = data_hive.saturation + 1
+                    flower_pollinated = true
+                end
+            elseif minetest.get_item_group(flower_node.name, 'farmable') > 0 then
                 if data_hive.saturation < 16 then
                     data_hive.saturation = data_hive.saturation + 1
+                    flower_pollinated = true
                 end
                 local crop_pos = {x = pos.x, y = pos.y - 1, z = pos.z}
                 x_farming.grow_plant(crop_pos)
@@ -686,6 +779,10 @@ minetest.register_node('x_farming:bee', {
 
         bee_particles(pos)
         bee_particles(pos_hive_front)
+
+        if flower_pollinated then
+            honey_particle(pos_hive_front)
+        end
 
         if not minetest.get_node_timer(pos_hive):is_started() then
             tick_hive(pos_hive)
@@ -776,3 +873,16 @@ minetest.register_globalstep(function(dtime)
         end
     end
 end)
+
+minetest.register_abm({
+    label = "bee particle effects near flowers",
+    nodenames = {"x_farming:bee"},
+    neighbors = {"group:flower", "group:farmable"},
+    interval = 5,
+    chance = 2,
+    min_y = -11000,
+    action = function(pos, node)
+        local bee_pos = {x = pos.x, y = pos.y + 0.2, z = pos.z}
+        honey_particle(bee_pos, { amount = math.random(1, 5), minsize = 0.4, maxsize = 0.7, move_up = false})
+    end
+})
