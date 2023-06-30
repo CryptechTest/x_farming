@@ -340,6 +340,9 @@ end
 
 -- Saturated Hive timer
 local hive_saturated_on_timer = function(pos, elapsed)
+    -- Hive data
+    local meta_hive = minetest.get_meta(pos)
+    local data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
     if data_hive.occupancy == 0 then
         return
     end
