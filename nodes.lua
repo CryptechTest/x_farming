@@ -1509,6 +1509,16 @@ x_farming.register_pie('honey_kiwi_pie', {
     hunger_amount = 24
 })
 
+-- Blueberr Pie
+x_farming.register_pie('blueberry_pie', {
+    description = S('Blueberry Pie') .. '\n' .. S('Compost chance') .. ': 100%\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 28'),
+    short_description = S('Blueberry Pie'),
+    mesh = 'x_farming_pie.obj',
+    steps = 4,
+    hunger_amount = 28
+})
+
 --
 -- Convert farming soils - copy from MTG
 --

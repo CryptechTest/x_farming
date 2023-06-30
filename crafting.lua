@@ -991,6 +991,26 @@ if minetest.get_modpath("farming") then
 end
 
 minetest.register_craft({
+    output = 'x_farming:blueberry_pie_1',
+    recipe = {
+        { 'x_farming:barley', 'x_farming:barley', 'x_farming:barley' },
+        { 'default:blueberries', 'default:blueberries', 'default:blueberries' },
+        { 'group:food_sugar', 'group:food_flour', 'x_farming:bottle_honey' },
+    }
+})
+
+if minetest.get_modpath("farming") then
+    minetest.register_craft({
+        output = 'x_farming:blueberry_pie_1',
+        recipe = {
+            { 'farming:wheat', 'farming:wheat', 'farming:wheat' },
+            { 'default:blueberries', 'default:blueberries', 'default:blueberries' },
+            { 'group:food_sugar', 'group:food_flour', 'x_farming:bottle_honey' },
+        }
+    })
+end
+
+minetest.register_craft({
     output = 'x_farming:chocolate_pie_1',
     recipe = {
         { 'x_farming:chocolate', 'x_farming:chocolate', 'x_farming:chocolate' },
@@ -1012,6 +1032,12 @@ minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:strawberry_pie_1',
     recipe = { 'x_farming:slice_strawberry_pie', 'x_farming:slice_strawberry_pie', 'x_farming:slice_strawberry_pie', 'x_farming:slice_strawberry_pie' }
+})
+
+minetest.register_craft({
+    type = 'shapeless',
+    output = 'x_farming:blueberry_pie_1',
+    recipe = { 'x_farming:slice_blueberry_pie', 'x_farming:slice_blueberry_pie', 'x_farming:slice_blueberry_pie', 'x_farming:slice_blueberry_pie' }
 })
 
 minetest.register_craft({
