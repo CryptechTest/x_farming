@@ -824,7 +824,7 @@ minetest.register_node('x_farming:bee', {
 
         if minetest.is_protected(pos, clicker:get_player_name()) then
             -- Hurt player when unable to capture bee
-            local armor_groups = puncher:get_armor_groups()
+            local armor_groups = clicker:get_armor_groups()
             local damage = 3
             if armor_groups.fleshy then
                 damage = math.round((2 * 100) / armor_groups.fleshy)
