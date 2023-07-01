@@ -343,6 +343,8 @@ local hive_on_timer = function(pos, elapsed)
 
             update_hive_infotext(pos)
             update_bee_infotext(pos_bee)
+        else
+            update_hive_infotext(pos)
         end
     end
 
