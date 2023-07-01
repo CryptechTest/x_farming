@@ -25,7 +25,7 @@ local function update_hive_infotext(pos)
     local tod = minetest.get_timeofday()
     local is_day = false
 
-    if tod > 0.2 and tod < 0.805 then
+    if tod > 0.2 and tod < 0.75 then
         is_day = true
     end
 
@@ -174,6 +174,14 @@ local function is_valid_hive_position(pos, params)
     return true
 end
 
+local shuffle = function(tbl)
+    for i = #tbl, 2, -1 do
+        local j = math.random(i)
+        tbl[i], tbl[j] = tbl[j], tbl[i]
+    end
+    return tbl
+end
+
 local function get_valid_hive_position(pos_hive, pos_bee)
     local valid_pos = nil
 
@@ -189,12 +197,13 @@ local function get_valid_hive_position(pos_hive, pos_bee)
 
     -- Find neighboring bee hive position
     local hive_positions = minetest.find_nodes_in_area(
-        vector.add(pos_bee, x_farming.beehive_distance),
-        vector.subtract(pos_bee, x_farming.beehive_distance),
+        vector.add(pos_bee, x_farming.beehive_distance + 1),
+        vector.subtract(pos_bee, x_farming.beehive_distance + 1),
         { 'group:bee_hive' }
     )
 
-    for _, p in ipairs(hive_positions) do
+    local random_hives = shuffle(hive_positions)
+    for _, p in ipairs(random_hives) do
         if is_valid_hive_position(p, { ommit_node_group_check = true }) then
             valid_pos = p
             break
@@ -242,7 +251,7 @@ local can_bee_use_flower = function(pos)
 end
 
 local bee_tick_flower = function(pos)
-    local cooldown = math.random(200, 500)
+    local cooldown = math.random(250, 600)
     local flower_meta = minetest.get_meta(pos)
     if can_bee_use_flower(pos) then
         flower_meta:set_int("last_bee_time", os.time() + cooldown)
@@ -744,6 +753,24 @@ minetest.register_node('x_farming:bee', {
         local meta_hive = minetest.get_meta(pos_hive)
         local data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
         local node_hive = minetest.get_node(pos_hive)
+
+        if data_hive.saturation >= 15 and math.random(0, 3) >= 1 then
+            local pos_old_hive = vector.copy(pos_hive)
+            local pos_old_hive_front = vector.subtract(vector.new(pos_old_hive.x, pos_old_hive.y + 0.5, pos_old_hive.z), minetest.facedir_to_dir(node_hive.param2))
+            honey_particle(pos_old_hive_front, { amount = math.random(1, 5), minsize = 0.1, maxsize = 0.4, move_up = false})
+
+            -- get new hive position
+            pos_hive = get_valid_hive_position(nil, pos)
+
+            meta_hive = minetest.get_meta(pos_hive)
+            data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
+            node_hive = minetest.get_node(pos_hive)
+            if (pos_hive == pos_old_hive) then
+                minetest.log("action", "[x_farming] Bee failed to locate new hive")
+            else
+                minetest.log("action", "[x_farming] Bee located new empty Hive")
+            end
+        end
 
         -- Bee go home
         data_hive.occupancy = data_hive.occupancy + 1
