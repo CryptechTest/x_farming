@@ -143,6 +143,7 @@ local function is_valid_hive_position(pos, params)
 
     local _params = params or {}
     local ommit_node_group_check = _params.ommit_node_group_check or false
+    local ommit_hive_bee_check = _params.ommit_hive_bee_check or false
 
     local hive_node = minetest.get_node(pos)
 
@@ -163,12 +164,14 @@ local function is_valid_hive_position(pos, params)
         return false
     end
 
-    if not data_hive.occupancy then
-        return false
-    end
+    if not ommit_hive_bee_check then
+        if not data_hive.occupancy then
+            return false
+        end
 
-    if data_hive.occupancy >= 3 then
-        return false
+        if data_hive.occupancy >= 3 then
+            return false
+        end
     end
 
     return true
@@ -189,7 +192,7 @@ local function get_valid_hive_position(pos_hive, pos_bee)
         valid_pos = vector.copy(pos_hive)
     end
 
-    if is_valid_hive_position(valid_pos) then
+    if is_valid_hive_position(valid_pos, { ommit_hive_bee_check = true }) then
         return valid_pos
     end
 
@@ -265,6 +268,10 @@ local hive_on_timer = function(pos, elapsed)
     local meta_hive = minetest.get_meta(pos)
     local data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
     local node = minetest.get_node(pos)
+
+    if not data_hive then
+        return
+    end
 
     if data_hive.occupancy == 0 then
         return
@@ -426,7 +433,7 @@ local hive_on_rightclick = function(pos, node, clicker, itemstack, pointed_thing
         tick_hive(pos)
     end
 
-    if data.occupancy == 3 then
+    if data.occupancy >= 3 then
         return itemstack
     end
 
@@ -448,6 +455,62 @@ local hive_on_rightclick = function(pos, node, clicker, itemstack, pointed_thing
     end
 
     return stack
+end
+
+-- Preserve Metadata
+local hive_preserve_metadata = function(pos, oldnode, oldmeta, drops)
+    local meta = minetest.get_meta(pos)
+    local inv = meta:get_inventory()
+    local stack = drops[1]
+    local meta_drop = stack:get_meta()
+    local data = minetest.deserialize(meta:get_string('x_farming'))
+    if data and data.saturation > 0 then
+        data.saturation =  data.saturation - 6
+        if data.saturation < 0 then
+            data.saturation = 0
+        end
+        meta:set_string('x_farming', minetest.serialize(data))
+    end
+    if data and data.occupancy > 3 then
+        data.occupancy = 3
+        meta:set_string('x_farming', minetest.serialize(data))
+    end
+    local data_hive = minetest.deserialize(meta:get_string('x_farming'))
+    if data_hive and (data_hive.occupancy > 0 or data_hive.saturation > 0) then
+        meta_drop:set_string('x_farming', minetest.serialize(meta:get_string("x_farming")))
+        meta_drop:set_string('description', stack:get_description() .. '\n'
+            .. S('Occupancy') .. ': ' .. data_hive.occupancy .. '\n'
+            .. S('Saturation') .. ': ' .. data_hive.saturation)
+    end
+end
+
+-- Hive dig node
+local hive_after_dig_node = function(pos, oldnode, oldmetadata, digger)
+    local data = minetest.deserialize(oldmetadata.fields.x_farming)
+    local positions = minetest.find_nodes_in_area_under_air(
+        vector.add(pos, x_farming.beehive_distance),
+        vector.subtract(pos, x_farming.beehive_distance),
+        { 'group:flower', 'group:flora', 'group:bees_pollinate_crop' }
+    )
+
+    if positions and #positions > 0 and data and data.occupancy and data.occupancy > 3 then
+        for i = 1, data.occupancy - 3 do
+            local p = positions[i]
+
+            if p then
+                local pos_bee = vector.new(p.x, p.y + 1, p.z)
+                minetest.swap_node(pos_bee, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
+                tick_bee(pos_bee)
+                bee_particles(pos_bee)
+
+                if i == 1 then
+                    minetest.sound_play('x_farming_bee', {
+                        pos = pos,
+                    })
+                end
+            end
+        end
+    end
 end
 
 -- Hive
@@ -496,65 +559,23 @@ minetest.register_node('x_farming:bee_hive', {
         update_hive_infotext(pos)
     end,
     after_place_node = function(pos, placer, itemstack, pointed_thing)
+        local node = minetest.get_node(pos)
+        local meta = minetest.get_meta(pos)
+        local meta_st = itemstack:get_meta()
+        local hive_meta = minetest.deserialize(meta_st:get_string('x_farming'))
+        if hive_meta then
+            meta:set_string("x_farming", hive_meta)
+            local meta_hive = minetest.get_meta(pos)
+            local data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
+            hive_node_swap(pos, data_hive.saturation or 0, node.param2)
+            update_hive_infotext(pos)
+        end
         tick_hive(pos)
     end,
     on_rightclick = hive_on_rightclick,
-    after_dig_node = function(pos, oldnode, oldmetadata, digger)
-        local data = minetest.deserialize(oldmetadata.fields.x_farming)
-        local positions = minetest.find_nodes_in_area_under_air(
-            vector.add(pos, x_farming.beehive_distance),
-            vector.subtract(pos, x_farming.beehive_distance),
-            { 'group:flower', 'group:flora', 'group:bees_pollinate_crop' }
-        )
-
-        if positions and #positions > 0 and data.occupancy and data.occupancy > 0 then
-            for i = 1, data.occupancy do
-                local p = positions[i]
-
-                if p then
-                    local pos_bee = vector.new(p.x, p.y + 1, p.z)
-                    minetest.swap_node(pos_bee, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
-                    tick_bee(pos_bee)
-                    bee_particles(pos_bee)
-
-                    if i == 1 then
-                        minetest.sound_play('x_farming_bee', {
-                            pos = pos_bee,
-                        })
-                    end
-                end
-            end
-        end
-    end,
+    after_dig_node = hive_after_dig_node,
+    preserve_metadata = hive_preserve_metadata,
 })
-
-local hive_after_dig_node = function(pos, oldnode, oldmetadata, digger)
-    local data = minetest.deserialize(oldmetadata.fields.x_farming)
-    local positions = minetest.find_nodes_in_area_under_air(
-        vector.add(pos, x_farming.beehive_distance),
-        vector.subtract(pos, x_farming.beehive_distance),
-        { 'group:flower', 'group:flora', 'group:bees_pollinate_crop' }
-    )
-
-    if positions and #positions > 0 and data.occupancy and data.occupancy > 0 then
-        for i = 1, data.occupancy do
-            local p = positions[i]
-
-            if p then
-                local pos_bee = vector.new(p.x, p.y + 1, p.z)
-                minetest.swap_node(pos_bee, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
-                tick_bee(pos_bee)
-                bee_particles(pos_bee)
-
-                if i == 1 then
-                    minetest.sound_play('x_farming_bee', {
-                        pos = pos,
-                    })
-                end
-            end
-        end
-    end
-end
 
 -- Hive saturrated
 minetest.register_node('x_farming:bee_hive_saturated', {
@@ -594,6 +615,7 @@ minetest.register_node('x_farming:bee_hive_saturated', {
     on_rightclick = hive_on_rightclick,
     after_dig_node = hive_after_dig_node,
     on_timer = hive_on_timer,
+    preserve_metadata = hive_preserve_metadata,
 })
 
 -- Hive saturrated 1
@@ -634,6 +656,7 @@ minetest.register_node('x_farming:bee_hive_saturated_1', {
     on_rightclick = hive_on_rightclick,
     after_dig_node = hive_after_dig_node,
     on_timer = hive_on_timer,
+    preserve_metadata = hive_preserve_metadata,
 })
 
 -- Hive saturrated 2
@@ -674,6 +697,7 @@ minetest.register_node('x_farming:bee_hive_saturated_2', {
     on_rightclick = hive_on_rightclick,
     after_dig_node = hive_after_dig_node,
     on_timer = hive_saturated_on_timer,
+    preserve_metadata = hive_preserve_metadata,
 })
 
 -- Bee
@@ -748,6 +772,11 @@ minetest.register_node('x_farming:bee', {
             })
 
             bee_particles(pos)
+            honey_particle(pos, { amount = math.random(7, 12), minsize = 0.2, maxsize = 0.4 })
+
+            if data_bee and data_bee.pos_hive then
+                minetest.log("action", "[x_farming] Bee failed to locate Hive and was removed")
+            end
 
             return
         end
@@ -756,21 +785,36 @@ minetest.register_node('x_farming:bee', {
         local data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
         local node_hive = minetest.get_node(pos_hive)
 
-        if data_hive.saturation >= 15 and math.random(0, 3) >= 1 then
+        if (data_hive.saturation >= 15 and math.random(0, 3) >= 1) or (data_hive.occupancy >= 3) then
             local pos_old_hive = vector.copy(pos_hive)
-            local pos_old_hive_front = vector.subtract(vector.new(pos_old_hive.x, pos_old_hive.y + 0.5, pos_old_hive.z), minetest.facedir_to_dir(node_hive.param2))
-            honey_particle(pos_old_hive_front, { amount = math.random(1, 5), minsize = 0.1, maxsize = 0.4, move_up = false})
+            if pos_old_hive then
+                local pos_old_hive_front = vector.subtract(vector.new(pos_old_hive.x, pos_old_hive.y + 0.5, pos_old_hive.z), minetest.facedir_to_dir(node_hive.param2))
+                honey_particle(pos_old_hive_front, { amount = math.random(1, 5), minsize = 0.1, maxsize = 0.4, move_up = false})
+            end
 
             -- get new hive position
             pos_hive = get_valid_hive_position(nil, pos)
 
-            meta_hive = minetest.get_meta(pos_hive)
-            data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
-            node_hive = minetest.get_node(pos_hive)
-            if (pos_hive == pos_old_hive) then
-                minetest.log("action", "[x_farming] Bee failed to locate new hive")
+            if pos_hive then
+                meta_hive = minetest.get_meta(pos_hive)
+                data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
+                node_hive = minetest.get_node(pos_hive)
+                if (pos_hive == pos_old_hive) then
+                    minetest.log("action", "[x_farming] Bee located same Hive")
+                else
+                    minetest.log("action", "[x_farming] Bee located new empty Hive")
+                end
+            elseif data_hive.occupancy >= 5 then
+                minetest.remove_node(pos)
+                minetest.sound_play('x_farming_bee', {
+                    pos = pos,
+                })
+                bee_particles(pos)
+                minetest.log("action", "[x_farming] Bee failed to locate Hive and was removed")
+                return
             else
-                minetest.log("action", "[x_farming] Bee located new empty Hive")
+                pos_hive = pos_old_hive;
+                minetest.log("action", "[x_farming] Bee failed to locate new Hive")
             end
         end
 
