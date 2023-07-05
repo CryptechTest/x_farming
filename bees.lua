@@ -838,6 +838,15 @@ minetest.register_node('x_farming:bee', {
                 local crop_pos = {x = pos.x, y = pos.y - 1, z = pos.z}
                 x_farming.grow_plant(crop_pos)
                 x_farming.x_bonemeal.particle_effect(crop_pos)
+                minetest.after(0.8, function()
+                    x_farming.grow_plant(crop_pos)
+                end)
+                if math.random(0,1) == 1 then
+                    minetest.after(1.5, function()
+                        x_farming.grow_plant(crop_pos)
+                        x_farming.x_bonemeal.particle_effect(crop_pos)
+                    end)
+                end
             end
 
             if data_hive.saturation >= 5 then
