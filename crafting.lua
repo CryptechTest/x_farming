@@ -31,6 +31,9 @@ minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:cookie 8',
     recipe = { 'x_farming:barley', 'x_farming:cocoa_bean', 'group:food_flour', 'group:food_milk_glass', 'group:food_sugar' },
+    replacements = {
+        { 'group:food_milk_glass', 'vessels:drinking_glass' }
+    }
 })
 
 minetest.register_craft({
@@ -225,7 +228,10 @@ minetest.register_craft({
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:pumpkin_pie',
-    recipe = { 'x_farming:pumpkin_block', 'group:food_flour', 'group:food_milk_glass', 'group:food_sugar' }
+    recipe = { 'x_farming:pumpkin_block', 'group:food_flour', 'group:food_milk_glass', 'group:food_sugar' },
+    replacements = {
+        { 'group:food_milk_glass', 'vessels:drinking_glass' }
+    }
 })
 
 --- FUELS
@@ -327,19 +333,28 @@ end
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:donut',
-    recipe = { 'group:food_milk_glass', 'group:food_sugar', 'group:food_flour' }
+    recipe = { 'group:food_milk_glass', 'group:food_sugar', 'group:food_flour' },
+    replacements = {
+        { 'group:food_milk_glass', 'vessels:drinking_glass' }
+    }
 })
 
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:donut_chocolate',
-    recipe = { 'group:food_milk_glass', 'group:food_sugar', 'group:food_flour', 'x_farming:cocoa_bean' }
+    recipe = { 'group:food_milk_glass', 'group:food_sugar', 'group:food_flour', 'x_farming:cocoa_bean' },
+    replacements = {
+        { 'group:food_milk_glass', 'vessels:drinking_glass' }
+    }
 })
 
 minetest.register_craft({
     type = 'shapeless',
     output = 'x_farming:donut_honey_glazed 2',
-    recipe = { 'group:food_milk_glass', 'group:food_sugar', 'group:food_flour', 'x_farming:bottle_honey' }
+    recipe = { 'group:food_milk_glass', 'group:food_sugar', 'group:food_flour', 'x_farming:bottle_honey' },
+    replacements = {
+        { 'group:food_milk_glass', 'vessels:drinking_glass' }
+    }
 })
 
 -- Honey Sticks
@@ -958,6 +973,9 @@ minetest.register_craft({
         { 'x_farming:bakedpotato', 'group:food_milk_glass', 'x_farming:bakedpotato' },
         { 'x_farming:bakedpotato', 'x_farming:corn', 'x_farming:bakedpotato' },
         { 'group:food_salt', 'x_farming:bowl', 'group:food_salt' },
+    },
+    replacements = {
+        { 'group:food_milk_glass', 'vessels:drinking_glass' }
     }
 })
 
@@ -1024,6 +1042,9 @@ minetest.register_craft({
         { 'x_farming:barley', 'x_farming:barley', 'x_farming:barley' },
         { 'default:blueberries', 'default:blueberries', 'default:blueberries' },
         { 'group:food_sugar', 'group:food_flour', 'x_farming:bottle_honey' },
+    },
+    replacements = {
+        { 'x_farming:bottle_honey', 'x_farming:glass_bottle' },
     }
 })
 
@@ -1034,6 +1055,9 @@ if minetest.get_modpath("farming") then
             { 'farming:wheat', 'farming:wheat', 'farming:wheat' },
             { 'default:blueberries', 'default:blueberries', 'default:blueberries' },
             { 'group:food_sugar', 'group:food_flour', 'x_farming:bottle_honey' },
+        },
+        replacements = {
+            { 'x_farming:bottle_honey', 'x_farming:glass_bottle' },
         }
     })
 end
@@ -1044,6 +1068,11 @@ minetest.register_craft({
         { 'x_farming:chocolate', 'x_farming:chocolate', 'x_farming:chocolate' },
         { 'group:food_milk_glass', 'group:food_milk_glass', 'group:food_milk_glass' },
         { 'group:food_sugar', 'group:food_flour', 'group:food_sugar' },
+    },
+    replacements = {
+        { 'group:food_milk_glass', 'vessels:drinking_glass' },
+        { 'group:food_milk_glass', 'vessels:drinking_glass' },
+        { 'group:food_milk_glass', 'vessels:drinking_glass' }
     }
 })
 
@@ -1053,6 +1082,12 @@ minetest.register_craft({
         { 'x_farming:bottle_honey', 'x_farming:bottle_honey', 'x_farming:bottle_honey' },
         { 'x_farming:kiwi', 'x_farming:kiwi', 'x_farming:kiwi' },
         { 'group:food_milk_glass', 'group:food_flour', 'group:food_milk_glass' },
+    },
+    replacements = {
+        { 'x_farming:bottle_honey', 'x_farming:glass_bottle' },
+        { 'x_farming:bottle_honey', 'x_farming:glass_bottle' },
+        { 'x_farming:bottle_honey', 'x_farming:glass_bottle' },
+        { 'group:food_milk_glass', 'vessels:drinking_glass' }
     }
 })
 
