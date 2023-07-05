@@ -384,6 +384,7 @@ local hive_on_timer = function(pos, elapsed)
 
     if data_hive and data_hive.occupancy > 0 then
         tick_hive(pos)
+        update_hive_infotext(pos)
     end
 end
 
