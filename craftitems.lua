@@ -161,6 +161,78 @@ minetest.register_craftitem('x_farming:jar_with_bee', {
     groups = { bee = 1, not_in_creative_inventory = 1 }
 })
 
+-- Jars
+minetest.register_craftitem('x_farming:jar_with_honey', {
+    description = S('Jar of Honey Preserves') .. '\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 14'),
+    inventory_image = 'x_farming_jar_honey.png',
+    groups = {
+        vessel = 1,
+        hunger_amount = 14,
+        -- MCL
+        craftitem = 1,
+        food = 3,
+        eatable = 12,
+        can_eat_when_full = 1
+    },
+    _mcl_saturation = 1.0,
+    on_use = minetest.item_eat(14, 'x_farming:jar_empty'),
+})
+
+minetest.register_craftitem('x_farming:jar_with_bluerries', {
+    description = S('Jar of Blueberry Preserves') .. '\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 7'),
+    inventory_image = 'x_farming_jar_blueberry.png',
+    groups = {
+        vessel = 1,
+        hunger_amount = 7,
+        -- MCL
+        craftitem = 1,
+        food = 3,
+        eatable = 6,
+        can_eat_when_full = 1
+    },
+    _mcl_saturation = 1.0,
+    on_use = minetest.item_eat(7, 'x_farming:jar_empty'),
+})
+
+minetest.register_craftitem('x_farming:jar_with_strawberries', {
+    description = S('Jar of Strawberry Preserves') .. '\n'
+        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 7'),
+    inventory_image = 'x_farming_jar_strawberry.png',
+    groups = {
+        vessel = 1,
+        hunger_amount = 7,
+        -- MCL
+        craftitem = 1,
+        food = 3,
+        eatable = 6,
+        can_eat_when_full = 1
+    },
+    _mcl_saturation = 1.0,
+    on_use = minetest.item_eat(7, 'x_farming:jar_empty'),
+})
+
+if minetest.get_modpath("ctg_world") then
+    minetest.register_craftitem('x_farming:jar_with_glowberries', {
+        description = S('Jar of Glowberry Preserves') .. '\n'
+            .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 7'),
+        inventory_image = 'x_farming_jar_glowberry.png',
+        light_source = 10,
+        groups = {
+            vessel = 1,
+            hunger_amount = 7,
+            -- MCL
+            craftitem = 1,
+            food = 3,
+            eatable = 6,
+            can_eat_when_full = 1
+        },
+        _mcl_saturation = 1.0,
+        on_use = minetest.item_eat(7, 'x_farming:jar_empty'),
+    })
+end
+
 -- Rice
 minetest.register_craftitem('x_farming:rice_grains', {
     description = S('Rice Grains'),

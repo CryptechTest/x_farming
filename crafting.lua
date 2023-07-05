@@ -709,6 +709,34 @@ minetest.register_craft({
     }
 })
 
+-- Jarred Preserves
+minetest.register_craft({
+    output = 'x_farming:jar_with_honey',
+    recipe = {
+        { 'x_farming:bottle_honey', 'x_farming:bottle_honey', 'group:food_sugar' }
+    }
+})
+minetest.register_craft({
+    output = 'x_farming:jar_with_bluerries',
+    recipe = {
+        { 'x_farming:jar_empty', 'default:blueberries', 'default:blueberries', 'default:blueberries', 'group:food_sugar' }
+    }
+})
+minetest.register_craft({
+    output = 'x_farming:jar_with_strawberries',
+    recipe = {
+        { 'x_farming:jar_empty', 'x_farming:strawberry', 'x_farming:strawberry', 'x_farming:strawberry', 'group:food_sugar' }
+    }
+})
+if minetest.get_modpath("ctg_world") then
+    minetest.register_craft({
+        output = 'x_farming:jar_with_glowberries',
+        recipe = {
+            { 'x_farming:jar_empty', 'ctg_world:glowberries', 'ctg_world:glowberries', 'ctg_world:glowberries', 'group:food_sugar' }
+        }
+    })
+end
+
 -- Hive
 minetest.register_craft({
     output = 'x_farming:bee_hive',
