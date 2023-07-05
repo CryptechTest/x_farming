@@ -110,7 +110,7 @@ end
 if minetest.get_modpath('mcl_farming') then
     if x_farming.vessels then
         bottle_honey_def.on_place = minetest.item_eat(6, 'x_farming:glass_bottle')
-        bottle_honey_def.on_secondary_use = minetest.item_eat(6, 'x_farming:glass_bottle')
+        bottle_honey_def.on_secondary_use = minetest.item_eat(6, 'vessels:glass_bottle')
     else
         bottle_honey_def.on_place = minetest.item_eat(6, 'x_farming:glass_bottle')
         bottle_honey_def.on_secondary_use = minetest.item_eat(6, 'x_farming:glass_bottle')

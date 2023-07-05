@@ -27,6 +27,10 @@ if minetest.get_modpath('mcl_core') and minetest.global_exists('mcl_core') then
     dofile(path .. '/mod_support_mcl_aliases.lua')
 end
 
+if minetest.get_modpath('vessels') then
+    dofile(path .. '/mod_support_vessels_aliases.lua')
+end
+
 dofile(path .. '/api.lua')
 dofile(path .. '/craftitems.lua')
 dofile(path .. '/nodes.lua')

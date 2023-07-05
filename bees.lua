@@ -25,7 +25,7 @@ local function update_hive_infotext(pos)
     local tod = minetest.get_timeofday()
     local is_day = false
 
-    if tod > 0.2 and tod < 0.75 then
+    if tod > 0.2 and tod < 0.78 then
         is_day = true
     end
 
@@ -33,14 +33,19 @@ local function update_hive_infotext(pos)
         local text = ""
         if not is_day and data.occupancy > 0 then
             text = "The Bees are sleeping." .. "\n"
-        elseif data.saturation >= 15 then
+        elseif data.saturation >= 15 and data.occupancy > 0 then
             text = "The Bees are teeming." .. "\n"
-        elseif data.saturation >= 7 then
+        elseif data.saturation >= 7 and data.occupancy > 0 then
             text = "The Bees are happy." .. "\n"
-        elseif data.occupancy >= 3 then
-            text = "The Bees are busy." .. "\n"
+        elseif data.occupancy > 3 then
+            text = "The Bees are cramped." .. "\n"
+        elseif data.occupancy >= 2 then
+            text = "The Bees are working." .. "\n"
+        elseif data.occupancy == 0 and data.recent_out > 0 then
+            text = "The Bees are out." .. "\n"
         end
-        text = text .. 'Occupancy: ' .. data.occupancy .. ' / 3\n'
+
+        text = text .. 'Occupancy: ' .. data.occupancy .. ' / '.. 3 ..'\n'
             .. 'Saturation: ' .. data.saturation .. ' / 16'
         meta:set_string('infotext', text)
     end
@@ -59,16 +64,27 @@ local function bee_particles(pos)
         minexptime = 0.5,
         maxexptime = 1,
         texture = 'x_farming_default_particle.png^[colorize:#FFD69C:255',
-        collisiondetection = true
+        collisiondetection = true,
+        glow = 3
     })
 end
 
 local function honey_particle(pos, params)
+    local move_up = true
+    local time = 0.1
     local amount = 15
     local minsize = 0.5
     local maxsize = 1
-    local move_up = true
+    local minexptime = 0.5
+    local maxexptime = 1.5
+    local glow = 8
     if params then
+        if params.move_up ~= nil then
+            move_up = params.move_up
+        end
+        if params.time then
+            time = params.time
+        end
         if params.amount then
             amount = params.amount
         end
@@ -78,8 +94,14 @@ local function honey_particle(pos, params)
         if params.maxsize then
             maxsize = params.maxsize
         end
-        if params.move_up ~= nil then
-            move_up = params.move_up
+        if params.minexptime then
+            minexptime = params.minexptime
+        end
+        if params.minexptime then
+            minexptime = params.minexptime
+        end
+        if params.glow ~= nil then
+            glow = params.glow
         end
     end
     local y_vel = 1
@@ -88,7 +110,7 @@ local function honey_particle(pos, params)
     end
     minetest.add_particlespawner({
         amount = amount,
-        time = 0.1,
+        time = time,
         minpos = { x = pos.x - 0.1, y = pos.y - 0.20, z = pos.z - 0.1 },
         maxpos = { x = pos.x + 0.1, y = pos.y - 0.25, z = pos.z + 0.1 },
         minvel = { x = -0.25, y = -0, z = -0.25 },
@@ -97,11 +119,11 @@ local function honey_particle(pos, params)
         maxacc = { x = 0.45, y = y_vel * 2, z = 0.45 },
         minsize = minsize,
         maxsize = maxsize,
-        minexptime = 0.5,
-        maxexptime = 1.5,
+        minexptime = minexptime,
+        maxexptime = maxexptime,
         texture = 'x_farming_default_particle.png^[colorize:#ffc137:160',
         collisiondetection = true,
-        glow = 8
+        glow = glow
     })
 end
 
@@ -200,8 +222,8 @@ local function get_valid_hive_position(pos_hive, pos_bee)
 
     -- Find neighboring bee hive position
     local hive_positions = minetest.find_nodes_in_area(
-        vector.add(pos_bee, x_farming.beehive_distance + 1),
-        vector.subtract(pos_bee, x_farming.beehive_distance + 1),
+        vector.add(pos_bee, x_farming.beehive_distance + 3),
+        vector.subtract(pos_bee, x_farming.beehive_distance + 3),
         { 'group:bee_hive' }
     )
 
@@ -316,15 +338,20 @@ local hive_on_timer = function(pos, elapsed)
         local tod = minetest.get_timeofday()
         local is_day = false
 
-        if tod > 0.2 and tod < 0.710 then
+        if tod > 0.2 and tod < 0.760 then
             is_day = true
         end
 
         if data_hive and data_hive.occupancy > 0 and is_day then
             local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), minetest.facedir_to_dir(node.param2))
 
+            if not data_hive.recent_out then
+                data_hive.recent_out = 0
+            end
+
             -- Send bee out
             data_hive.occupancy = data_hive.occupancy - 1
+            data_hive.recent_out = data_hive.recent_out + 1
 
             minetest.swap_node(pos_bee, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
             tick_bee(pos_bee)
@@ -435,6 +462,10 @@ local hive_on_rightclick = function(pos, node, clicker, itemstack, pointed_thing
 
     if data.occupancy >= 3 then
         return itemstack
+    end
+
+    if data.recent_out then
+        data.recent_out = 0
     end
 
     if minetest.get_item_group(itemstack:get_name(), 'bee') > 0 then
@@ -552,7 +583,8 @@ minetest.register_node('x_farming:bee_hive', {
         local meta = minetest.get_meta(pos)
         local data = {
             occupancy = 0,
-            saturation = 0
+            saturation = 0,
+            recent_out = 0
         }
 
         meta:set_string('x_farming', minetest.serialize(data))
@@ -804,7 +836,7 @@ minetest.register_node('x_farming:bee', {
                 else
                     minetest.log("action", "[x_farming] Bee located new empty Hive")
                 end
-            elseif data_hive.occupancy >= 5 then
+            elseif data_hive.occupancy > 5 then
                 minetest.remove_node(pos)
                 minetest.sound_play('x_farming_bee', {
                     pos = pos,
@@ -820,6 +852,7 @@ minetest.register_node('x_farming:bee', {
 
         -- Bee go home
         data_hive.occupancy = data_hive.occupancy + 1
+        data_hive.recent_out = 0
 
         local flower_node = minetest.get_node(vector.new(pos.x, pos.y - 1, pos.z))
 
@@ -838,11 +871,11 @@ minetest.register_node('x_farming:bee', {
                 local crop_pos = {x = pos.x, y = pos.y - 1, z = pos.z}
                 x_farming.grow_plant(crop_pos)
                 x_farming.x_bonemeal.particle_effect(crop_pos)
-                minetest.after(0.8, function()
+                minetest.after(1, function()
                     x_farming.grow_plant(crop_pos)
                 end)
                 if math.random(0,1) == 1 then
-                    minetest.after(1.5, function()
+                    minetest.after(2, function()
                         x_farming.grow_plant(crop_pos)
                         x_farming.x_bonemeal.particle_effect(crop_pos)
                     end)
@@ -947,7 +980,7 @@ minetest.register_globalstep(function(dtime)
     local tod = minetest.get_timeofday()
     local is_day = false
 
-    if tod > 0.2 and tod < 0.710 then
+    if tod > 0.2 and tod < 0.760 then
         is_day = true
     end
 
@@ -986,10 +1019,38 @@ minetest.register_abm({
     nodenames = {"x_farming:bee"},
     neighbors = {"group:flower", "group:farmable"},
     interval = 5,
-    chance = 3,
+    chance = 5,
     min_y = -11000,
     action = function(pos, node)
+        local time = math.random(0.6, 1)
         local bee_pos = {x = pos.x, y = pos.y + 0.2, z = pos.z}
-        honey_particle(bee_pos, { amount = math.random(1, 5), minsize = 0.1, maxsize = 0.4, move_up = false})
+        honey_particle(bee_pos, {  time = time, amount = math.random(2, 5), minsize = 0.25, maxsize = 0.42, move_up = false})
+    end
+})
+
+minetest.register_abm({
+    label = "particle effects on front of hives",
+    nodenames = {"group:bee_hive"},
+    interval = 3,
+    chance = 9,
+    min_y = -11000,
+    action = function(pos, node)
+        local meta_hive = minetest.get_meta(pos)
+        local data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
+        if data_hive and data_hive.saturation > 3 and (data_hive.occupancy > 0 or data_hive.recent_out > 0) then
+            local tod = minetest.get_timeofday()
+            local is_day = false
+            if tod > 0.2 and tod < 0.760 then
+                is_day = true
+            end
+            local time = math.random(1, 3)
+            local amount = math.random(3, data_hive.saturation)
+            if not is_day then
+                amount = amount * 0.45
+            end
+            local dir = minetest.facedir_to_dir(node.param2);
+            local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y - 0.1, pos.z), dir * 0.6)
+            honey_particle(pos_hive_front, { time = time, amount = amount, minsize = 0.15, maxsize = 0.3, move_up = false, glow = 6, maxexptime = 0.8 })
+        end
     end
 })
