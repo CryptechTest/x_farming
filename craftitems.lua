@@ -78,7 +78,7 @@ minetest.register_craftitem('x_farming:bottle_water', {
     tiles = { 'x_farming_bottle_water.png' },
     inventory_image = 'x_farming_bottle_water.png',
     wield_image = 'x_farming_bottle_water.png',
-    groups = { vessel = 1 },
+    groups = { vessel = 1, food_water = 1 },
 })
 
 -- Bottle Honey
