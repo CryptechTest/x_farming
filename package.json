@@ -1,7 +1,7 @@
 {
     "name": "x_farming",
     "version": "1.0.0",
-    "description": "Adds bow and arrows to Minetest.",
+    "description": "Adds new farming crops, plants and items.",
     "main": "index.js",
     "type": "module",
     "directories": {

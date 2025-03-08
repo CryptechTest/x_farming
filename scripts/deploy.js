@@ -1,6 +1,6 @@
 /**
  * Deploy code to CDB
- * Copyright (C) 2024 SaKeL
+ * Copyright (C) 2025 SaKeL
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,7 @@ try {
         ref: 'master'
     }
 
-    const response = await fetch('https://content.minetest.net/api/packages/SaKeL/x_farming/releases/new/', {
+    const response = await fetch('https://content.luanti.org/api/packages/SaKeL/x_farming/releases/new/', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {

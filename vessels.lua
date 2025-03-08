@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2024 SaKeL
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 -- ----------------------
 -- Originally by Vanessa Ezekowitz (LGPLv2.1+)
 -- Modified by Perttu Ahola <celeron55@gmail.com> (LGPLv2.1+)
--- Various Minetest developers and contributors (LGPLv2.1+)
+-- Various Luanti developers and contributors (LGPLv2.1+)
 
 local S = minetest.get_translator(minetest.get_current_modname())
 
