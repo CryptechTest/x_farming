@@ -248,7 +248,7 @@ minetest.register_entity('x_farming:stove_food', {
 
 -- Nodes
 minetest.register_node('x_farming:stove', {
-    description = S('Stove inactive)'),
+    description = S('Stove (inactive)'),
     tiles = {
         'x_farming_stove_top.png',
         'x_farming_stove_side.png',
