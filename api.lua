@@ -21,7 +21,7 @@ local S = minetest.get_translator(minetest.get_current_modname())
 -- main class
 x_farming = {
     hunger_ng = minetest.get_modpath('hunger_ng'),
-    hbhunger = minetest.get_modpath('hbhunger'),
+    hbhunger = minetest.get_modpath('hbhunger') and minetest.global_exists('hbhunger'),
     vessels = minetest.get_modpath('vessels'),
     bucket = minetest.get_modpath('bucket'),
     colors = {

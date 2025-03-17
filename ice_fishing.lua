@@ -645,7 +645,7 @@ for i, def in ipairs(fishes) do
     minetest.register_craftitem(name, raw_fish_def)
 
     -- hbhunger
-    if x_farming.hbhunger ~= nil then
+    if x_farming.hbhunger and x_farming.hbhunger ~= nil then
         if hbhunger.register_food ~= nil then
             hbhunger.register_food(name, def.item_eat)
         end
