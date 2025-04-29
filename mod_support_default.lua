@@ -96,7 +96,7 @@ local tree_defs = {
                 return false
             end
 
-            if minetest.find_node_near(pos, 1, { 'group:snowy' }) then
+            if core.find_node_near(pos, 1, { 'group:snowy' }) then
                 default.grow_new_snowy_pine_tree(pos)
             else
                 default.grow_new_pine_tree(pos)
@@ -170,7 +170,7 @@ local tree_defs = {
                 return false
             end
 
-            local node = minetest.get_node(pos)
+            local node = core.get_node(pos)
 
             default.grow_papyrus(pos, node)
 

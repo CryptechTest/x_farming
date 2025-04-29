@@ -16,9 +16,9 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
-minetest.register_tool('x_farming:honeycomb_saw', {
+core.register_tool('x_farming:honeycomb_saw', {
     description = S('Honeycomb Saw'),
     inventory_image = 'x_farming_honeycomb_saw.png',
     wield_image = 'x_farming_honeycomb_saw.png',

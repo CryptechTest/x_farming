@@ -16,14 +16,14 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 -- main class
 x_farming = {
-    hunger_ng = minetest.get_modpath('hunger_ng'),
-    hbhunger = minetest.get_modpath('hbhunger') and minetest.global_exists('hbhunger'),
-    vessels = minetest.get_modpath('vessels'),
-    bucket = minetest.get_modpath('bucket'),
+    hunger_ng = core.get_modpath('hunger_ng'),
+    hbhunger = core.get_modpath('hbhunger') and core.global_exists('hbhunger'),
+    vessels = core.get_modpath('vessels'),
+    bucket = core.get_modpath('bucket'),
     colors = {
         brown = '#DEB887',
         red = '#FF8080',
@@ -290,32 +290,32 @@ end
 
 ---how often node timers for plants will tick, +/- some random value
 function x_farming.tick_block(pos)
-    minetest.get_node_timer(pos):start(math.random(498, 1287))
+    core.get_node_timer(pos):start(math.random(498, 1287))
 end
 
 ---how often a growth failure tick is retried (e.g. too dark)
 function x_farming.tick_block_short(pos)
-    minetest.get_node_timer(pos):start(math.random(332, 858))
+    core.get_node_timer(pos):start(math.random(332, 858))
 end
 
 -- how often node timers for plants will tick, +/- some random value
 function x_farming.tick(pos)
-    minetest.get_node_timer(pos):start(math.random(166, 286))
+    core.get_node_timer(pos):start(math.random(166, 286))
 end
 -- how often a growth failure tick is retried (e.g. too dark)
 function x_farming.tick_again(pos)
-    minetest.get_node_timer(pos):start(math.random(40, 80))
+    core.get_node_timer(pos):start(math.random(40, 80))
 end
 
 ---just shorthand for minetest metadata handling
 function x_farming.meta_get_str(key, pos)
-    local meta = minetest.get_meta(pos)
+    local meta = core.get_meta(pos)
     return meta:get_string(key)
 end
 
 ---just shorthand for minetest metadata handling
 function x_farming.meta_set_str(key, value, pos)
-    local meta = minetest.get_meta(pos)
+    local meta = core.get_meta(pos)
     meta:set_string(key, value)
 end
 
@@ -348,15 +348,15 @@ x_farming.hoe_on_use = function(itemstack, user, pointed_thing, uses)
         return
     end
 
-    local under = minetest.get_node(pt.under)
+    local under = core.get_node(pt.under)
     local p = { x = pt.under.x, y = pt.under.y + 1, z = pt.under.z }
-    local above = minetest.get_node(p)
+    local above = core.get_node(p)
 
     -- return if any of the nodes is not registered
-    if not minetest.registered_nodes[under.name] then
+    if not core.registered_nodes[under.name] then
         return
     end
-    if not minetest.registered_nodes[above.name] then
+    if not core.registered_nodes[above.name] then
         return
     end
 
@@ -366,42 +366,42 @@ x_farming.hoe_on_use = function(itemstack, user, pointed_thing, uses)
     end
 
     -- check if pointing at soil
-    if minetest.get_item_group(under.name, 'soil') ~= 1 then
+    if core.get_item_group(under.name, 'soil') ~= 1 then
         return
     end
 
     -- check if (wet) soil defined
-    local regN = minetest.registered_nodes
+    local regN = core.registered_nodes
     if regN[under.name].soil == nil or regN[under.name].soil.wet == nil or regN[under.name].soil.dry == nil then
         return
     end
 
     local player_name = user and user:get_player_name() or ''
 
-    if minetest.is_protected(pt.under, player_name) then
-        minetest.record_protection_violation(pt.under, player_name)
+    if core.is_protected(pt.under, player_name) then
+        core.record_protection_violation(pt.under, player_name)
         return
     end
 
-    if minetest.is_protected(pt.above, player_name) then
-        minetest.record_protection_violation(pt.above, player_name)
+    if core.is_protected(pt.above, player_name) then
+        core.record_protection_violation(pt.above, player_name)
         return
     end
 
     -- turn the node into soil and play sound
-    minetest.set_node(pt.under, { name = regN[under.name].soil.dry })
-    minetest.sound_play('x_farming_dirt_hit', {
+    core.set_node(pt.under, { name = regN[under.name].soil.dry })
+    core.sound_play('x_farming_dirt_hit', {
         pos = pt.under,
         gain = 0.3,
     }, true)
 
-    if not minetest.is_creative_enabled(player_name) then
+    if not core.is_creative_enabled(player_name) then
         -- wear tool
         local wdef = itemstack:get_definition()
         itemstack:add_wear_by_uses(uses)
         -- tool break sound
         if itemstack:get_count() == 0 and wdef.sound and wdef.sound.breaks then
-            minetest.sound_play(wdef.sound.breaks, {pos = pt.above,
+            core.sound_play(wdef.sound.breaks, {pos = pt.above,
                 gain = 0.5}, true)
         end
     end
@@ -426,13 +426,13 @@ x_farming.register_hoe = function(name, def)
         _def.max_uses = 30
     end
 
-    if minetest.get_modpath('farming') then
+    if core.get_modpath('farming') then
         _def.on_use = function(itemstack, user, pointed_thing)
             return x_farming.hoe_on_use(itemstack, user, pointed_thing, _def.max_uses)
         end
     end
 
-    if minetest.get_modpath('mcl_farming') then
+    if core.get_modpath('mcl_farming') then
         _def.on_place = x_farming.mcl.hoe_on_place_function(_def.max_uses)
     end
 
@@ -442,15 +442,15 @@ x_farming.register_hoe = function(name, def)
     _def.wield_scale = _def.wield_scale or { x = 1, y = 1, z = 1 }
 
     -- Register the tool
-    minetest.register_tool(name, _def)
+    core.register_tool(name, _def)
     -- Register its recipe
     if _def.recipe then
-        minetest.register_craft({
+        core.register_craft({
             output = name:sub(2),
             recipe = _def.recipe
         })
     elseif _def.material then
-        minetest.register_craft({
+        core.register_craft({
             output = name:sub(2),
             recipe = {
                 { _def.material, 'group:stick' },
@@ -465,7 +465,7 @@ end
 -- Log API / helpers - copy from MTG
 --
 
-local log_non_player_actions = minetest.settings:get_bool('log_non_player_actions', false)
+local log_non_player_actions = core.settings:get_bool('log_non_player_actions', false)
 
 local is_pos = function(v)
     return type(v) == 'table' and
@@ -483,11 +483,11 @@ function x_farming.log_player_action(player, ...)
     end
     for _, v in ipairs({ ... }) do
         -- translate pos
-        local part = is_pos(v) and minetest.pos_to_string(v) or v
+        local part = is_pos(v) and core.pos_to_string(v) or v
         -- no leading spaces before punctuation marks
         msg = msg .. (string.match(part, '^[;,.]') and '' or ' ') .. part
     end
-    minetest.log('action', msg)
+    core.log('action', msg)
 end
 
 function x_farming.set_inventory_action_loggers(def, name)
@@ -509,8 +509,8 @@ end
 function x_farming.sapling_on_place(itemstack, placer, pointed_thing, sapling_name, minp_relative, maxp_relative, interval)
     -- Position of sapling
     local pos = pointed_thing.under
-    local node = minetest.get_node_or_nil(pos)
-    local pdef = node and minetest.registered_nodes[node.name]
+    local node = core.get_node_or_nil(pos)
+    local pdef = node and core.registered_nodes[node.name]
 
     if not node then
         return itemstack
@@ -525,8 +525,8 @@ function x_farming.sapling_on_place(itemstack, placer, pointed_thing, sapling_na
 
     if not pdef or not pdef.buildable_to then
         pos = pointed_thing.above
-        node = minetest.get_node_or_nil(pos)
-        pdef = node and minetest.registered_nodes[node.name]
+        node = core.get_node_or_nil(pos)
+        pdef = node and core.registered_nodes[node.name]
         if not pdef or not pdef.buildable_to then
             return itemstack
         end
@@ -535,23 +535,23 @@ function x_farming.sapling_on_place(itemstack, placer, pointed_thing, sapling_na
     local player_name = placer and placer:get_player_name() or ''
 
     -- Check sapling position for protection
-    if minetest.is_protected(pos, player_name) then
-        minetest.record_protection_violation(pos, player_name)
+    if core.is_protected(pos, player_name) then
+        core.record_protection_violation(pos, player_name)
         return itemstack
     end
 
     -- Check tree volume for protection
-    if minetest.is_area_protected(
+    if core.is_area_protected(
             vector.add(pos, minp_relative),
             vector.add(pos, maxp_relative),
             player_name,
             interval) then
-        minetest.record_protection_violation(pos, player_name)
+        core.record_protection_violation(pos, player_name)
         -- Print extra information to explain
-        -- minetest.chat_send_player(player_name,
+        -- core.chat_send_player(player_name,
         -- itemstack:get_definition().description .. ' will intersect protection ' ..
         -- 'on growth')
-        minetest.chat_send_player(
+        core.chat_send_player(
             player_name,
             S('@1 will intersect protection on growth.', itemstack:get_definition().description)
         )
@@ -560,10 +560,10 @@ function x_farming.sapling_on_place(itemstack, placer, pointed_thing, sapling_na
 
     x_farming.log_player_action(placer, 'places node', sapling_name, 'at', pos)
 
-    local take_item = not minetest.is_creative_enabled(player_name)
+    local take_item = not core.is_creative_enabled(player_name)
     local newnode = { name = sapling_name }
-    local ndef = minetest.registered_nodes[sapling_name]
-    minetest.set_node(pos, newnode)
+    local ndef = core.registered_nodes[sapling_name]
+    core.set_node(pos, newnode)
 
     -- Run callback
     if ndef and ndef.after_place_node then
@@ -574,7 +574,7 @@ function x_farming.sapling_on_place(itemstack, placer, pointed_thing, sapling_na
     end
 
     -- Run script hook
-    for _, callback in ipairs(minetest.registered_on_placenodes) do
+    for _, callback in ipairs(core.registered_on_placenodes) do
         -- Deepcopy pos, node and pointed_thing because callback can modify them
         if callback(table.copy(pos), table.copy(newnode),
                 placer, table.copy(node or {}),
@@ -598,32 +598,32 @@ end
 
 function x_farming.after_place_leaves(pos, placer, itemstack, pointed_thing)
     if placer and placer:is_player() then
-        local node = minetest.get_node(pos)
+        local node = core.get_node(pos)
         node.param2 = 1
-        minetest.set_node(pos, node)
+        core.set_node(pos, node)
     end
 end
 
 -- Leafdecay
 local function leafdecay_after_destruct(pos, oldnode, def)
-    for _, v in pairs(minetest.find_nodes_in_area(vector.subtract(pos, def.radius), vector.add(pos, def.radius), def.leaves)) do
-        local node = minetest.get_node(v)
-        local timer = minetest.get_node_timer(v)
-        if (node.param2 ~= 1 or minetest.get_item_group('cocoa') == 0) and not timer:is_started() then
+    for _, v in pairs(core.find_nodes_in_area(vector.subtract(pos, def.radius), vector.add(pos, def.radius), def.leaves)) do
+        local node = core.get_node(v)
+        local timer = core.get_node_timer(v)
+        if (node.param2 ~= 1 or core.get_item_group('cocoa') == 0) and not timer:is_started() then
             timer:start(math.random(20, 120) / 10)
         end
     end
 end
 
-local movement_gravity = tonumber(minetest.settings:get('movement_gravity')) or 9.81
+local movement_gravity = tonumber(core.settings:get('movement_gravity')) or 9.81
 
 local function leafdecay_on_timer(pos, def)
-    if minetest.find_node_near(pos, def.radius, def.trunks) then
+    if core.find_node_near(pos, def.radius, def.trunks) then
         return false
     end
 
-    local node = minetest.get_node(pos)
-    local drops = minetest.get_node_drops(node.name)
+    local node = core.get_node(pos)
+    local drops = core.get_node_drops(node.name)
     for _, item in ipairs(drops) do
         local is_leaf
         for _, v in pairs(def.leaves) do
@@ -632,8 +632,8 @@ local function leafdecay_on_timer(pos, def)
             end
         end
 
-        if minetest.get_item_group(item, 'leafdecay_drop') ~= 0 or not is_leaf then
-            minetest.add_item({
+        if core.get_item_group(item, 'leafdecay_drop') ~= 0 or not is_leaf then
+            core.add_item({
                 x = pos.x - 0.5 + math.random(),
                 y = pos.y - 0.5 + math.random(),
                 z = pos.z - 0.5 + math.random(),
@@ -641,11 +641,11 @@ local function leafdecay_on_timer(pos, def)
         end
     end
 
-    minetest.remove_node(pos)
-    minetest.check_for_falling(pos)
+    core.remove_node(pos)
+    core.check_for_falling(pos)
 
     -- spawn a few particles for the removed node
-    minetest.add_particlespawner({
+    core.add_particlespawner({
         amount = 8,
         time = 0.001,
         minpos = vector.subtract(pos, { x = 0.5, y = 0.5, z = 0.5 }),
@@ -666,7 +666,7 @@ function x_farming.register_leafdecay(def)
     assert(def.radius)
 
     for _, v in pairs(def.trunks) do
-        minetest.override_item(v, {
+        core.override_item(v, {
             after_destruct = function(pos, oldnode)
                 leafdecay_after_destruct(pos, oldnode, def)
             end,
@@ -674,7 +674,7 @@ function x_farming.register_leafdecay(def)
     end
 
     for _, v in pairs(def.leaves) do
-        minetest.override_item(v, {
+        core.override_item(v, {
             on_timer = function(pos)
                 leafdecay_on_timer(pos, def)
             end,
@@ -693,25 +693,25 @@ function x_farming.place_seed(itemstack, placer, pointed_thing, plantname)
         return itemstack
     end
 
-    local under = minetest.get_node(pt.under)
-    local above = minetest.get_node(pt.above)
+    local under = core.get_node(pt.under)
+    local above = core.get_node(pt.above)
 
     local player_name = placer and placer:get_player_name() or ''
 
-    if minetest.is_protected(pt.under, player_name) then
-        minetest.record_protection_violation(pt.under, player_name)
+    if core.is_protected(pt.under, player_name) then
+        core.record_protection_violation(pt.under, player_name)
         return itemstack
     end
-    if minetest.is_protected(pt.above, player_name) then
-        minetest.record_protection_violation(pt.above, player_name)
+    if core.is_protected(pt.above, player_name) then
+        core.record_protection_violation(pt.above, player_name)
         return itemstack
     end
 
     -- return if any of the nodes is not registered
-    if not minetest.registered_nodes[under.name] then
+    if not core.registered_nodes[under.name] then
         return itemstack
     end
-    if not minetest.registered_nodes[above.name] then
+    if not core.registered_nodes[above.name] then
         return itemstack
     end
 
@@ -721,20 +721,20 @@ function x_farming.place_seed(itemstack, placer, pointed_thing, plantname)
     end
 
     -- check if you can replace the node above the pointed node
-    if not minetest.registered_nodes[above.name].buildable_to then
+    if not core.registered_nodes[above.name].buildable_to then
         return itemstack
     end
 
     -- check if pointing at soil
-    if minetest.get_item_group(under.name, 'soil') < 2 then
+    if core.get_item_group(under.name, 'soil') < 2 then
         return itemstack
     end
 
     -- add the node and remove 1 item from the itemstack
     x_farming.log_player_action(placer, 'places node', plantname, 'at', pt.above)
-    minetest.add_node(pt.above, { name = plantname, param2 = 1 })
+    core.add_node(pt.above, { name = plantname, param2 = 1 })
     x_farming.tick(pt.above)
-    if not minetest.is_creative_enabled(player_name) then
+    if not core.is_creative_enabled(player_name) then
         itemstack:take_item()
     end
 
@@ -742,9 +742,9 @@ function x_farming.place_seed(itemstack, placer, pointed_thing, plantname)
 end
 
 x_farming.grow_plant = function(pos, elapsed)
-    local node = minetest.get_node(pos)
+    local node = core.get_node(pos)
     local name = node.name
-    local def = minetest.registered_nodes[name]
+    local def = core.registered_nodes[name]
 
     if not def.next_plant then
         -- disable timer for fully grown plant
@@ -752,21 +752,21 @@ x_farming.grow_plant = function(pos, elapsed)
     end
 
     -- grow seed
-    if minetest.get_item_group(node.name, 'seed') and def.fertility then
-        local soil_node = minetest.get_node_or_nil({ x = pos.x, y = pos.y - 1, z = pos.z })
+    if core.get_item_group(node.name, 'seed') and def.fertility then
+        local soil_node = core.get_node_or_nil({ x = pos.x, y = pos.y - 1, z = pos.z })
         if not soil_node then
             x_farming.tick_again(pos)
             return
         end
         -- omitted is a check for light, we assume seeds can germinate in the dark.
         for _, v in pairs(def.fertility) do
-            if minetest.get_item_group(soil_node.name, v) ~= 0 or string.find(soil_node.name, 'mcl_farming:soil') then
+            if core.get_item_group(soil_node.name, v) ~= 0 or string.find(soil_node.name, 'mcl_farming:soil') then
                 local placenode = { name = def.next_plant }
                 if def.place_param2 then
                     placenode.param2 = def.place_param2
                 end
-                minetest.swap_node(pos, placenode)
-                if minetest.registered_nodes[def.next_plant].next_plant then
+                core.swap_node(pos, placenode)
+                if core.registered_nodes[def.next_plant].next_plant then
                     x_farming.tick(pos)
                     return
                 end
@@ -777,14 +777,14 @@ x_farming.grow_plant = function(pos, elapsed)
     end
 
     -- check if on wet soil
-    local below = minetest.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
-    if minetest.get_item_group(below.name, 'soil') < 3 then
+    local below = core.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
+    if core.get_item_group(below.name, 'soil') < 3 then
         x_farming.tick_again(pos)
         return
     end
 
     -- check light
-    local light = minetest.get_node_light(pos)
+    local light = core.get_node_light(pos)
     if not light or light < def.minlight or light > def.maxlight then
         x_farming.tick_again(pos)
         return
@@ -795,10 +795,10 @@ x_farming.grow_plant = function(pos, elapsed)
     if def.place_param2 then
         placenode.param2 = def.place_param2
     end
-    minetest.swap_node(pos, placenode)
+    core.swap_node(pos, placenode)
 
     -- new timer needed?
-    if minetest.registered_nodes[def.next_plant].next_plant then
+    if core.registered_nodes[def.next_plant].next_plant then
         x_farming.tick(pos)
     end
     return
@@ -861,7 +861,7 @@ x_farming.register_plant = function(name, def)
         end
     end
 
-    minetest.register_node(':' .. mname .. ':seed_' .. pname, {
+    core.register_node(':' .. mname .. ':seed_' .. pname, {
         description = def.description,
         tiles = def.tiles or { def.inventory_image },
         inventory_image = def.inventory_image,
@@ -886,8 +886,8 @@ x_farming.register_plant = function(name, def)
 
         on_place = def.on_place or function(itemstack, placer, pointed_thing)
             local under = pointed_thing.under
-            local node = minetest.get_node(under)
-            local udef = minetest.registered_nodes[node.name]
+            local node = core.get_node(under)
+            local udef = core.registered_nodes[node.name]
             if udef and udef.on_rightclick and
                 not (placer and placer:is_player() and
                 placer:get_player_control().sneak)
@@ -907,7 +907,7 @@ x_farming.register_plant = function(name, def)
     })
 
     -- Register harvest
-    minetest.register_craftitem(':' .. mname .. ':' .. pname, {
+    core.register_craftitem(':' .. mname .. ':' .. pname, {
         description = def.harvest_description,
         inventory_image = mname .. '_' .. pname .. '.png',
         groups = def.groups or { flammable = 2 },
@@ -963,7 +963,7 @@ x_farming.register_plant = function(name, def)
             _buildable_to = def.buildable_to
         end
 
-        minetest.register_node(':' .. mname .. ':' .. pname .. '_' .. i, {
+        core.register_node(':' .. mname .. ':' .. pname .. '_' .. i, {
             drawtype = def.drawtype or 'plantlike',
             waving = 1,
             tiles = def.tiles or { mname .. '_' .. pname .. '_' .. i .. '.png' },
@@ -994,7 +994,7 @@ x_farming.register_plant = function(name, def)
     end
 
     -- replacement LBM for pre-nodetimer plants
-    minetest.register_lbm({
+    core.register_lbm({
         name = ':' .. mname .. ':start_nodetimer_' .. pname,
         nodenames = lbm_nodes,
         action = function(pos, node)
@@ -1012,18 +1012,18 @@ end
 
 ---grow blocks next to the plant
 function x_farming.grow_block(pos, elapsed)
-    local node = minetest.get_node(pos)
+    local node = core.get_node(pos)
     local random_pos = false
     local spawn_positions = {}
     local right_pos = { x = pos.x + 1, y = pos.y, z = pos.z }
     local front_pos = { x = pos.x, y = pos.y, z = pos.z + 1 }
     local left_pos = { x = pos.x - 1, y = pos.y, z = pos.z }
     local back_pos = { x = pos.x, y = pos.y, z = pos.z - 1 }
-    local right = minetest.get_node(right_pos)
-    local front = minetest.get_node(front_pos)
-    local left = minetest.get_node(left_pos)
-    local back = minetest.get_node(back_pos)
-    local def = minetest.registered_nodes[node.name]
+    local right = core.get_node(right_pos)
+    local front = core.get_node(front_pos)
+    local left = core.get_node(left_pos)
+    local back = core.get_node(back_pos)
+    local def = core.registered_nodes[node.name]
 
     local children = {}
 
@@ -1047,7 +1047,7 @@ function x_farming.grow_block(pos, elapsed)
         local parent_pos_from_child = x_farming.meta_get_str('parent', child_pos)
 
         ---disable timer for fully grown plant - fruit for this stem already exists
-        if minetest.pos_to_string(pos) == parent_pos_from_child then
+        if core.pos_to_string(pos) == parent_pos_from_child then
             return
         end
     end
@@ -1088,7 +1088,7 @@ function x_farming.grow_block(pos, elapsed)
     end
 
     ---check light
-    local light = minetest.get_node_light(pos)
+    local light = core.get_node_light(pos)
     if not light or light < 13 or light > 14 then
         x_farming.tick_block_short(pos)
         return
@@ -1096,32 +1096,32 @@ function x_farming.grow_block(pos, elapsed)
 
     ---spawn block
     if random_pos then
-        minetest.set_node(random_pos, { name = def.next_plant })
-        x_farming.meta_set_str('parent', minetest.pos_to_string(pos), random_pos)
+        core.set_node(random_pos, { name = def.next_plant })
+        x_farming.meta_set_str('parent', core.pos_to_string(pos), random_pos)
     end
     return
 end
 
 function x_farming.grow_kiwi_tree(pos)
-    local path = minetest.get_modpath('x_farming') ..
+    local path = core.get_modpath('x_farming') ..
         '/schematics/x_farming_kiwi_tree_from_sapling.mts'
-    minetest.place_schematic({ x = pos.x - 2, y = pos.y, z = pos.z - 2 },
+    core.place_schematic({ x = pos.x - 2, y = pos.y, z = pos.z - 2 },
         path, 'random', nil, false)
 end
 
 -- 'can grow' function - copy from MTG
 
 function x_farming.can_grow(pos)
-    local node_under = minetest.get_node_or_nil({ x = pos.x, y = pos.y - 1, z = pos.z })
+    local node_under = core.get_node_or_nil({ x = pos.x, y = pos.y - 1, z = pos.z })
     if not node_under then
         return false
     end
 
-    if minetest.get_item_group(node_under.name, 'soil') == 0 then
+    if core.get_item_group(node_under.name, 'soil') == 0 then
         return false
     end
 
-    local light_level = minetest.get_node_light(pos)
+    local light_level = core.get_node_light(pos)
 
     if not light_level or light_level < 13 then
         return false
@@ -1135,14 +1135,14 @@ end
 function x_farming.grow_sapling(pos)
     if not x_farming.can_grow(pos) then
         ---try again 5 min later
-        minetest.get_node_timer(pos):start(300)
+        core.get_node_timer(pos):start(300)
         return
     end
 
-    local node = minetest.get_node(pos)
+    local node = core.get_node(pos)
     if node.name == 'x_farming:kiwi_sapling' then
-        minetest.log('action', 'A sapling grows into a tree at ' ..
-            minetest.pos_to_string(pos))
+        core.log('action', 'A sapling grows into a tree at ' ..
+            core.pos_to_string(pos))
         x_farming.grow_kiwi_tree(pos)
     end
 end
@@ -1150,27 +1150,27 @@ end
 ---Grow Large Cactus
 
 function x_farming.grow_large_cactus(pos)
-    local path = minetest.get_modpath('x_farming') ..
+    local path = core.get_modpath('x_farming') ..
         '/schematics/x_farming_large_cactus_from_seedling.mts'
-    minetest.place_schematic({ x = pos.x, y = pos.y, z = pos.z },
+    core.place_schematic({ x = pos.x, y = pos.y, z = pos.z },
         path, 'random', nil, false, 'place_center_x, place_center_z')
 end
 
 ---Grow Jungle Tree
 
 function x_farming.grow_jungle_tree(pos)
-    local path = minetest.get_modpath('x_farming') ..
+    local path = core.get_modpath('x_farming') ..
         '/schematics/x_farming_jungle_tree_with_cocoa_from_sapling.mts'
-    minetest.place_schematic({ x = pos.x - 2, y = pos.y - 1, z = pos.z - 2 },
+    core.place_schematic({ x = pos.x - 2, y = pos.y - 1, z = pos.z - 2 },
         path, nil, nil, false)
 end
 
 ---Pine Nut Tree
 
 function x_farming.grow_pine_nut_tree(pos)
-    local path = minetest.get_modpath('x_farming') ..
+    local path = core.get_modpath('x_farming') ..
         '/schematics/x_farming_pine_nut_tree_from_sapling.mts'
-    minetest.place_schematic({ x = pos.x - 2, y = pos.y, z = pos.z - 2 },
+    core.place_schematic({ x = pos.x - 2, y = pos.y, z = pos.z - 2 },
         path, '0', nil, false)
 end
 
@@ -1179,11 +1179,11 @@ end
 function x_farming.grow_christmas_tree(pos)
     local path
     if math.random() > 0.5 then
-        path = minetest.get_modpath('x_farming') .. '/schematics/x_farming_christmas_tree_large.mts'
-        minetest.place_schematic({ x = pos.x - 2, y = pos.y, z = pos.z - 2 }, path, '0', nil, false)
+        path = core.get_modpath('x_farming') .. '/schematics/x_farming_christmas_tree_large.mts'
+        core.place_schematic({ x = pos.x - 2, y = pos.y, z = pos.z - 2 }, path, '0', nil, false)
     else
-        path = minetest.get_modpath('x_farming') .. '/schematics/x_farming_christmas_tree.mts'
-        minetest.place_schematic({ x = pos.x - 1, y = pos.y, z = pos.z - 1 }, path, '0', nil, false)
+        path = core.get_modpath('x_farming') .. '/schematics/x_farming_christmas_tree.mts'
+        core.place_schematic({ x = pos.x - 1, y = pos.y, z = pos.z - 1 }, path, '0', nil, false)
     end
 end
 
@@ -1192,11 +1192,11 @@ end
 ----
 
 function x_farming.tick_crates(pos)
-    minetest.get_node_timer(pos):start(math.random(332, 572))
+    core.get_node_timer(pos):start(math.random(332, 572))
 end
 
 function x_farming.tick_again_crates(pos)
-    minetest.get_node_timer(pos):start(math.random(80, 160))
+    core.get_node_timer(pos):start(math.random(80, 160))
 end
 
 function x_farming.get_crate_or_bag_formspec(pos, label_copy)
@@ -1223,7 +1223,7 @@ function x_farming.get_crate_or_bag_formspec(pos, label_copy)
         'list[current_player;main;0,6.08;8,3;8]',
         'listring[nodemeta:', spos, ';main]',
         'listring[current_player;main]',
-        'label[2,0;' .. minetest.formspec_escape(label_copy) .. ']',
+        'label[2,0;' .. core.formspec_escape(label_copy) .. ']',
         list_bg,
         hotbar_bg,
         'image[0,0.3;1,1;x_farming_crate_ui_bg_hb_slot.png]'
@@ -1276,7 +1276,7 @@ function x_farming.register_crate(name, def)
     end
 
     _def.on_construct = function(pos)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local inv = meta:get_inventory()
         meta:set_string('infotext', _def.short_description)
         meta:set_string('owner', '')
@@ -1284,16 +1284,16 @@ function x_farming.register_crate(name, def)
     end
 
     _def.after_place_node = function(pos, placer, itemstack, pointed_thing)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local meta_st = itemstack:get_meta()
-        local crate_inv = minetest.deserialize(meta_st:get_string('crate_inv'))
+        local crate_inv = core.deserialize(meta_st:get_string('crate_inv'))
         local inv = meta:get_inventory()
 
         if crate_inv then
             inv:add_item('main', ItemStack(crate_inv))
         end
 
-        local node = minetest.get_node(pos)
+        local node = core.get_node(pos)
 
         meta:set_string('owner', placer:get_player_name() or '')
 
@@ -1304,9 +1304,9 @@ function x_farming.register_crate(name, def)
                 .. ' (' .. S('owned by') .. ' ' .. meta:get_string('owner') .. ')\n'
                 .. inv_stack:get_description() .. '\n' .. S('Quantity') .. ': ' .. inv_stack:get_count())
         else
-            local swap_node = minetest.registered_nodes['x_farming:crate_empty']
+            local swap_node = core.registered_nodes['x_farming:crate_empty']
             if swap_node and inv:is_empty('main') and node.name ~= swap_node.name then
-                minetest.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
+                core.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
                 meta:set_string('infotext', swap_node.short_description
                     .. ' (' .. S('owned by') .. ' ' .. meta:get_string('owner') .. ')')
             end
@@ -1315,26 +1315,26 @@ function x_farming.register_crate(name, def)
 
     _def.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
         local p_name = clicker:get_player_name()
-        if minetest.is_protected(pos, p_name) then
+        if core.is_protected(pos, p_name) then
             return itemstack
         end
 
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local inv = meta:get_inventory()
         local inv_stack = inv:get_stack('main', 1)
         local label_copy = _def.short_description .. ' (' .. S('owned by') .. ' ' .. meta:get_string('owner')
             .. ')\n' .. inv_stack:get_description()
-        minetest.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
-        minetest.sound_play('x_farming_wood_hit', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
+        core.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
+        core.sound_play('x_farming_wood_hit', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
     end
 
     _def.on_blast = function(pos, intensity)
-        if minetest.is_protected(pos, '') then
+        if core.is_protected(pos, '') then
             return
         end
 
         local drops = {}
-        local inv = minetest.get_meta(pos):get_inventory()
+        local inv = core.get_meta(pos):get_inventory()
         local n = #drops
 
         for i = 1, inv:get_size('main') do
@@ -1346,16 +1346,16 @@ function x_farming.register_crate(name, def)
         end
 
         drops[#drops + 1] = name
-        minetest.remove_node(pos)
+        core.remove_node(pos)
         return drops
     end
 
     _def.can_dig = function(pos, player)
-        return not minetest.is_protected(pos, player:get_player_name())
+        return not core.is_protected(pos, player:get_player_name())
     end
 
     _def.preserve_metadata = function(pos, oldnode, oldmeta, drops)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local inv = meta:get_inventory()
         local stack = drops[1]
         local meta_drop = stack:get_meta()
@@ -1363,7 +1363,7 @@ function x_farming.register_crate(name, def)
         if not inv:is_empty('main') then
             local inv_stack = inv:get_stack('main', 1)
 
-            meta_drop:set_string('crate_inv', minetest.serialize(inv_stack:to_table()))
+            meta_drop:set_string('crate_inv', core.serialize(inv_stack:to_table()))
             meta_drop:set_string('description', stack:get_description() .. '\n' .. inv_stack:get_description()
                 .. '\n' .. S('Quantity') .. ': ' .. inv_stack:get_count())
 
@@ -1374,10 +1374,10 @@ function x_farming.register_crate(name, def)
     _def.allow_metadata_inventory_put = function(pos, listname, index, stack, player)
         local st_name = stack:get_name()
 
-        if minetest.is_protected(pos, player:get_player_name())
+        if core.is_protected(pos, player:get_player_name())
             or (
                 not x_farming.allowed_crate_items[st_name]
-                and minetest.get_item_group(st_name, 'fish') == 0
+                and core.get_item_group(st_name, 'fish') == 0
             )
         then
             return 0
@@ -1389,10 +1389,10 @@ function x_farming.register_crate(name, def)
     _def.allow_metadata_inventory_take = function(pos, listname, index, stack, player)
         local st_name = stack:get_name()
 
-        if minetest.is_protected(pos, player:get_player_name())
+        if core.is_protected(pos, player:get_player_name())
             or (
                 not x_farming.allowed_crate_items[st_name]
-                and minetest.get_item_group(st_name, 'fish') == 0
+                and core.get_item_group(st_name, 'fish') == 0
             )
         then
             return 0
@@ -1408,13 +1408,13 @@ function x_farming.register_crate(name, def)
             return
         end
 
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local inv = meta:get_inventory()
-        local node = minetest.get_node(pos)
+        local node = core.get_node(pos)
         local inv_stack = inv:get_stack('main', 1)
         local split_name = stack_name:split(':')
 
-        if minetest.get_item_group(stack_name, 'fish') ~= 0 then
+        if core.get_item_group(stack_name, 'fish') ~= 0 then
             split_name = { 'x_farming', 'fish' }
         end
 
@@ -1422,7 +1422,7 @@ function x_farming.register_crate(name, def)
             split_name = { 'x_farming', 'cotton2' }
         end
 
-        local swap_node = minetest.registered_nodes['x_farming:crate_' .. split_name[2] .. '_3']
+        local swap_node = core.registered_nodes['x_farming:crate_' .. split_name[2] .. '_3']
 
         if not swap_node then
             return
@@ -1431,12 +1431,12 @@ function x_farming.register_crate(name, def)
         if not inv:is_empty(listname) and node.name ~= swap_node.name then
             local p_name = player:get_player_name()
 
-            minetest.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
+            core.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
 
             local label_copy = swap_node.short_description .. ' (' .. S('owned by') .. ' ' .. meta:get_string('owner') .. ')\n'
                 .. inv_stack:get_description()
 
-            minetest.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
+            core.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
         end
 
         meta:set_string('infotext', swap_node.short_description .. ' (' .. S('owned by')
@@ -1445,27 +1445,27 @@ function x_farming.register_crate(name, def)
     end
 
     _def.on_metadata_inventory_take = function(pos, listname, index, stack, player)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local inv = meta:get_inventory()
         local inv_stack = inv:get_stack('main', 1)
-        local node = minetest.get_node(pos)
+        local node = core.get_node(pos)
 
         if inv:is_empty(listname) then
             local p_name = player:get_player_name()
-            local swap_node = minetest.registered_nodes['x_farming:crate_empty']
+            local swap_node = core.registered_nodes['x_farming:crate_empty']
 
             if swap_node then
-                minetest.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
+                core.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
                 meta:set_string('infotext', swap_node.short_description
                     .. ' (' .. S('owned by') .. ' ' .. meta:get_string('owner') .. ')')
 
                 local label_copy = swap_node.short_description .. ' (' .. S('owned by') .. ' '
                     .. meta:get_string('owner') .. ')\n' .. inv_stack:get_description()
 
-                minetest.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
+                core.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
             end
         else
-            local node_def = minetest.registered_nodes[node.name]
+            local node_def = core.registered_nodes[node.name]
 
             if node_def then
                 meta:set_string('infotext', node_def.short_description
@@ -1477,7 +1477,7 @@ function x_farming.register_crate(name, def)
 
     _def.on_timer = function(pos, elapsed)
         local pos_above = { x = pos.x, y = pos.y + 1, z = pos.z }
-        local node_above = minetest.get_node(pos_above)
+        local node_above = core.get_node(pos_above)
 
         if not node_above then
             x_farming.tick_again_crates(pos)
@@ -1491,7 +1491,7 @@ function x_farming.register_crate(name, def)
 
         local rand1 = math.random(1, 2) / 10
 
-        minetest.add_particlespawner({
+        core.add_particlespawner({
             amount = 60,
             time = 15,
             minpos = { x = pos_above.x - 0.1, y = pos_above.y - 0.3, z = pos_above.z - 0.1 },
@@ -1518,7 +1518,7 @@ function x_farming.register_crate(name, def)
         table.insert(x_farming.lbm_nodenames_crates, _def.name)
     end
 
-    minetest.register_node(_def.name, _def)
+    core.register_node(_def.name, _def)
 end
 
 ---Bag
@@ -1561,7 +1561,7 @@ function x_farming.register_bag(name, def)
     end
 
     _def.on_construct = function(pos)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local inv = meta:get_inventory()
         meta:set_string('infotext', _def.short_description)
         meta:set_string('owner', '')
@@ -1569,16 +1569,16 @@ function x_farming.register_bag(name, def)
     end
 
     _def.after_place_node = function(pos, placer, itemstack, pointed_thing)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local meta_st = itemstack:get_meta()
-        local bag_inv = minetest.deserialize(meta_st:get_string('bag_inv'))
+        local bag_inv = core.deserialize(meta_st:get_string('bag_inv'))
         local inv = meta:get_inventory()
 
         if bag_inv then
             inv:add_item('main', ItemStack(bag_inv))
         end
 
-        local node = minetest.get_node(pos)
+        local node = core.get_node(pos)
 
         meta:set_string('owner', placer:get_player_name() or '')
 
@@ -1589,9 +1589,9 @@ function x_farming.register_bag(name, def)
                 .. meta:get_string('owner') .. ')\n' .. inv_stack:get_description()
                 .. '\n' .. S('Quantity') .. ': ' .. inv_stack:get_count())
         else
-            local swap_node = minetest.registered_nodes['x_farming:bag_empty']
+            local swap_node = core.registered_nodes['x_farming:bag_empty']
             if swap_node and inv:is_empty('main') and node.name ~= swap_node.name then
-                minetest.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
+                core.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
                 meta:set_string('infotext', swap_node.short_description
                     .. ' (' .. S('owned by') .. ' ' .. meta:get_string('owner') .. ')')
             end
@@ -1601,26 +1601,26 @@ function x_farming.register_bag(name, def)
     _def.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
         local p_name = clicker:get_player_name()
 
-        if minetest.is_protected(pos, p_name) then
+        if core.is_protected(pos, p_name) then
             return itemstack
         end
 
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local inv = meta:get_inventory()
         local inv_stack = inv:get_stack('main', 1)
         local label_copy = _def.short_description .. ' (' .. S('owned by') .. ' ' .. meta:get_string('owner') .. ')\n'
             .. inv_stack:get_description()
-        minetest.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
-        minetest.sound_play('x_farming_sand_footstep', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
+        core.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
+        core.sound_play('x_farming_sand_footstep', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
     end
 
     _def.on_blast = function(pos, intensity)
-        if minetest.is_protected(pos, '') then
+        if core.is_protected(pos, '') then
             return
         end
 
         local drops = {}
-        local inv = minetest.get_meta(pos):get_inventory()
+        local inv = core.get_meta(pos):get_inventory()
         local n = #drops
 
         for i = 1, inv:get_size('main') do
@@ -1632,16 +1632,16 @@ function x_farming.register_bag(name, def)
         end
 
         drops[#drops + 1] = name
-        minetest.remove_node(pos)
+        core.remove_node(pos)
         return drops
     end
 
     _def.can_dig = function(pos, player)
-        return not minetest.is_protected(pos, player:get_player_name())
+        return not core.is_protected(pos, player:get_player_name())
     end
 
     _def.preserve_metadata = function(pos, oldnode, oldmeta, drops)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local inv = meta:get_inventory()
         local stack = drops[1]
         local meta_drop = stack:get_meta()
@@ -1649,7 +1649,7 @@ function x_farming.register_bag(name, def)
         if not inv:is_empty('main') then
             local inv_stack = inv:get_stack('main', 1)
 
-            meta_drop:set_string('bag_inv', minetest.serialize(inv_stack:to_table()))
+            meta_drop:set_string('bag_inv', core.serialize(inv_stack:to_table()))
             meta_drop:set_string('description', stack:get_description() .. '\n'
                 .. inv_stack:get_description() .. '\n' .. S('Quantity') .. ': ' .. inv_stack:get_count())
 
@@ -1658,7 +1658,7 @@ function x_farming.register_bag(name, def)
     end
 
     _def.allow_metadata_inventory_put = function(pos, listname, index, stack, player)
-        if minetest.is_protected(pos, player:get_player_name()) or not x_farming.allowed_bag_items[stack:get_name()] then
+        if core.is_protected(pos, player:get_player_name()) or not x_farming.allowed_bag_items[stack:get_name()] then
             return 0
         end
 
@@ -1666,7 +1666,7 @@ function x_farming.register_bag(name, def)
     end
 
     _def.allow_metadata_inventory_take = function(pos, listname, index, stack, player)
-        if minetest.is_protected(pos, player:get_player_name()) or not x_farming.allowed_bag_items[stack:get_name()] then
+        if core.is_protected(pos, player:get_player_name()) or not x_farming.allowed_bag_items[stack:get_name()] then
             return 0
         end
 
@@ -1680,11 +1680,11 @@ function x_farming.register_bag(name, def)
             return
         end
 
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local inv = meta:get_inventory()
         local split_name = stack_name:split(':')
-        local node = minetest.get_node(pos)
-        local swap_node = minetest.registered_nodes['x_farming:bag_' .. split_name[2]]
+        local node = core.get_node(pos)
+        local swap_node = core.registered_nodes['x_farming:bag_' .. split_name[2]]
         local inv_stack = inv:get_stack('main', 1)
 
         if not swap_node then
@@ -1694,12 +1694,12 @@ function x_farming.register_bag(name, def)
         if not inv:is_empty(listname) and node.name ~= swap_node.name then
             local p_name = player:get_player_name()
 
-            minetest.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
+            core.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
 
             local label_copy = swap_node.short_description .. ' (' .. S('owned by') .. ' ' .. meta:get_string('owner') .. ')\n'
                 .. inv_stack:get_description()
 
-            minetest.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
+            core.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
         end
 
         meta:set_string('infotext', swap_node.short_description .. ' (' .. S('owned by')
@@ -1708,27 +1708,27 @@ function x_farming.register_bag(name, def)
     end
 
     _def.on_metadata_inventory_take = function(pos, listname, index, stack, player)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local inv = meta:get_inventory()
         local inv_stack = inv:get_stack('main', 1)
-        local node = minetest.get_node(pos)
+        local node = core.get_node(pos)
 
         if inv:is_empty(listname) then
             local p_name = player:get_player_name()
-            local swap_node = minetest.registered_nodes['x_farming:bag_empty']
+            local swap_node = core.registered_nodes['x_farming:bag_empty']
 
             if swap_node then
-                minetest.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
+                core.swap_node(pos, { name = swap_node.name, param2 = node.param2 })
                 meta:set_string('infotext', swap_node.short_description
                     .. ' (' .. S('owned by') .. ' ' .. meta:get_string('owner') .. ')')
 
                 local label_copy = swap_node.short_description
                     .. ' (' .. S('owned by') .. ' ' .. meta:get_string('owner') .. ')\n' .. inv_stack:get_description()
 
-                minetest.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
+                core.show_formspec(p_name, _def.name, x_farming.get_crate_or_bag_formspec(pos, label_copy))
             end
         else
-            local node_def = minetest.registered_nodes[node.name]
+            local node_def = core.registered_nodes[node.name]
 
             if node_def then
                 meta:set_string('infotext', node_def.short_description .. ' (' .. S('owned by') .. ' '
@@ -1738,7 +1738,7 @@ function x_farming.register_bag(name, def)
         end
     end
 
-    minetest.register_node(_def.name, _def)
+    core.register_node(_def.name, _def)
 end
 
 --
@@ -1751,27 +1751,27 @@ end
 ---@license GNU LGPL 2.1
 ----
 
----Get creative mode setting from minetest.conf
-local creative_mod_cache = minetest.settings:get_bool('creative_mode')
+---Get creative mode setting from core.conf
+local creative_mod_cache = core.settings:get_bool('creative_mode')
 
 ---Check if creating mode is enabled or player has creative privs
 ---@param name string name
 ---@return boolean
 function x_farming.x_bonemeal.is_creative(name)
-    return creative_mod_cache or minetest.check_player_privs(name, { creative = true })
+    return creative_mod_cache or core.check_player_privs(name, { creative = true })
 end
 
 ---Check if node has a soil below its self
 ---@param under Vector of position
 ---@return boolean
 function x_farming.x_bonemeal.is_on_soil(under)
-    local below = minetest.get_node_or_nil({ x = under.x, y = under.y - 1, z = under.z })
+    local below = core.get_node_or_nil({ x = under.x, y = under.y - 1, z = under.z })
 
     if not below then
         return false
     end
 
-    if minetest.get_item_group(below.name, 'soil') == 0 and below.name ~= 'mcl_farming:soil_wet' then
+    if core.get_item_group(below.name, 'soil') == 0 and below.name ~= 'mcl_farming:soil_wet' then
         return false
     end
 
@@ -1782,14 +1782,14 @@ end
 ---@param under Vector of position
 ---@return boolean
 function x_farming.x_bonemeal.is_on_sand(under)
-    local below = minetest.get_node_or_nil({ x = under.x, y = under.y - 1, z = under.z })
+    local below = core.get_node_or_nil({ x = under.x, y = under.y - 1, z = under.z })
 
     if not below then
         return false
     end
 
-    if minetest.get_item_group(below.name, 'sand') == 0
-        and minetest.get_item_group(below.name, 'everness_sand') == 0
+    if core.get_item_group(below.name, 'sand') == 0
+        and core.get_item_group(below.name, 'everness_sand') == 0
     then
         return false
     end
@@ -1821,12 +1821,12 @@ local farming_steps = {
 ---Particle and sound effect after the bone meal is successfully used
 ---@param pos Vector containing position
 function x_farming.x_bonemeal.particle_effect(pos)
-    minetest.sound_play('x_farming_x_bonemeal_grow', {
+    core.sound_play('x_farming_x_bonemeal_grow', {
         pos = pos,
         gain = 0.5,
     })
 
-    minetest.add_particlespawner({
+    core.add_particlespawner({
         amount = 6,
         time = 3,
         minpos = { x = pos.x - 0.4, y = pos.y - 0.4, z = pos.z - 0.4 },
@@ -1890,7 +1890,7 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
         success = false,
         itemstack = itemstack
     }
-    local node = minetest.get_node(pointed_thing.under)
+    local node = core.get_node(pointed_thing.under)
 
     if not node then
         return result
@@ -1898,13 +1898,13 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
 
     local pos0 = vector.subtract(pointed_thing.under, 3)
     local pos1 = vector.add(pointed_thing.under, 3)
-    local biome_data = minetest.get_biome_data(pointed_thing.under)
+    local biome_data = core.get_biome_data(pointed_thing.under)
 
     if not biome_data then
         return result
     end
 
-    local biome_name = minetest.get_biome_name(biome_data.biome)
+    local biome_name = core.get_biome_name(biome_data.biome)
 
     if not biome_name then
         return result
@@ -1914,7 +1914,7 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
     local registered_decorations_filtered = {}
     ---@type ItemStack | nil
     local returned_itemstack
-    local node_def = minetest.registered_nodes[node.name]
+    local node_def = core.registered_nodes[node.name]
     local below_water = false
     local floats_on_water = false
     local node_in_decor = false
@@ -1924,16 +1924,16 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
     -- print('biome_name', biome_name)
 
     ---check 1 node below pointed node (floats on water)
-    local test_node = minetest.get_node({
+    local test_node = core.get_node({
         x = pointed_thing.under.x,
         y = pointed_thing.under.y - 1,
         z = pointed_thing.under.z
     })
-    local test_node_def = minetest.registered_nodes[test_node.name]
+    local test_node_def = core.registered_nodes[test_node.name]
 
     if test_node_def
         and test_node_def.liquidtype == 'source'
-        and minetest.get_item_group(test_node_def.name, 'water') > 0
+        and core.get_item_group(test_node_def.name, 'water') > 0
     then
         floats_on_water = true
     end
@@ -1941,16 +1941,16 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
     ---check 2 nodes above pointed nodes (below water)
     local water_nodes_above = 0
     for i = 1, 2 do
-        local test_node2 = minetest.get_node({
+        local test_node2 = core.get_node({
             x = pointed_thing.under.x,
             y = pointed_thing.under.y + i,
             z = pointed_thing.under.z
         })
-        local test_node_def2 = minetest.registered_nodes[test_node2.name]
+        local test_node_def2 = core.registered_nodes[test_node2.name]
 
         if test_node_def2
             and test_node_def2.liquidtype == 'source'
-            and minetest.get_item_group(test_node_def2.name, 'water') > 0
+            and core.get_item_group(test_node_def2.name, 'water') > 0
         then
             water_nodes_above = water_nodes_above + 1
         end
@@ -1961,15 +1961,15 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
     end
 
     if below_water then
-        positions_dirty = minetest.find_nodes_in_area(pos0, pos1, node.name)
+        positions_dirty = core.find_nodes_in_area(pos0, pos1, node.name)
     elseif floats_on_water then
-        positions_dirty = minetest.find_nodes_in_area(pos0, pos1, 'air')
+        positions_dirty = core.find_nodes_in_area(pos0, pos1, 'air')
     else
-        positions_dirty = minetest.find_nodes_in_area_under_air(pos0, pos1, node.name)
+        positions_dirty = core.find_nodes_in_area_under_air(pos0, pos1, node.name)
     end
 
     ---find suitable decorations
-    for _, v in pairs(minetest.registered_decorations) do
+    for _, v in pairs(core.registered_decorations) do
         ---only for 'simple' decoration types
         if v.deco_type == 'simple' then
             ---filter based on biome name in `biomes` table and node name in `place_on` table
@@ -2004,7 +2004,7 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
 
     ---find suitable positions
     for j, pos_value in ipairs(positions_dirty) do
-        local node_at_pos = minetest.get_node(pos_value)
+        local node_at_pos = core.get_node(pos_value)
 
         if below_water then
             ---below water
@@ -2012,12 +2012,12 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
 
             ---check if 2 nodes above are water
             for i = 1, 2 do
-                local test_node3 = minetest.get_node({ x = pos_value.x, y = pos_value.y + i, z = pos_value.z })
-                local test_node_def3 = minetest.registered_nodes[test_node3.name]
+                local test_node3 = core.get_node({ x = pos_value.x, y = pos_value.y + i, z = pos_value.z })
+                local test_node_def3 = core.registered_nodes[test_node3.name]
 
                 if test_node_def3
                     and test_node_def3.liquidtype == 'source'
-                    and minetest.get_item_group(test_node_def3.name, 'water') > 0
+                    and core.get_item_group(test_node_def3.name, 'water') > 0
                 then
                     water_nodes_above2 = water_nodes_above2 + 1
                 end
@@ -2037,12 +2037,12 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
     ---find suitable positions (float on water)
     if floats_on_water then
         for _, pos_value in ipairs(positions_dirty) do
-            local node_at_pos_below = minetest.get_node({ x = pos_value.x, y = pos_value.y - 1, z = pos_value.z })
-            local test_node_def4 = minetest.registered_nodes[node_at_pos_below.name]
+            local node_at_pos_below = core.get_node({ x = pos_value.x, y = pos_value.y - 1, z = pos_value.z })
+            local test_node_def4 = core.registered_nodes[node_at_pos_below.name]
 
             if test_node_def4
                 and test_node_def4.liquidtype == 'source'
-                and minetest.get_item_group(test_node_def4.name, 'water') > 0
+                and core.get_item_group(test_node_def4.name, 'water') > 0
             then
                 table.insert(positions, pos_value)
             end
@@ -2065,7 +2065,7 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
                 random_decor_item = random_decor.decoration[math.random(1, #random_decor.decoration)]
             end
 
-            local random_decor_item_def = minetest.registered_nodes[random_decor_item]
+            local random_decor_item_def = core.registered_nodes[random_decor_item]
 
             if random_pos ~= nil and random_decor_item_def.drawtype ~= 'airlike' then
                 if random_decor_item_def.on_place ~= nil and node_def and not node_def.on_rightclick then
@@ -2104,7 +2104,7 @@ function x_farming.x_bonemeal.grow_grass_and_flowers(itemstack, user, pointed_th
                     end
 
                     x_farming.x_bonemeal.particle_effect(random_pos)
-                    minetest.set_node({
+                    core.set_node({
                         x = random_pos.x,
                         y = random_pos.y + pos_y,
                         z = random_pos.z
@@ -2145,8 +2145,8 @@ function x_farming.x_bonemeal.grow_farming(itemstack, user, pointed_thing)
         itemstack = itemstack
     }
     local pos_under = pointed_thing.under
-    local replace_node_name = minetest.get_node(pos_under).name
-    local ndef = minetest.registered_nodes[replace_node_name]
+    local replace_node_name = core.get_node(pos_under).name
+    local ndef = core.registered_nodes[replace_node_name]
     local take_item = false
 
     if not ndef.next_plant
@@ -2158,17 +2158,17 @@ function x_farming.x_bonemeal.grow_farming(itemstack, user, pointed_thing)
 
     local pos0 = vector.subtract(pointed_thing.under, 3)
     local pos1 = vector.add(pointed_thing.under, 3)
-    local positions = minetest.find_nodes_in_area(pos0, pos1, { 'group:plant', 'group:seed' })
+    local positions = core.find_nodes_in_area(pos0, pos1, { 'group:plant', 'group:seed' })
 
     for i, pos in ipairs(positions) do
         local isFertile = false
-        replace_node_name = minetest.get_node(pos).name
+        replace_node_name = core.get_node(pos).name
 
         ---check if on wet soil
-        local below = minetest.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
-        local below_def = minetest.registered_nodes[below.name]
+        local below = core.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
+        local below_def = core.registered_nodes[below.name]
 
-        if minetest.get_item_group(below.name, 'soil') == 3 or below.name == 'mcl_farming:soil_wet' then
+        if core.get_item_group(below.name, 'soil') == 3 or below.name == 'mcl_farming:soil_wet' then
             local current_step = tonumber(string.reverse(string.reverse(replace_node_name):split('_')[1]))
             local max_step = farming_steps[replace_node_name:gsub('_%d+', '', 1)]
 
@@ -2197,7 +2197,7 @@ function x_farming.x_bonemeal.grow_farming(itemstack, user, pointed_thing)
             end
 
             ---search for fertility (again after checking soil)
-            local seed_def = minetest.registered_nodes[seed_name]
+            local seed_def = core.registered_nodes[seed_name]
 
             if seed_def and below_def then
                 if below_def.groups then
@@ -2215,14 +2215,14 @@ function x_farming.x_bonemeal.grow_farming(itemstack, user, pointed_thing)
                 local new_plant = replace_node_name:gsub('_%d+', '_' .. new_step, 1)
                 take_item = true
 
-                local placenode_def = minetest.registered_nodes[new_plant]
+                local placenode_def = core.registered_nodes[new_plant]
 
                 local placenode = { name = new_plant }
                 if placenode_def and placenode_def.place_param2 then
                     placenode.param2 = placenode_def.place_param2
                 end
                 x_farming.x_bonemeal.particle_effect(pos)
-                minetest.swap_node(pos, placenode)
+                core.swap_node(pos, placenode)
             end
         end
     end
@@ -2262,11 +2262,11 @@ function x_farming.x_bonemeal.on_use(self, itemstack, user, pointed_thing)
     if pointed_thing.type ~= 'node' then
         return result
     end
-    if minetest.is_protected(under, user:get_player_name()) then
+    if core.is_protected(under, user:get_player_name()) then
         return result
     end
 
-    local node = minetest.get_node(under)
+    local node = core.get_node(under)
 
     if not node then
         return result
@@ -2319,7 +2319,7 @@ end
 --- API for registering tree growing from saplings using bonemeal
 function x_farming.x_bonemeal.register_tree_defs(self, defs)
     if not defs or type(defs) ~= 'table' then
-        minetest.log('warning', '[x_farming][x_bonemeal] Missing or incorrect definition: \n' .. dump(defs))
+        core.log('warning', '[x_farming][x_bonemeal] Missing or incorrect definition: \n' .. dump(defs))
     end
 
     for _, value in ipairs(defs) do
@@ -2355,9 +2355,9 @@ end
 
 -- TheTermos (MIT)
 function x_farming.nodeatpos(pos)
-    local node = minetest.get_node_or_nil(pos)
+    local node = core.get_node_or_nil(pos)
     if node then
-        return minetest.registered_nodes[node.name]
+        return core.registered_nodes[node.name]
     end
 end
 
@@ -2381,7 +2381,7 @@ function x_farming.get_node_height(pos)
                     return npos.y + 0.5, 1, false
                 end
             elseif node.node_box and node.node_box.type == 'leveled' then
-                return minetest.get_node_level(pos) / 64 - 0.5 + x_farming.get_node_pos(pos).y, 0, false
+                return core.get_node_level(pos) / 64 - 0.5 + x_farming.get_node_pos(pos).y, 0, false
             else
                 -- the unforeseen
                 return npos.y + 0.5, 1, false
@@ -2435,7 +2435,7 @@ end
 -- modified by SaKeL
 function x_farming.get_spawn_pos_abr(dtime, intrvl, radius, chance, reduction)
     dtime = math.min(dtime, 0.1)
-    local players = minetest.get_connected_players()
+    local players = core.get_connected_players()
     intrvl = 1 / intrvl
 
     if math.random() < dtime * (intrvl * #players) then
@@ -2448,21 +2448,21 @@ function x_farming.get_spawn_pos_abr(dtime, intrvl, radius, chance, reduction)
         local yaw
         if spd > 1 then
             -- spawn in the front arc
-            yaw = minetest.dir_to_yaw(vel) + math.random() * 0.35 - 0.75
+            yaw = core.dir_to_yaw(vel) + math.random() * 0.35 - 0.75
         else
             -- random yaw
             yaw = math.random() * math.pi * 2 - math.pi
         end
 
         local pos = player:get_pos()
-        local dir = vector.multiply(minetest.yaw_to_dir(yaw), radius)
+        local dir = vector.multiply(core.yaw_to_dir(yaw), radius)
         local pos2 = vector.add(pos, dir)
 
         pos2.y = pos2.y - 5
 
         local height, liquidflag = x_farming.get_terrain_height(pos2, 32)
         if height then
-            local objs = minetest.find_node_near(pos, radius * 1.1, { 'group:bee' }) or {}
+            local objs = core.find_node_near(pos, radius * 1.1, { 'group:bee' }) or {}
 
             -- count mobs in abrange
             for _, obj in ipairs(objs) do
@@ -2471,7 +2471,7 @@ function x_farming.get_spawn_pos_abr(dtime, intrvl, radius, chance, reduction)
 
             if chance < math.random() then
                 pos2.y = height
-                objs = minetest.get_objects_inside_radius(pos2, radius * 0.95)
+                objs = core.get_objects_inside_radius(pos2, radius * 0.95)
 
                 -- do not spawn if another player around
                 for _, obj in ipairs(objs) do
@@ -2487,20 +2487,20 @@ function x_farming.get_spawn_pos_abr(dtime, intrvl, radius, chance, reduction)
 end
 
 function x_farming.on_flood_candle(pos, oldnode, newnode)
-    local drops = minetest.get_node_drops(oldnode)
+    local drops = core.get_node_drops(oldnode)
 
     for _, item_name in ipairs(drops) do
-        minetest.add_item(pos, ItemStack(item_name))
+        core.add_item(pos, ItemStack(item_name))
     end
 
     -- Play flame-extinguish sound if liquid is not an 'igniter'
-    local nodedef = minetest.registered_items[newnode.name]
+    local nodedef = core.registered_items[newnode.name]
 
     if not (nodedef and nodedef.groups
         and nodedef.groups.igniter and nodedef.groups.igniter > 0)
-        and minetest.get_item_group(oldnode.name, 'candle_on') > 0
+        and core.get_item_group(oldnode.name, 'candle_on') > 0
     then
-        minetest.sound_play(
+        core.sound_play(
             'x_farming_extinguish_candle',
             { pos = pos, max_hear_distance = 16, gain = 0.07 },
             true
@@ -2613,7 +2613,7 @@ function x_farming.register_feast(name, def)
         end
 
         d.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-            local n = minetest.registered_nodes[node.name]
+            local n = core.registered_nodes[node.name]
             local p_name = clicker:get_player_name()
             local inv = clicker:get_inventory()
             local stack_name = itemstack:get_name()
@@ -2624,18 +2624,18 @@ function x_farming.register_feast(name, def)
 
             -- last (no more food) step
             if n._next_step > def.steps then
-                minetest.chat_send_player(p_name, S('There is no more food left!'))
+                core.chat_send_player(p_name, S('There is no more food left!'))
                 return itemstack
             end
 
             if stack_name == 'x_farming:bowl' then
-                minetest.swap_node(pos, { name = 'x_farming:' .. name .. '_' .. n._next_step, param2 = node.param2 })
+                core.swap_node(pos, { name = 'x_farming:' .. name .. '_' .. n._next_step, param2 = node.param2 })
 
-                if not minetest.is_creative_enabled(p_name) then
+                if not core.is_creative_enabled(p_name) then
                     itemstack:take_item()
                 end
 
-                minetest.sound_play('x_farming_wooden_bowl', {
+                core.sound_play('x_farming_wooden_bowl', {
                     pos = pos,
                     gain = 0.4,
                     max_hear_distance = 16
@@ -2647,22 +2647,22 @@ function x_farming.register_feast(name, def)
                     inv:add_item('main', stack_bowl)
                 else
                     -- drop on the ground
-                    minetest.add_item(clicker:get_pos(), stack_bowl)
+                    core.add_item(clicker:get_pos(), stack_bowl)
                 end
             else
-                minetest.chat_send_player(p_name, S('You need to hold empty bowl if you want to take portion of the food!'))
+                core.chat_send_player(p_name, S('You need to hold empty bowl if you want to take portion of the food!'))
             end
 
             return itemstack
         end
 
         -- Node
-        minetest.register_node('x_farming:' .. name .. '_' .. i, d)
+        core.register_node('x_farming:' .. name .. '_' .. i, d)
 
         -- Craftitem definition
         local craftitem_def = {
             description = def.short_description .. ' ' .. S('Bowl') .. '\n' .. S('Compost chance') .. ': 100%\n'
-            .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 8'),
+            .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 8'),
             inventory_image = 'x_farming_bowl_' .. name .. '.png',
             wield_image = 'x_farming_bowl_' .. name .. '.png',
             groups = {
@@ -2678,17 +2678,17 @@ function x_farming.register_feast(name, def)
             _mcl_saturation = 12.0,
         }
 
-        if minetest.get_modpath('farming') then
-            craftitem_def.on_use = minetest.item_eat(8)
+        if core.get_modpath('farming') then
+            craftitem_def.on_use = core.item_eat(8)
         end
 
-        if minetest.get_modpath('mcl_farming') then
-            craftitem_def.on_place = minetest.item_eat(8)
-            craftitem_def.on_secondary_use = minetest.item_eat(8)
+        if core.get_modpath('mcl_farming') then
+            craftitem_def.on_place = core.item_eat(8)
+            craftitem_def.on_secondary_use = core.item_eat(8)
         end
 
         -- Craftitem
-        minetest.register_craftitem('x_farming:bowl_' .. name, craftitem_def)
+        core.register_craftitem('x_farming:bowl_' .. name, craftitem_def)
     end
 end
 
@@ -2793,53 +2793,53 @@ function x_farming.register_pie(name, def)
         }
 
         d.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-            local n = minetest.registered_nodes[node.name]
+            local n = core.registered_nodes[node.name]
 
             if not n then
                 return itemstack
             end
 
             if i < def.steps then
-                minetest.swap_node(pos, { name = 'x_farming:' .. name .. '_' .. n._next_step, param2 = node.param2 })
+                core.swap_node(pos, { name = 'x_farming:' .. name .. '_' .. n._next_step, param2 = node.param2 })
             else
-                minetest.remove_node(pos)
-                minetest.check_for_falling(pos)
+                core.remove_node(pos)
+                core.check_for_falling(pos)
             end
 
             local sound_name = 'x_farming_wooden_bowl'
 
-            if minetest.get_modpath('hunger_ng') then
+            if core.get_modpath('hunger_ng') then
                 hunger_ng.alter_hunger(clicker:get_player_name(), _def.item_eat)
                 sound_name = 'hunger_ng_eat'
-            elseif minetest.get_modpath('hbhunger') then
+            elseif core.get_modpath('hbhunger') then
                 hbhunger.eat(_def.item_eat, nil, ItemStack({ name = 'x_farming:' .. name .. '_1' }), clicker, pointed_thing)
                 sound_name = nil
-            elseif minetest.get_modpath('stamina') and minetest.global_exists('stamina') then
+            elseif core.get_modpath('stamina') and core.global_exists('stamina') then
                 -- extra check for global variable since there are some mods called "stamina" without registering global "stamina" namespace
-                -- @see https://content.minetest.net/threads/6791/
+                -- @see https://content.core.net/threads/6791/
                 stamina.change_saturation(clicker, _def.item_eat)
                 sound_name = 'stamina_eat'
-            elseif minetest.get_modpath('mcl_hunger') then
+            elseif core.get_modpath('mcl_hunger') then
                 local h = mcl_hunger.get_hunger(clicker)
                 mcl_hunger.set_hunger(clicker, math.min(h + _def.item_eat, 20))
                 sound_name = 'mcl_hunger_bite'
             else
-                minetest.item_eat(_def.item_eat)
+                core.item_eat(_def.item_eat)
             end
 
             if sound_name then
-                minetest.sound_play(sound_name, { pos = pos, gain = 0.7, max_hear_distance = 5 }, true)
+                core.sound_play(sound_name, { pos = pos, gain = 0.7, max_hear_distance = 5 }, true)
             end
 
             return itemstack
         end
 
         -- Node
-        minetest.register_node('x_farming:' .. name .. '_' .. i, d)
+        core.register_node('x_farming:' .. name .. '_' .. i, d)
 
         local craftitem_def = {
             description = def.short_description .. ' ' .. S('Slice') .. '\n' .. S('Compost chance') .. ': 100%\n'
-            .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': ' .. _def.item_eat),
+            .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': ' .. _def.item_eat),
             inventory_image = 'x_farming_slice_' .. name .. '.png',
             wield_image = 'x_farming_slice_' .. name .. '.png',
             groups = {
@@ -2855,17 +2855,17 @@ function x_farming.register_pie(name, def)
             _mcl_saturation = 10.0,
         }
 
-        if minetest.get_modpath('farming') then
-            craftitem_def.on_use = minetest.item_eat(_def.item_eat)
+        if core.get_modpath('farming') then
+            craftitem_def.on_use = core.item_eat(_def.item_eat)
         end
 
-        if minetest.get_modpath('mcl_farming') then
-            craftitem_def.on_place = minetest.item_eat(_def.item_eat)
-            craftitem_def.on_secondary_use = minetest.item_eat(_def.item_eat)
+        if core.get_modpath('mcl_farming') then
+            craftitem_def.on_place = core.item_eat(_def.item_eat)
+            craftitem_def.on_secondary_use = core.item_eat(_def.item_eat)
         end
 
         -- Craftitem
-        minetest.register_craftitem('x_farming:slice_' .. name, craftitem_def)
+        core.register_craftitem('x_farming:slice_' .. name, craftitem_def)
     end
 end
 
@@ -2877,21 +2877,21 @@ function x_farming.mcl.create_soil(pos, inv)
     if pos == nil then
         return false
     end
-    local node = minetest.get_node(pos)
+    local node = core.get_node(pos)
     local name = node.name
-    local above = minetest.get_node({ x = pos.x, y = pos.y + 1, z = pos.z })
-    if minetest.get_item_group(name, 'cultivatable') == 2 then
+    local above = core.get_node({ x = pos.x, y = pos.y + 1, z = pos.z })
+    if core.get_item_group(name, 'cultivatable') == 2 then
         if above.name == 'air' then
             node.name = 'mcl_farming:soil'
-            minetest.set_node(pos, node)
-            minetest.sound_play('x_farming_dirt_hit', { pos = pos, gain = 0.5 }, true)
+            core.set_node(pos, node)
+            core.sound_play('x_farming_dirt_hit', { pos = pos, gain = 0.5 }, true)
             return true
         end
-    elseif minetest.get_item_group(name, 'cultivatable') == 1 then
+    elseif core.get_item_group(name, 'cultivatable') == 1 then
         if above.name == 'air' then
             node.name = 'mcl_core:dirt'
-            minetest.set_node(pos, node)
-            minetest.sound_play('x_farming_dirt_hit', { pos = pos, gain = 0.6 }, true)
+            core.set_node(pos, node)
+            core.sound_play('x_farming_dirt_hit', { pos = pos, gain = 0.6 }, true)
             return true
         end
     end
@@ -2901,10 +2901,10 @@ end
 function x_farming.mcl.hoe_on_place_function(uses)
     return function(itemstack, user, pointed_thing)
         -- Call on_rightclick if the pointed node defines it
-        local node = minetest.get_node(pointed_thing.under)
+        local node = core.get_node(pointed_thing.under)
 
         -- Custom: add support for MTG definition farming
-        local regN = minetest.registered_nodes
+        local regN = core.registered_nodes
         if regN[node.name].soil ~= nil
             and regN[node.name].soil.wet ~= nil
             and regN[node.name].soil.dry ~= nil
@@ -2913,18 +2913,18 @@ function x_farming.mcl.hoe_on_place_function(uses)
         end
 
         if user and not user:get_player_control().sneak then
-            if minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].on_rightclick then
-                return minetest.registered_nodes[node.name].on_rightclick(pointed_thing.under, node, user, itemstack) or itemstack
+            if core.registered_nodes[node.name] and core.registered_nodes[node.name].on_rightclick then
+                return core.registered_nodes[node.name].on_rightclick(pointed_thing.under, node, user, itemstack) or itemstack
             end
         end
 
-        if minetest.is_protected(pointed_thing.under, user:get_player_name()) then
-            minetest.record_protection_violation(pointed_thing.under, user:get_player_name())
+        if core.is_protected(pointed_thing.under, user:get_player_name()) then
+            core.record_protection_violation(pointed_thing.under, user:get_player_name())
             return itemstack
         end
 
         if x_farming.mcl.create_soil(pointed_thing.under, user:get_inventory()) then
-            if not minetest.is_creative_enabled(user:get_player_name()) then
+            if not core.is_creative_enabled(user:get_player_name()) then
                 itemstack:add_wear_by_uses(uses)
             end
             return itemstack

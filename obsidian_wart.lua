@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 local minlight = 0
 local maxlight = 14
 
@@ -35,7 +35,7 @@ x_farming.register_plant('x_farming:obsidian_wart', {
 })
 
 -- needed
-minetest.override_item('x_farming:obsidian_wart', {
+core.override_item('x_farming:obsidian_wart', {
     description = S('Obsidian Wart') .. '\n' .. S('Compost chance') .. ': 65%',
     short_description = S('Obsidian Wart'),
     groups = {
@@ -46,9 +46,9 @@ minetest.override_item('x_farming:obsidian_wart', {
     },
 })
 
-if minetest.get_modpath('default') then
+if core.get_modpath('default') then
     -- default obsidian
-    minetest.override_item('default:obsidian', {
+    core.override_item('default:obsidian', {
         groups = {
             -- MTG
             cracky = 1,
@@ -64,7 +64,7 @@ if minetest.get_modpath('default') then
     })
 
     -- obsidian - soil
-    minetest.register_node('x_farming:obsidian_soil', {
+    core.register_node('x_farming:obsidian_soil', {
         description = S('Obsidian Soil'),
         short_description = S('Obsidian Soil'),
         drop = 'default:obsidian',
@@ -79,7 +79,7 @@ if minetest.get_modpath('default') then
     })
 
     -- obsidian - soil - wet
-    minetest.register_node('x_farming:obsidian_soil_wet', {
+    core.register_node('x_farming:obsidian_soil_wet', {
         description = S('Wet Obsidian Soil'),
         short_description = S('Wet Obsidian Soil'),
         drop = 'default:obsidian',
@@ -92,9 +92,9 @@ if minetest.get_modpath('default') then
             wet = 'x_farming:obsidian_soil_wet'
         }
     })
-elseif minetest.get_modpath('mcl_core') then
+elseif core.get_modpath('mcl_core') then
     -- mcl_core obsidian
-    minetest.override_item('mcl_core:obsidian', {
+    core.override_item('mcl_core:obsidian', {
         groups = {
             pickaxey = 5,
             building_block = 1,
@@ -112,7 +112,7 @@ elseif minetest.get_modpath('mcl_core') then
     })
 
     -- mcl_core obsidian - soil
-    minetest.register_node('x_farming:mcl_obsidian_soil', {
+    core.register_node('x_farming:mcl_obsidian_soil', {
         description = S('Obsidian Soil'),
         short_description = S('Obsidian Soil'),
         drop = 'mcl_core:obsidian',
@@ -137,7 +137,7 @@ elseif minetest.get_modpath('mcl_core') then
     })
 
     -- mcl_core obsidian - soil - wet
-    minetest.register_node('x_farming:mcl_obsidian_soil_wet', {
+    core.register_node('x_farming:mcl_obsidian_soil_wet', {
         description = S('Wet Obsidian Soil'),
         short_description = S('Wet Obsidian Soil'),
         drop = 'mcl_core:obsidian',
@@ -166,7 +166,7 @@ end
 --
 -- Nodes
 --
-minetest.register_node('x_farming:wart_block', {
+core.register_node('x_farming:wart_block', {
     description = S('Wart Block') .. '\n' .. S('Compost chance') .. ': 85%',
     short_description = S('Wart Block'),
     tiles = { 'x_farming_wart_block.png' },
@@ -186,7 +186,7 @@ minetest.register_node('x_farming:wart_block', {
     _mcl_hardness = 0.8,
 })
 
-minetest.register_node('x_farming:wartrack', {
+core.register_node('x_farming:wartrack', {
     description = S('Wartrack'),
     short_description = S('Wartrack'),
     tiles = { 'x_farming_wartrack.png' },
@@ -208,7 +208,7 @@ minetest.register_node('x_farming:wartrack', {
     _mcl_hardness = 0.8,
 })
 
-minetest.register_node('x_farming:wart_brick_block', {
+core.register_node('x_farming:wart_brick_block', {
     description = S('Wart Brick Block'),
     short_description = S('Wart Brick Block'),
     tiles = { 'x_farming_wart_brick_block.png' },
@@ -230,7 +230,7 @@ minetest.register_node('x_farming:wart_brick_block', {
     _mcl_hardness = 0.8,
 })
 
-minetest.register_node('x_farming:wart_red_brick_block', {
+core.register_node('x_farming:wart_red_brick_block', {
     description = S('Wart Red Brick Block'),
     short_description = S('Wart Red Brick Block'),
     tiles = { 'x_farming_wart_red_brick_block.png' },
@@ -255,7 +255,7 @@ minetest.register_node('x_farming:wart_red_brick_block', {
 --
 -- Register Wart stairs and slabs
 --
-if minetest.get_modpath('stairs') then
+if core.get_modpath('stairs') then
     stairs.register_stair_and_slab(
         'wart_block',
         'x_farming:wart_block',
@@ -297,7 +297,7 @@ if minetest.get_modpath('stairs') then
     )
 end
 
-if minetest.get_modpath('mcl_stairs') then
+if core.get_modpath('mcl_stairs') then
     mcl_stairs.register_stair_and_slab(
         'x_farming_wart_block',
         'x_farming:wart_block',
@@ -383,13 +383,13 @@ if minetest.get_modpath('mcl_stairs') then
     )
 end
 
-minetest.register_craftitem('x_farming:wart_brick', {
+core.register_craftitem('x_farming:wart_brick', {
     description = S('Wart Brick'),
     inventory_image = 'x_farming_wart_brick.png',
     groups = { craftitem = 1 },
 })
 
-minetest.register_node('x_farming:obsidian_wart_decor', {
+core.register_node('x_farming:obsidian_wart_decor', {
     description = S('Obsidian Wart'),
     short_description = S('Obsidian Wart'),
     drawtype = 'plantlike_rooted',
@@ -437,7 +437,7 @@ minetest.register_node('x_farming:obsidian_wart_decor', {
     },
 
     after_destruct = function(pos, oldnode)
-        minetest.set_node(pos, { name = 'default:obsidian' })
+        core.set_node(pos, { name = 'default:obsidian' })
     end,
 })
 
@@ -451,8 +451,8 @@ x_farming.register_crate('crate_obsidian_wart_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
-    minetest.register_decoration({
+core.register_on_mods_loaded(function()
+    core.register_decoration({
         name = 'x_farming:obsidian_wart_decor',
         deco_type = 'simple',
         place_offset_y = -1,

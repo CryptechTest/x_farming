@@ -16,10 +16,10 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 local function particle_effect(pos)
-    minetest.add_particlespawner({
+    core.add_particlespawner({
         amount = 8,
         time = 2,
         minpos = { x = pos.x - 0.4, y = pos.y + 0.4, z = pos.z - 0.4 },
@@ -77,7 +77,7 @@ for i = 1, 5, 1 do
     def.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
         local p_name = clicker:get_player_name()
 
-        if minetest.is_protected(pos, p_name) then
+        if core.is_protected(pos, p_name) then
             return itemstack
         end
 
@@ -87,38 +87,38 @@ for i = 1, 5, 1 do
         -- percentage, higher = better, max 100%
         local chance = 0
 
-        if minetest.get_item_group(wield_stack_name, 'compost') > 0 then
+        if core.get_item_group(wield_stack_name, 'compost') > 0 then
             -- defined in groups, e.g. `{ compost = 10 }`
-            chance = minetest.get_item_group(wield_stack_name, 'compost')
-        elseif minetest.get_item_group(wield_stack_name, 'food_bread') == 1
-            or minetest.get_item_group(wield_stack_name, 'wool') == 1
+            chance = core.get_item_group(wield_stack_name, 'compost')
+        elseif core.get_item_group(wield_stack_name, 'food_bread') == 1
+            or core.get_item_group(wield_stack_name, 'wool') == 1
             or node.name == 'farming:straw'
         then
             chance = 85
-        elseif minetest.get_item_group(wield_stack_name, 'flora') == 1
-            or minetest.get_item_group(wield_stack_name, 'food_apple') == 1
-            or minetest.get_item_group(wield_stack_name, 'fern') == 1
-            or minetest.get_item_group(wield_stack_name, 'food_wheat') == 1
-            or minetest.get_item_group(wield_stack_name, 'food_flour') == 1
-            or minetest.get_item_group(wield_stack_name, 'mushroom') == 1
-            or minetest.get_item_group(wield_stack_name, 'flower') == 1
+        elseif core.get_item_group(wield_stack_name, 'flora') == 1
+            or core.get_item_group(wield_stack_name, 'food_apple') == 1
+            or core.get_item_group(wield_stack_name, 'fern') == 1
+            or core.get_item_group(wield_stack_name, 'food_wheat') == 1
+            or core.get_item_group(wield_stack_name, 'food_flour') == 1
+            or core.get_item_group(wield_stack_name, 'mushroom') == 1
+            or core.get_item_group(wield_stack_name, 'flower') == 1
         then
             chance = 65
-        elseif minetest.get_item_group(wield_stack_name, 'marram_grass') == 1
-            or minetest.get_item_group(wield_stack_name, 'junglegrass') == 1
+        elseif core.get_item_group(wield_stack_name, 'marram_grass') == 1
+            or core.get_item_group(wield_stack_name, 'junglegrass') == 1
             or node.name == 'default:cactus'
             or node.name == 'default:coral_green'
             or node.name == 'default:coral_pink'
             or node.name == 'default:coral_cyan'
         then
             chance = 50
-        elseif minetest.get_item_group(wield_stack_name, 'leaves') == 1
-            or minetest.get_item_group(wield_stack_name, 'seed') == 1
-            or minetest.get_item_group(wield_stack_name, 'grass') == 1
-            or minetest.get_item_group(wield_stack_name, 'snappy') == 3
-            or minetest.get_item_group(wield_stack_name, 'sapling') == 1
-            or minetest.get_item_group(wield_stack_name, 'food_blueberries') == 1
-            or minetest.get_item_group(wield_stack_name, 'food_berry') == 1
+        elseif core.get_item_group(wield_stack_name, 'leaves') == 1
+            or core.get_item_group(wield_stack_name, 'seed') == 1
+            or core.get_item_group(wield_stack_name, 'grass') == 1
+            or core.get_item_group(wield_stack_name, 'snappy') == 3
+            or core.get_item_group(wield_stack_name, 'sapling') == 1
+            or core.get_item_group(wield_stack_name, 'food_blueberries') == 1
+            or core.get_item_group(wield_stack_name, 'food_berry') == 1
             or node.name == 'default:sand_with_kelp'
             or node.name == 'default:large_cactus_seedling'
         then
@@ -131,7 +131,7 @@ for i = 1, 5, 1 do
 
         -- fill the composter
         if math.random() < chance / 100 then
-            local meta = minetest.get_meta(pos)
+            local meta = core.get_meta(pos)
             local prev_status = meta:get_int('composter_status')
             local status = prev_status + 10
 
@@ -141,28 +141,28 @@ for i = 1, 5, 1 do
 
             meta:set_int('composter_status', status)
 
-            local node_def = minetest.registered_nodes[node.name]
+            local node_def = core.registered_nodes[node.name]
 
             if math.fmod(status, 50) == 0 and node_def._next_state then
                 local placenode = { name = node_def._next_state }
 
-                minetest.swap_node(pos, placenode)
+                core.swap_node(pos, placenode)
                 particle_effect(pos)
 
                 if i == 3 then
                     -- placed nr 4
-                    minetest.get_node_timer(pos):start(math.random(1, 2))
+                    core.get_node_timer(pos):start(math.random(1, 2))
                 end
             elseif i == 1 then
                 -- convert to visual 1st level
-                minetest.swap_node(pos, { name = 'x_farming:composter_2' })
+                core.swap_node(pos, { name = 'x_farming:composter_2' })
                 particle_effect(pos)
             end
         end
 
-        minetest.sound_play('x_farming_dirt_hit', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
+        core.sound_play('x_farming_dirt_hit', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
 
-        if not minetest.is_creative_enabled(clicker:get_player_name()) then
+        if not core.is_creative_enabled(clicker:get_player_name()) then
             itemstack:take_item()
         end
 
@@ -201,7 +201,7 @@ for i = 1, 5, 1 do
 
         -- last step
         def.on_timer = function(pos, elapsed)
-            minetest.swap_node(pos, { name = 'x_farming:composter_5' })
+            core.swap_node(pos, { name = 'x_farming:composter_5' })
         end
     end
 
@@ -209,22 +209,22 @@ for i = 1, 5, 1 do
         def.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
             local p_name = clicker:get_player_name()
 
-            if minetest.is_protected(pos, p_name) then
+            if core.is_protected(pos, p_name) then
                 return itemstack
             end
 
-            local meta = minetest.get_meta(pos)
+            local meta = core.get_meta(pos)
             local above = vector.new(pos.x, pos.y + 0.5, pos.z)
-            local drop_pos = minetest.find_node_near(above, 0.5, { 'air' }) or above
+            local drop_pos = core.find_node_near(above, 0.5, { 'air' }) or above
 
-            minetest.sound_play('x_farming_dirt_hit', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
+            core.sound_play('x_farming_dirt_hit', { gain = 0.3, pos = pos, max_hear_distance = 10 }, true)
             -- drop bonemeal
-            minetest.add_item(
+            core.add_item(
                 vector.new(drop_pos.x, drop_pos.y + 1, drop_pos.z),
                 ItemStack({ name = 'x_farming:bonemeal', count = math.random(1, 2) })
             )
             -- swap to beginning
-            minetest.swap_node(pos, { name = 'x_farming:composter_1' })
+            core.swap_node(pos, { name = 'x_farming:composter_1' })
             -- reset status
             meta:set_int('composter_status', 0)
         end
@@ -234,5 +234,5 @@ for i = 1, 5, 1 do
     def._mcl_hardness = 0.6
     def._mcl_blast_resistance = 0.6
 
-    minetest.register_node(def.name, def)
+    core.register_node(def.name, def)
 end

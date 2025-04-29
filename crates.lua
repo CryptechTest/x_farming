@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 ---Crates
 x_farming.register_crate('crate_empty', {
@@ -35,10 +35,10 @@ x_farming.register_crate('crate_empty', {
         -- ALL
         flammable = 2
     },
-    stack_max = tonumber(minetest.settings:get('default_stack_max')) or 99
+    stack_max = tonumber(core.settings:get('default_stack_max')) or 99
 })
 
-if minetest.get_modpath('farming') then
+if core.get_modpath('farming') then
     ---crate wheat
     x_farming.register_crate('crate_wheat_3', {
         description = S('Wheat Crate'),

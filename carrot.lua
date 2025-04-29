@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 local minlight = 13
 local maxlight = 14
 
@@ -37,7 +37,7 @@ x_farming.register_plant('x_farming:carrot', {
 -- needed
 local carrot_def = {
     description = S('Carrot') .. '\n' .. S('Compost chance') .. ': 65%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
     short_description = S('Carrot'),
     groups = {
         -- X Farming
@@ -51,20 +51,20 @@ local carrot_def = {
     _mcl_blast_resistance = 0,
 }
 
-if minetest.get_modpath('farming') then
-    carrot_def.on_use = minetest.item_eat(3)
+if core.get_modpath('farming') then
+    carrot_def.on_use = core.item_eat(3)
 end
 
-if minetest.get_modpath('mcl_farming') then
-    carrot_def.on_place = minetest.item_eat(3)
-    carrot_def.on_secondary_use = minetest.item_eat(3)
+if core.get_modpath('mcl_farming') then
+    carrot_def.on_place = core.item_eat(3)
+    carrot_def.on_secondary_use = core.item_eat(3)
 end
 
-minetest.override_item('x_farming:carrot', carrot_def)
+core.override_item('x_farming:carrot', carrot_def)
 
 -- Golden carrot
 local golden_carrot_def = {
-    description = S('Golden Carrot') .. '\n' .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 10'),
+    description = S('Golden Carrot') .. '\n' .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 10'),
     inventory_image = 'x_farming_carrot_golden.png',
     wield_image = 'x_farming_carrot_golden.png',
     groups = {
@@ -76,19 +76,19 @@ local golden_carrot_def = {
 }
 
 if x_farming.hbhunger ~= nil or x_farming.hunger_ng ~= nil then
-    golden_carrot_def.description = golden_carrot_def.description .. '\n' .. minetest.colorize(x_farming.colors.red, S('Heal') .. ': 10')
+    golden_carrot_def.description = golden_carrot_def.description .. '\n' .. core.colorize(x_farming.colors.red, S('Heal') .. ': 10')
 end
 
-if minetest.get_modpath('farming') then
-    golden_carrot_def.on_use = minetest.item_eat(10)
+if core.get_modpath('farming') then
+    golden_carrot_def.on_use = core.item_eat(10)
 end
 
-if minetest.get_modpath('mcl_farming') then
-    golden_carrot_def.on_place = minetest.item_eat(10)
-    golden_carrot_def.on_secondary_use = minetest.item_eat(10)
+if core.get_modpath('mcl_farming') then
+    golden_carrot_def.on_place = core.item_eat(10)
+    golden_carrot_def.on_secondary_use = core.item_eat(10)
 end
 
-minetest.register_craftitem('x_farming:carrot_golden', golden_carrot_def)
+core.register_craftitem('x_farming:carrot_golden', golden_carrot_def)
 
 ---crate
 x_farming.register_crate('crate_carrot_3', {
@@ -100,30 +100,30 @@ x_farming.register_crate('crate_carrot_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dirt_with_grass')
         table.insert(deco_biomes, 'grassland')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:dirt_with_coral_grass')
         table.insert(deco_biomes, 'everness:coral_forest')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
         table.insert(deco_biomes, 'Plains')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:carrot',
             deco_type = 'simple',
             place_on = deco_place_on,

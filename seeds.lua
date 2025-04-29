@@ -17,7 +17,7 @@
 --]]
 
 -- Register farming items as dungeon loot
-if minetest.global_exists('dungeon_loot') then
+if core.global_exists('dungeon_loot') then
     dungeon_loot.register({
         { name = 'x_farming:seed_obsidian_wart', chance = 0.3, count = { 1, 2 } },
         { name = 'x_farming:seed_pumpkin', chance = 0.4, count = { 1, 4 } },

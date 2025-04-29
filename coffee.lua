@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 -- COFFEE
 x_farming.register_plant('x_farming:coffee', {
@@ -33,7 +33,7 @@ x_farming.register_plant('x_farming:coffee', {
 })
 
 -- needed
-minetest.override_item('x_farming:coffee', {
+core.override_item('x_farming:coffee', {
     description = S('Coffee bean') .. '\n' .. S('Compost chance') .. ': 50%',
     short_description = S('Coffee bean'),
     groups = {
@@ -44,7 +44,7 @@ minetest.override_item('x_farming:coffee', {
     }
 })
 
-minetest.register_craftitem('x_farming:bottle_coffee', {
+core.register_craftitem('x_farming:bottle_coffee', {
     description = S('Coffee Bottle'),
     tiles = { 'x_farming_bottle_coffee.png' },
     inventory_image = 'x_farming_bottle_coffee.png',
@@ -55,9 +55,9 @@ minetest.register_craftitem('x_farming:bottle_coffee', {
 -- Hot cup of coffee
 local coffee_cup_hot_def = {
     description = S('Hot Cup of Coffee') .. '\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Hot Cup of Coffee') .. '\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     drawtype = 'mesh',
     mesh = 'x_farming_coffee_cup_hot.obj',
     tiles = { 'x_farming_coffee_cup_hot_mesh.png' },
@@ -89,7 +89,7 @@ local coffee_cup_hot_def = {
         dig_by_water = 1,
         destroy_by_lava_flow = 1,
     },
-    on_use = minetest.item_eat(6),
+    on_use = core.item_eat(6),
     sounds = x_farming.node_sound_thin_glass_defaults(),
     sunlight_propagates = true,
     -- MCL
@@ -99,15 +99,15 @@ local coffee_cup_hot_def = {
 }
 
 if x_farming.hbhunger ~= nil or x_farming.hunger_ng ~= nil then
-    coffee_cup_hot_def.description = coffee_cup_hot_def.description .. '\n' .. minetest.colorize(x_farming.colors.red, S('Heal') .. ': 4')
-    coffee_cup_hot_def.short_description = coffee_cup_hot_def.short_description .. '\n' .. minetest.colorize(x_farming.colors.red, S('Heal') .. ': 4')
+    coffee_cup_hot_def.description = coffee_cup_hot_def.description .. '\n' .. core.colorize(x_farming.colors.red, S('Heal') .. ': 4')
+    coffee_cup_hot_def.short_description = coffee_cup_hot_def.short_description .. '\n' .. core.colorize(x_farming.colors.red, S('Heal') .. ': 4')
 end
 
-if minetest.get_modpath('mcl_farming') then
-    coffee_cup_hot_def.on_secondary_use = minetest.item_eat(6)
+if core.get_modpath('mcl_farming') then
+    coffee_cup_hot_def.on_secondary_use = core.item_eat(6)
 end
 
-minetest.register_node('x_farming:coffee_cup_hot', coffee_cup_hot_def)
+core.register_node('x_farming:coffee_cup_hot', coffee_cup_hot_def)
 
 -- Crate
 x_farming.register_crate('crate_coffee_3', {
@@ -119,30 +119,30 @@ x_farming.register_crate('crate_coffee_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dry_dirt_with_dry_grass')
         table.insert(deco_biomes, 'savanna')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:dry_dirt_with_dry_grass')
         table.insert(deco_biomes, 'everness:baobab_savanna')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
         table.insert(deco_biomes, 'Savanna')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:coffee',
             deco_type = 'simple',
             place_on = deco_place_on,

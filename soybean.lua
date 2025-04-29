@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 -- SOYBEAN
 x_farming.register_plant('x_farming:soybean', {
@@ -33,7 +33,7 @@ x_farming.register_plant('x_farming:soybean', {
 })
 
 -- needed
-minetest.override_item('x_farming:soybean', {
+core.override_item('x_farming:soybean', {
     description = S('Soybean') .. '\n' .. S('Compost chance') .. ': 65%',
     short_description = S('Soybean'),
     groups = {
@@ -44,7 +44,7 @@ minetest.override_item('x_farming:soybean', {
     },
 })
 
-minetest.register_craftitem('x_farming:bottle_soymilk', {
+core.register_craftitem('x_farming:bottle_soymilk', {
     description = S('Soymilk Bottle'),
     short_description = S('Soymilk Bottle'),
     tiles = { 'x_farming_bottle_soymilk.png' },
@@ -54,7 +54,7 @@ minetest.register_craftitem('x_farming:bottle_soymilk', {
     sounds = x_farming.node_sound_thin_glass_defaults(),
 })
 
-minetest.register_craftitem('x_farming:bottle_soymilk_raw', {
+core.register_craftitem('x_farming:bottle_soymilk_raw', {
     description = S('Raw Soymilk Bottle'),
     short_description = S('Raw Soymilk Bottle'),
     tiles = { 'x_farming_bottle_soymilk_raw.png' },
@@ -63,7 +63,7 @@ minetest.register_craftitem('x_farming:bottle_soymilk_raw', {
     groups = { vessel = 1, dig_immediate = 3, attached_node = 1 },
 })
 
-minetest.register_craft({
+core.register_craft({
     type = 'shapeless',
     output = 'x_farming:bottle_soymilk_raw',
     recipe = {
@@ -86,30 +86,30 @@ x_farming.register_crate('crate_soybean_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dirt_with_grass')
         table.insert(deco_biomes, 'grassland')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:dirt_with_crystal_grass')
         table.insert(deco_biomes, 'everness:crystal_forest')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
         table.insert(deco_biomes, 'Plains')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:soybean',
             deco_type = 'simple',
             place_on = deco_place_on,

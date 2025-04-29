@@ -16,12 +16,12 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 local rand = PcgRandom(tonumber(tostring(os.time()):reverse():sub(1, 9)))
 
 local function update_hive_infotext(pos)
-    local meta = minetest.get_meta(pos)
-    local data = minetest.deserialize(meta:get_string('x_farming'))
+    local meta = core.get_meta(pos)
+    local data = core.deserialize(meta:get_string('x_farming'))
 
     if data then
         local text = 'Occupancy: ' .. data.occupancy .. ' / 3\n'
@@ -31,7 +31,7 @@ local function update_hive_infotext(pos)
 end
 
 local function bee_particles(pos)
-    minetest.add_particlespawner({
+    core.add_particlespawner({
         amount = 20,
         time = 0.1,
         minpos = { x = pos.x - 0.25, y = pos.y, z = pos.z - 0.25 },
@@ -48,8 +48,8 @@ local function bee_particles(pos)
 end
 
 local function update_bee_infotext(pos)
-    local meta = minetest.get_meta(pos)
-    local data = minetest.deserialize(meta:get_string('x_farming'))
+    local meta = core.get_meta(pos)
+    local data = core.deserialize(meta:get_string('x_farming'))
 
     if data then
         meta:set_string('infotext', 'Hive position: ' .. data.pos_hive)
@@ -58,11 +58,11 @@ end
 
 -- how often node timers for plants will tick, +/- some random value
 local function tick_hive(pos)
-    minetest.get_node_timer(pos):start(math.random(15, 25))
+    core.get_node_timer(pos):start(math.random(15, 25))
 end
 -- how often a growth failure tick is retried (e.g. too dark)
 local function tick_bee(pos)
-    minetest.get_node_timer(pos):start(math.random(90, 150))
+    core.get_node_timer(pos):start(math.random(90, 150))
 end
 
 local function is_valid_hive_position(pos, params)
@@ -73,20 +73,20 @@ local function is_valid_hive_position(pos, params)
     local _params = params or {}
     local ommit_node_group_check = _params.ommit_node_group_check or false
 
-    local hive_node = minetest.get_node(pos)
+    local hive_node = core.get_node(pos)
 
     if not hive_node then
         return false
     end
 
     if not ommit_node_group_check then
-        if minetest.get_item_group(hive_node.name, 'bee_hive') == 0 then
+        if core.get_item_group(hive_node.name, 'bee_hive') == 0 then
             return false
         end
     end
 
-    local meta_hive = minetest.get_meta(pos)
-    local data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
+    local meta_hive = core.get_meta(pos)
+    local data_hive = core.deserialize(meta_hive:get_string('x_farming'))
 
     if not data_hive then
         return false
@@ -117,7 +117,7 @@ local function get_valid_hive_position(pos_hive, pos_bee)
     valid_pos = nil
 
     -- Find neighboring bee hive position
-    local hive_positions = minetest.find_nodes_in_area(
+    local hive_positions = core.find_nodes_in_area(
         vector.add(pos_bee, 5),
         vector.subtract(pos_bee, 5),
         { 'group:bee_hive' }
@@ -134,7 +134,7 @@ local function get_valid_hive_position(pos_hive, pos_bee)
 end
 
 -- Hive
-minetest.register_node('x_farming:bee_hive', {
+core.register_node('x_farming:bee_hive', {
     description = S('Bee Hive'),
     short_description = S('Bee Hive'),
     tiles = {
@@ -168,15 +168,15 @@ minetest.register_node('x_farming:bee_hive', {
     sounds = x_farming.node_sound_wood_defaults(),
     on_timer = function(pos, elapsed)
         -- Hive data
-        local meta_hive = minetest.get_meta(pos)
-        local data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
-        local node = minetest.get_node(pos)
+        local meta_hive = core.get_meta(pos)
+        local data_hive = core.deserialize(meta_hive:get_string('x_farming'))
+        local node = core.get_node(pos)
 
         if data_hive.occupancy == 0 then
             return
         end
 
-        local flower_positions = minetest.find_nodes_in_area_under_air(
+        local flower_positions = core.find_nodes_in_area_under_air(
             vector.add(pos, 5),
             vector.subtract(pos, 5),
             { 'group:flower' }
@@ -189,7 +189,7 @@ minetest.register_node('x_farming:bee_hive', {
         if flower_positions and #flower_positions > 0 then
             local random_pos = flower_positions[rand:next(1, #flower_positions)]
             local pos_bee = vector.new(random_pos.x, random_pos.y + 1, random_pos.z)
-            local tod = minetest.get_timeofday()
+            local tod = core.get_timeofday()
             local is_day = false
 
             if tod > 0.2 and tod < 0.805 then
@@ -197,15 +197,15 @@ minetest.register_node('x_farming:bee_hive', {
             end
 
             if data_hive and data_hive.occupancy > 0 and is_day then
-                local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), minetest.facedir_to_dir(node.param2))
+                local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), core.facedir_to_dir(node.param2))
 
                 -- Send bee out
                 data_hive.occupancy = data_hive.occupancy - 1
 
-                minetest.swap_node(pos_bee, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
+                core.swap_node(pos_bee, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
                 tick_bee(pos_bee)
 
-                minetest.sound_play('x_farming_bee', {
+                core.sound_play('x_farming_bee', {
                     pos = pos_bee,
                 })
 
@@ -213,13 +213,13 @@ minetest.register_node('x_farming:bee_hive', {
                 bee_particles(pos_hive_front)
 
                 -- Bee data
-                local meta_bee = minetest.get_meta(pos_bee)
+                local meta_bee = core.get_meta(pos_bee)
                 local data_bee = {
                     pos_hive = vector.new(pos):to_string()
                 }
 
-                meta_bee:set_string('x_farming', minetest.serialize(data_bee))
-                meta_hive:set_string('x_farming', minetest.serialize(data_hive))
+                meta_bee:set_string('x_farming', core.serialize(data_bee))
+                meta_hive:set_string('x_farming', core.serialize(data_hive))
 
                 update_hive_infotext(pos)
                 update_bee_infotext(pos_bee)
@@ -231,21 +231,21 @@ minetest.register_node('x_farming:bee_hive', {
         end
     end,
     on_construct = function(pos)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local data = {
             occupancy = 0,
             saturation = 0
         }
 
-        meta:set_string('x_farming', minetest.serialize(data))
+        meta:set_string('x_farming', core.serialize(data))
         update_hive_infotext(pos)
     end,
     after_place_node = function(pos, placer, itemstack, pointed_thing)
         tick_hive(pos)
     end,
     on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-        local meta = minetest.get_meta(pos)
-        local data = minetest.deserialize(meta:get_string('x_farming'))
+        local meta = core.get_meta(pos)
+        local data = core.deserialize(meta:get_string('x_farming'))
 
         if not data then
             return itemstack
@@ -255,26 +255,26 @@ minetest.register_node('x_farming:bee_hive', {
             return itemstack
         end
 
-        if minetest.get_item_group(itemstack:get_name(), 'bee') > 0 then
+        if core.get_item_group(itemstack:get_name(), 'bee') > 0 then
             data.occupancy = data.occupancy + 1
-            meta:set_string('x_farming', minetest.serialize(data))
+            meta:set_string('x_farming', core.serialize(data))
             update_hive_infotext(pos)
             itemstack:take_item()
 
-            minetest.sound_play('x_farming_bee', {
+            core.sound_play('x_farming_bee', {
                 pos = pos,
             })
         end
 
-        if data.occupancy > 0 and not minetest.get_node_timer(pos):is_started() then
+        if data.occupancy > 0 and not core.get_node_timer(pos):is_started() then
             tick_hive(pos)
         end
 
         return itemstack
     end,
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
-        local data = minetest.deserialize(oldmetadata.fields.x_farming)
-        local positions = minetest.find_nodes_in_area_under_air(
+        local data = core.deserialize(oldmetadata.fields.x_farming)
+        local positions = core.find_nodes_in_area_under_air(
             vector.add(pos, 5),
             vector.subtract(pos, 5),
             { 'group:flower', 'group:flora' }
@@ -286,12 +286,12 @@ minetest.register_node('x_farming:bee_hive', {
 
                 if p then
                     local pos_bee = vector.new(p.x, p.y + 1, p.z)
-                    minetest.swap_node(pos_bee, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
+                    core.swap_node(pos_bee, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
                     tick_bee(pos_bee)
                     bee_particles(pos_bee)
 
                     if i == 1 then
-                        minetest.sound_play('x_farming_bee', {
+                        core.sound_play('x_farming_bee', {
                             pos = pos_bee,
                         })
                     end
@@ -302,7 +302,7 @@ minetest.register_node('x_farming:bee_hive', {
 })
 
 -- Hive saturrated
-minetest.register_node('x_farming:bee_hive_saturated', {
+core.register_node('x_farming:bee_hive_saturated', {
     description = S('Bee Hive'),
     short_description = S('Bee Hive'),
     tiles = {
@@ -339,30 +339,30 @@ minetest.register_node('x_farming:bee_hive_saturated', {
     on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
         local stack_name = itemstack:get_name()
         local stack = itemstack
-        local meta = minetest.get_meta(pos)
-        local data = minetest.deserialize(meta:get_string('x_farming'))
+        local meta = core.get_meta(pos)
+        local data = core.deserialize(meta:get_string('x_farming'))
 
         if stack_name == 'vessels:glass_bottle' or stack_name == 'x_farming:glass_bottle' then
             -- Fill bottle with honey and return it
             itemstack:take_item()
 
-            local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), minetest.facedir_to_dir(node.param2))
+            local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), core.facedir_to_dir(node.param2))
 
-            minetest.add_item(
+            core.add_item(
                 pos_hive_front,
                 ItemStack({ name = 'x_farming:bottle_honey' })
             )
 
-            minetest.swap_node(pos, { name = 'x_farming:bee_hive', param2 = node.param2 })
+            core.swap_node(pos, { name = 'x_farming:bee_hive', param2 = node.param2 })
 
-            minetest.sound_play('x_farming_bee', {
+            core.sound_play('x_farming_bee', {
                 pos = pos,
             })
 
             bee_particles(pos_hive_front)
 
             data.saturation = 0
-            meta:set_string('x_farming', minetest.serialize(data))
+            meta:set_string('x_farming', core.serialize(data))
             update_hive_infotext(pos)
 
             tick_hive(pos)
@@ -370,23 +370,23 @@ minetest.register_node('x_farming:bee_hive_saturated', {
             -- Add use to the tool and drop honeycomb
             itemstack:add_wear(65535 / 50)
 
-            local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), minetest.facedir_to_dir(node.param2))
+            local pos_hive_front = vector.subtract(vector.new(pos.x, pos.y + 0.5, pos.z), core.facedir_to_dir(node.param2))
 
-            minetest.add_item(
+            core.add_item(
                 pos_hive_front,
                 ItemStack({ name = 'x_farming:honeycomb' })
             )
 
-            minetest.swap_node(pos, { name = 'x_farming:bee_hive', param2 = node.param2 })
+            core.swap_node(pos, { name = 'x_farming:bee_hive', param2 = node.param2 })
 
-            minetest.sound_play('x_farming_bee', {
+            core.sound_play('x_farming_bee', {
                 pos = pos,
             })
 
             bee_particles(pos_hive_front)
 
             data.saturation = 0
-            meta:set_string('x_farming', minetest.serialize(data))
+            meta:set_string('x_farming', core.serialize(data))
             update_hive_infotext(pos)
 
             tick_hive(pos)
@@ -395,8 +395,8 @@ minetest.register_node('x_farming:bee_hive_saturated', {
         return stack
     end,
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
-        local data = minetest.deserialize(oldmetadata.fields.x_farming)
-        local positions = minetest.find_nodes_in_area_under_air(
+        local data = core.deserialize(oldmetadata.fields.x_farming)
+        local positions = core.find_nodes_in_area_under_air(
             vector.add(pos, 5),
             vector.subtract(pos, 5),
             { 'group:flower', 'group:flora' }
@@ -408,12 +408,12 @@ minetest.register_node('x_farming:bee_hive_saturated', {
 
                 if p then
                     local pos_bee = vector.new(p.x, p.y + 1, p.z)
-                    minetest.swap_node(pos_bee, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
+                    core.swap_node(pos_bee, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
                     tick_bee(pos_bee)
                     bee_particles(pos_bee)
 
                     if i == 1 then
-                        minetest.sound_play('x_farming_bee', {
+                        core.sound_play('x_farming_bee', {
                             pos = pos,
                         })
                     end
@@ -424,7 +424,7 @@ minetest.register_node('x_farming:bee_hive_saturated', {
 })
 
 -- Bee
-minetest.register_node('x_farming:bee', {
+core.register_node('x_farming:bee', {
     description = S('Bee'),
     short_description = S('Bee'),
     drawtype = 'mesh',
@@ -482,15 +482,15 @@ minetest.register_node('x_farming:bee', {
     },
     on_timer = function(pos, elapsed)
         -- Bee data
-        local meta_bee = minetest.get_meta(pos)
-        local data_bee = minetest.deserialize(meta_bee:get_string('x_farming')) or {}
+        local meta_bee = core.get_meta(pos)
+        local data_bee = core.deserialize(meta_bee:get_string('x_farming')) or {}
         local pos_hive = get_valid_hive_position(data_bee.pos_hive and vector.from_string(data_bee.pos_hive) or nil, pos)
 
         if not pos_hive then
             -- Bee data not found, remove bee
-            minetest.remove_node(pos)
+            core.remove_node(pos)
 
-            minetest.sound_play('x_farming_bee', {
+            core.sound_play('x_farming_bee', {
                 pos = pos,
             })
 
@@ -499,39 +499,39 @@ minetest.register_node('x_farming:bee', {
             return
         end
 
-        local meta_hive = minetest.get_meta(pos_hive)
-        local data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
-        local node_hive = minetest.get_node(pos_hive)
+        local meta_hive = core.get_meta(pos_hive)
+        local data_hive = core.deserialize(meta_hive:get_string('x_farming'))
+        local node_hive = core.get_node(pos_hive)
 
         -- Bee go home
         data_hive.occupancy = data_hive.occupancy + 1
 
-        local flower_node = minetest.get_node(vector.new(pos.x, pos.y - 1, pos.z))
+        local flower_node = core.get_node(vector.new(pos.x, pos.y - 1, pos.z))
 
         if flower_node then
-            if minetest.get_item_group(flower_node.name, 'flower') > 0 and data_hive.saturation < 5 then
+            if core.get_item_group(flower_node.name, 'flower') > 0 and data_hive.saturation < 5 then
                 data_hive.saturation = data_hive.saturation + 1
             end
 
             if data_hive.saturation >= 5 then
-                minetest.swap_node(pos_hive, { name = 'x_farming:bee_hive_saturated', param2 = node_hive.param2 })
+                core.swap_node(pos_hive, { name = 'x_farming:bee_hive_saturated', param2 = node_hive.param2 })
             end
         end
 
-        meta_hive:set_string('x_farming', minetest.serialize(data_hive))
-        minetest.remove_node(pos)
+        meta_hive:set_string('x_farming', core.serialize(data_hive))
+        core.remove_node(pos)
         update_hive_infotext(pos_hive)
 
-        minetest.sound_play('x_farming_bee', {
+        core.sound_play('x_farming_bee', {
             pos = pos,
         })
 
-        local pos_hive_front = vector.subtract(vector.new(pos_hive.x, pos_hive.y + 0.5, pos_hive.z), minetest.facedir_to_dir(node_hive.param2))
+        local pos_hive_front = vector.subtract(vector.new(pos_hive.x, pos_hive.y + 0.5, pos_hive.z), core.facedir_to_dir(node_hive.param2))
 
         bee_particles(pos)
         bee_particles(pos_hive_front)
 
-        if not minetest.get_node_timer(pos_hive):is_started() then
+        if not core.get_node_timer(pos_hive):is_started() then
             tick_hive(pos_hive)
         end
     end,
@@ -553,7 +553,7 @@ minetest.register_node('x_farming:bee', {
             damage_groups = { fleshy = damage },
         }, nil)
 
-        minetest.sound_play('x_farming_bee', {
+        core.sound_play('x_farming_bee', {
             pos = pos,
         })
 
@@ -564,10 +564,10 @@ minetest.register_node('x_farming:bee', {
 
         if stack_name == 'x_farming:jar_empty' then
             itemstack:take_item()
-            minetest.remove_node(pos)
-            minetest.add_item(vector.new(pos.x, pos.y + 0.3, pos.z), ItemStack({ name = 'x_farming:jar_with_bee' }))
+            core.remove_node(pos)
+            core.add_item(vector.new(pos.x, pos.y + 0.3, pos.z), ItemStack({ name = 'x_farming:jar_with_bee' }))
 
-            minetest.sound_play('x_farming_bee', {
+            core.sound_play('x_farming_bee', {
                 pos = pos,
             })
 
@@ -580,15 +580,15 @@ minetest.register_node('x_farming:bee', {
 
 -- Spawn bees on flowers
 -- local bee_spawn_timer = 0
-minetest.register_globalstep(function(dtime)
+core.register_globalstep(function(dtime)
     -- bee_spawn_timer = bee_spawn_timer + dtime
 
     -- if bee_spawn_timer > rand:next(90, 150) then
-        local abr = minetest.get_mapgen_setting('active_block_range') or 4
+        local abr = core.get_mapgen_setting('active_block_range') or 4
         local spawn_reduction = 0.5
         local spawn_rate = 0.5
         local spawnpos, liquidflag = x_farming.get_spawn_pos_abr(dtime, 3, abr * 16, spawn_rate, spawn_reduction)
-        local tod = minetest.get_timeofday()
+        local tod = core.get_timeofday()
         local is_day = false
 
         if tod > 0.2 and tod < 0.805 then
@@ -596,13 +596,13 @@ minetest.register_globalstep(function(dtime)
         end
 
         if spawnpos and not liquidflag and is_day then
-            local bees = minetest.find_node_near(spawnpos, abr * 16 * 1.1, { 'group:bee' }) or {}
+            local bees = core.find_node_near(spawnpos, abr * 16 * 1.1, { 'group:bee' }) or {}
 
             if #bees > 1 then
                 return
             end
 
-            local flower_positions = minetest.find_nodes_in_area_under_air(
+            local flower_positions = core.find_nodes_in_area_under_air(
                 vector.add(spawnpos, 5),
                 vector.subtract(spawnpos, 5),
                 { 'group:flower' }
@@ -612,10 +612,10 @@ minetest.register_globalstep(function(dtime)
                 local rand_pos = flower_positions[rand:next(1, #flower_positions)]
                 local bee_pos = vector.new(rand_pos.x, rand_pos.y + 1, rand_pos.z)
 
-                minetest.swap_node(bee_pos, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
+                core.swap_node(bee_pos, { name = 'x_farming:bee', param2 = rand:next(0, 3) })
                 tick_bee(bee_pos)
 
-                minetest.log('action', '[x_farming] Added Bee at ' .. minetest.pos_to_string(bee_pos))
+                core.log('action', '[x_farming] Added Bee at ' .. core.pos_to_string(bee_pos))
             end
         end
 

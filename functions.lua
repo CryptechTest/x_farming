@@ -17,7 +17,7 @@
 --]]
 
 -- Activate timers on bees which were spawned without starting the timer (bug was fixed in 5d04f7fdc5cb43e7573438a864c3730e05cff608)
-minetest.register_lbm({
+core.register_lbm({
     -- Descriptive label for profiling purposes (optional).
     -- Definitions with identical labels will be listed as one.
     label = 'x_farming_bee_timers',
@@ -38,10 +38,10 @@ minetest.register_lbm({
     -- `dtime_s` is the in-game time (in seconds) elapsed since the block
     -- was last active
     action = function(pos, node, dtime_s)
-        local timer = minetest.get_node_timer(pos)
+        local timer = core.get_node_timer(pos)
 
         if not timer:is_started() then
-            minetest.get_node_timer(pos):start(1)
+            core.get_node_timer(pos):start(1)
         end
     end
 })

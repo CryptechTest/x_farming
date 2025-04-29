@@ -16,10 +16,10 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
---- Register craftitem definition - added to minetest.registered_items[name]
-minetest.register_craftitem('x_farming:bonemeal', {
+--- Register craftitem definition - added to core.registered_items[name]
+core.register_craftitem('x_farming:bonemeal', {
     description = S('Bonemeal - use it as a fertilizer for most plants.'),
     inventory_image = 'x_farming_x_bonemeal_bonemeal.png',
     on_use = function(itemstack, user, pointed_thing)
@@ -32,15 +32,15 @@ minetest.register_craftitem('x_farming:bonemeal', {
 -- Crafting
 --
 
-minetest.register_craft({
+core.register_craft({
     output = 'x_farming:bonemeal 4',
     recipe = {
         { 'bones:bones' }
     }
 })
 
-if minetest.get_modpath('default') then
-    minetest.register_craft({
+if core.get_modpath('default') then
+    core.register_craft({
         output = 'x_farming:bonemeal 4',
         recipe = {
             { 'default:coral_skeleton' }
@@ -48,8 +48,8 @@ if minetest.get_modpath('default') then
     })
 end
 
-if minetest.get_modpath('everness') then
-    minetest.register_craft({
+if core.get_modpath('everness') then
+    core.register_craft({
         output = 'x_farming:bonemeal 4',
         recipe = {
             { 'everness:coral_skeleton' }

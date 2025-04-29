@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 local minlight = 13
 local maxlight = 14
 
@@ -37,7 +37,7 @@ x_farming.register_plant('x_farming:beetroot', {
 ---needed
 local beetroot_def = {
     description = S('Beetroot') .. '\n' .. S('Compost chance') .. ': 65%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
     short_description = S('Beetroot'),
     groups = {
         -- X Farming
@@ -51,16 +51,16 @@ local beetroot_def = {
     _mcl_blast_resistance = 0,
 }
 
-if minetest.get_modpath('farming') then
-    beetroot_def.on_use = minetest.item_eat(3)
+if core.get_modpath('farming') then
+    beetroot_def.on_use = core.item_eat(3)
 end
 
-if minetest.get_modpath('mcl_farming') then
-    beetroot_def.on_place = minetest.item_eat(3)
-    beetroot_def.on_secondary_use = minetest.item_eat(3)
+if core.get_modpath('mcl_farming') then
+    beetroot_def.on_place = core.item_eat(3)
+    beetroot_def.on_secondary_use = core.item_eat(3)
 end
 
-minetest.override_item('x_farming:beetroot', beetroot_def)
+core.override_item('x_farming:beetroot', beetroot_def)
 
 ---crate
 x_farming.register_crate('crate_beetroot_3', {
@@ -71,30 +71,30 @@ x_farming.register_crate('crate_beetroot_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:silver_sand')
         table.insert(deco_biomes, 'cold_desert')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:forsaken_desert_sand')
         table.insert(deco_biomes, 'everness:forsaken_desert')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_colorblocks:hardened_clay')
         table.insert(deco_biomes, 'Mesa')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:beetroot',
             deco_type = 'simple',
             place_on = deco_place_on,

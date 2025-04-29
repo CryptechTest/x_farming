@@ -16,12 +16,12 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 -- Donuts
 local donut_def = {
     description = S('Donut') .. '\n' .. S('Compost chance') .. ': 85%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
     short_description = S('Donut'),
     drawtype = 'mesh',
     mesh = 'x_farming_donut.obj',
@@ -63,19 +63,19 @@ local donut_def = {
     _mcl_blast_resistance = 0,
     _mcl_hardness = 0,
     sounds = x_farming.node_sound_leaves_defaults(),
-    on_use = minetest.item_eat(3),
+    on_use = core.item_eat(3),
     sunlight_propagates = true
 }
 
-if minetest.get_modpath('mcl_farming') then
-    donut_def.on_secondary_use = minetest.item_eat(3)
+if core.get_modpath('mcl_farming') then
+    donut_def.on_secondary_use = core.item_eat(3)
 end
 
-minetest.register_node('x_farming:donut', donut_def)
+core.register_node('x_farming:donut', donut_def)
 
 local donut_chocolate_def = {
     description = S('Chocolate Donut') .. '\n' .. S('Compost chance') .. ': 85%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 4'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 4'),
     short_description = S('Chocolate Donut'),
     drawtype = 'mesh',
     mesh = 'x_farming_donut.obj',
@@ -117,20 +117,20 @@ local donut_chocolate_def = {
     _mcl_blast_resistance = 0,
     _mcl_hardness = 0,
     sounds = x_farming.node_sound_leaves_defaults(),
-    on_use = minetest.item_eat(4),
+    on_use = core.item_eat(4),
     sunlight_propagates = true
 }
 
-if minetest.get_modpath('mcl_farming') then
-    donut_chocolate_def.on_secondary_use = minetest.item_eat(4)
+if core.get_modpath('mcl_farming') then
+    donut_chocolate_def.on_secondary_use = core.item_eat(4)
 end
 
-minetest.register_node('x_farming:donut_chocolate', donut_chocolate_def)
+core.register_node('x_farming:donut_chocolate', donut_chocolate_def)
 
 -- Fries
 local fries_def = {
     description = S('Fries') .. '\n' .. S('Compost chance') .. ': 85%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Fries'),
     drawtype = 'mesh',
     mesh = 'x_farming_fries.obj',
@@ -173,20 +173,20 @@ local fries_def = {
     _mcl_blast_resistance = 0,
     _mcl_hardness = 0,
     sounds = x_farming.node_sound_leaves_defaults(),
-    on_use = minetest.item_eat(6),
+    on_use = core.item_eat(6),
     sunlight_propagates = true
 }
 
-if minetest.get_modpath('mcl_farming') then
-    fries_def.on_secondary_use = minetest.item_eat(6)
+if core.get_modpath('mcl_farming') then
+    fries_def.on_secondary_use = core.item_eat(6)
 end
 
-minetest.register_node('x_farming:fries', fries_def)
+core.register_node('x_farming:fries', fries_def)
 
 -- Pumpkin pie
 local pumpkin_pie_def = {
     description = S('Pumpkin Pie') .. '\n' .. S('Compost chance') .. ': 100%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Pumpkin Pie'),
     drawtype = 'mesh',
     mesh = 'x_farming_pumpkin_pie.obj',
@@ -229,20 +229,20 @@ local pumpkin_pie_def = {
     _mcl_blast_resistance = 0,
     _mcl_hardness = 0,
     sounds = x_farming.node_sound_leaves_defaults(),
-    on_use = minetest.item_eat(6),
+    on_use = core.item_eat(6),
     sunlight_propagates = true
 }
 
-if minetest.get_modpath('mcl_farming') then
-    pumpkin_pie_def.on_secondary_use = minetest.item_eat(6)
+if core.get_modpath('mcl_farming') then
+    pumpkin_pie_def.on_secondary_use = core.item_eat(6)
 end
 
-minetest.register_node('x_farming:pumpkin_pie', pumpkin_pie_def)
+core.register_node('x_farming:pumpkin_pie', pumpkin_pie_def)
 
 -- Beetroot soup
 local beetroot_soup_def = {
     description = S('Beetroot Soup') .. '\n' .. S('Compost chance') .. ': 100%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     short_description = S('Beetroot Soup'),
     drawtype = 'mesh',
     mesh = 'x_farming_beetroot_soup.obj',
@@ -282,23 +282,23 @@ local beetroot_soup_def = {
     },
     sounds = x_farming.node_sound_wood_defaults(),
     sunlight_propagates = true,
-    on_use = minetest.item_eat(6, 'x_farming:bowl'),
+    on_use = core.item_eat(6, 'x_farming:bowl'),
     -- MCL
     _mcl_saturation = 0.6,
     _mcl_blast_resistance = 0,
     _mcl_hardness = 0,
 }
 
-if minetest.get_modpath('mcl_farming') then
-    beetroot_soup_def.on_secondary_use = minetest.item_eat(6, 'x_farming:bowl')
+if core.get_modpath('mcl_farming') then
+    beetroot_soup_def.on_secondary_use = core.item_eat(6, 'x_farming:bowl')
 end
 
-minetest.register_node('x_farming:beetroot_soup', beetroot_soup_def)
+core.register_node('x_farming:beetroot_soup', beetroot_soup_def)
 
 -- Fish Stew
 local fish_stew_def = {
     description = S('Fish Stew') .. '\n' .. S('Compost chance') .. ': 100%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 8'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 8'),
     short_description = S('Fish Stew'),
     drawtype = 'mesh',
     mesh = 'x_farming_fish_stew.obj',
@@ -338,19 +338,19 @@ local fish_stew_def = {
     },
     -- MCL
     _mcl_saturation = 0.6,
-    on_use = minetest.item_eat(8, 'x_farming:bowl'),
+    on_use = core.item_eat(8, 'x_farming:bowl'),
     sounds = x_farming.node_sound_wood_defaults(),
     sunlight_propagates = true
 }
 
-if minetest.get_modpath('mcl_farming') then
-    fish_stew_def.on_secondary_use = minetest.item_eat(8, 'x_farming:bowl')
+if core.get_modpath('mcl_farming') then
+    fish_stew_def.on_secondary_use = core.item_eat(8, 'x_farming:bowl')
 end
 
-minetest.register_node('x_farming:fish_stew', fish_stew_def)
+core.register_node('x_farming:fish_stew', fish_stew_def)
 
 -- Cactus brick
-minetest.register_node('x_farming:cactus_brick', {
+core.register_node('x_farming:cactus_brick', {
     description = S('Cactus Brick'),
     short_description = S('Cactus Brick'),
     paramtype2 = 'facedir',
@@ -373,7 +373,7 @@ minetest.register_node('x_farming:cactus_brick', {
     sounds = x_farming.node_sound_stone_defaults()
 })
 
-if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
+if core.global_exists('stairs') and core.get_modpath('stairs') then
     stairs.register_stair_and_slab(
         'cactus_brick',
         'x_farming:cactus_brick',
@@ -386,7 +386,7 @@ if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
     )
 end
 
-if minetest.get_modpath('mcl_stairs') then
+if core.get_modpath('mcl_stairs') then
     mcl_stairs.register_stair_and_slab(
         'cactus_brick',
         'x_farming:cactus_brick',
@@ -403,12 +403,12 @@ if minetest.get_modpath('mcl_stairs') then
 end
 
 local function tick_scarecrow(pos)
-    -- minetest.get_node_timer(pos):start(math.random(1, 2))
-    minetest.get_node_timer(pos):start(math.random(83, 143))
+    -- core.get_node_timer(pos):start(math.random(1, 2))
+    core.get_node_timer(pos):start(math.random(83, 143))
 end
 
 -- Scarecrow
-minetest.register_node('x_farming:scarecrow', {
+core.register_node('x_farming:scarecrow', {
     description = S('Scarecrow'),
     short_description = S('Scarecrow'),
     drawtype = 'mesh',
@@ -443,7 +443,7 @@ minetest.register_node('x_farming:scarecrow', {
     _mcl_hardness = 1,
     sounds = x_farming.node_sound_wood_defaults(),
     on_construct = function(pos)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         meta:set_string('x_farming_scarecrow_state', 'inactive')
         meta:set_string('infotext', 'Scarecrow - Activate with bonemeal.')
         meta:set_string('owner', '')
@@ -453,7 +453,7 @@ minetest.register_node('x_farming:scarecrow', {
             return
         end
 
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
 
         meta:set_string('owner', placer:get_player_name() or '')
         meta:set_string('infotext', S('Scarecrow (owned by @1) - Activate with bonemeal.', meta:get_string('owner')))
@@ -461,10 +461,10 @@ minetest.register_node('x_farming:scarecrow', {
     on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
         local player_name = clicker:get_player_name()
 
-        if minetest.is_protected(pos, player_name)
-            and not minetest.check_player_privs(player_name, 'protection_bypass')
+        if core.is_protected(pos, player_name)
+            and not core.check_player_privs(player_name, 'protection_bypass')
         then
-            minetest.record_protection_violation(pos, player_name)
+            core.record_protection_violation(pos, player_name)
             return itemstack
         end
 
@@ -472,13 +472,13 @@ minetest.register_node('x_farming:scarecrow', {
             return itemstack
         end
 
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local state = meta:get_string('x_farming_scarecrow_state')
 
         if state == 'inactive' then
             meta:set_string('x_farming_scarecrow_state', 'active')
             meta:set_string('infotext', S('Scarecrow (owned by @1) - Active', meta:get_string('owner')))
-            minetest.swap_node(pos, { name = 'x_farming:scarecrow_2', param2 = node.param2 })
+            core.swap_node(pos, { name = 'x_farming:scarecrow_2', param2 = node.param2 })
             meta:set_int('x_farming_scarecrow_fails', 0)
             tick_scarecrow(pos)
             itemstack:take_item()
@@ -488,7 +488,7 @@ minetest.register_node('x_farming:scarecrow', {
     end,
 })
 
-minetest.register_node('x_farming:scarecrow_2', {
+core.register_node('x_farming:scarecrow_2', {
     description = S('Scarecrow 2'),
     short_description = S('Scarecrow 2'),
     drawtype = 'mesh',
@@ -525,44 +525,44 @@ minetest.register_node('x_farming:scarecrow_2', {
     _mcl_hardness = 1,
     sounds = x_farming.node_sound_wood_defaults(),
     on_construct = function(pos)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         meta:set_string('x_farming_scarecrow_state', 'active')
     end,
     on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
         local player_name = clicker:get_player_name()
 
-        if minetest.is_protected(pos, player_name)
-            and not minetest.check_player_privs(player_name, 'protection_bypass')
+        if core.is_protected(pos, player_name)
+            and not core.check_player_privs(player_name, 'protection_bypass')
         then
-            minetest.record_protection_violation(pos, player_name)
+            core.record_protection_violation(pos, player_name)
             return itemstack
         end
 
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local state = meta:get_string('x_farming_scarecrow_state')
 
         if state == 'active' then
             meta:set_string('x_farming_scarecrow_state', 'inactive')
             meta:set_string('infotext', S('Scarecrow (owned by @1) - Activate with bonemeal.', meta:get_string('owner')))
-            minetest.swap_node(pos, { name = 'x_farming:scarecrow', param2 = node.param2 })
+            core.swap_node(pos, { name = 'x_farming:scarecrow', param2 = node.param2 })
         end
 
         return itemstack
     end,
     on_timer = function(pos, elapsed)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local state = meta:get_string('x_farming_scarecrow_state')
         local fails = meta:get_int('x_farming_scarecrow_fails')
         local player_name = meta:get_string('owner')
-        local player = minetest.get_player_by_name(player_name)
-        local node = minetest.get_node(pos)
+        local player = core.get_player_by_name(player_name)
+        local node = core.get_node(pos)
 
         if not player then
             return true
         end
 
-        if minetest.is_protected(pos, player_name)
-            and not minetest.check_player_privs(player_name, 'protection_bypass')
+        if core.is_protected(pos, player_name)
+            and not core.check_player_privs(player_name, 'protection_bypass')
         then
             return true
         end
@@ -572,7 +572,7 @@ minetest.register_node('x_farming:scarecrow_2', {
         end
 
         -- bonemeal it
-        local positions_raw = minetest.find_nodes_in_area(
+        local positions_raw = core.find_nodes_in_area(
             vector.subtract(vector.new(pos), 5),
             vector.add(vector.new(pos), 5),
             {
@@ -586,12 +586,12 @@ minetest.register_node('x_farming:scarecrow_2', {
         local positions = {}
 
         for _, p in ipairs(positions_raw) do
-            local n = minetest.get_node(p)
-            if minetest.get_item_group(n.name, 'field') == 0 then
-                local n_above = minetest.get_node(vector.new(p.x, p.y + 1, p.z))
+            local n = core.get_node(p)
+            if core.get_item_group(n.name, 'field') == 0 then
+                local n_above = core.get_node(vector.new(p.x, p.y + 1, p.z))
 
-                if minetest.get_item_group(n.name, 'seed') > 0 or minetest.get_item_group(n.name, 'plant') > 0 then
-                    local ndef = minetest.registered_nodes[n.name]
+                if core.get_item_group(n.name, 'seed') > 0 or core.get_item_group(n.name, 'plant') > 0 then
+                    local ndef = core.registered_nodes[n.name]
 
                     if ndef.next_plant
                         and ndef.next_plant ~= 'x_farming:pumpkin_fruit'
@@ -608,7 +608,7 @@ minetest.register_node('x_farming:scarecrow_2', {
         if #positions == 0 then
             meta:set_string('x_farming_scarecrow_state', 'inactive')
             meta:set_string('infotext', S('Scarecrow (owned by @1) - Activate with bonemeal.', meta:get_string('owner')))
-            minetest.swap_node(pos, { name = 'x_farming:scarecrow', param2 = node.param2 })
+            core.swap_node(pos, { name = 'x_farming:scarecrow', param2 = node.param2 })
 
             return false
         end
@@ -633,7 +633,7 @@ minetest.register_node('x_farming:scarecrow_2', {
         else
             meta:set_string('x_farming_scarecrow_state', 'inactive')
             meta:set_string('infotext', S('Scarecrow (owned by @1) - Activate with bonemeal.', meta:get_string('owner')))
-            minetest.swap_node(pos, { name = 'x_farming:scarecrow', param2 = node.param2 })
+            core.swap_node(pos, { name = 'x_farming:scarecrow', param2 = node.param2 })
 
             return false
         end
@@ -641,7 +641,7 @@ minetest.register_node('x_farming:scarecrow_2', {
 })
 
 -- Honey
-minetest.register_node('x_farming:honey_block', {
+core.register_node('x_farming:honey_block', {
     description = S('Honey Block'),
     short_description = S('Honey Block'),
     drawtype = 'mesh',
@@ -674,7 +674,7 @@ minetest.register_node('x_farming:honey_block', {
     move_resistance = 7,
 })
 
-minetest.register_node('x_farming:honeycomb_block', {
+core.register_node('x_farming:honeycomb_block', {
     description = S('Honeycomb Block'),
     short_description = S('Honeeycomb Block'),
     tiles = { 'x_farming_honeycomb_block.png' },
@@ -694,7 +694,7 @@ minetest.register_node('x_farming:honeycomb_block', {
 -- Candles
 for i = 1, 4 do
     -- OFF
-    minetest.register_node('x_farming:candle_off_' .. i, {
+    core.register_node('x_farming:candle_off_' .. i, {
         description = S('Candle'),
         short_description = S('Candle'),
         drawtype = 'mesh',
@@ -758,17 +758,17 @@ for i = 1, 4 do
         on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
             local stack_name = itemstack:get_name()
 
-            if minetest.get_item_group(stack_name, 'candle') > 0 and i < 4 then
-                minetest.swap_node(pos, { name = 'x_farming:candle_off_' .. i + 1, param2 = node.param2 })
+            if core.get_item_group(stack_name, 'candle') > 0 and i < 4 then
+                core.swap_node(pos, { name = 'x_farming:candle_off_' .. i + 1, param2 = node.param2 })
 
-                if not minetest.is_creative_enabled(clicker:get_player_name()) then
+                if not core.is_creative_enabled(clicker:get_player_name()) then
                     itemstack:take_item()
                 end
-            elseif minetest.get_item_group(stack_name, 'torch') > 0
+            elseif core.get_item_group(stack_name, 'torch') > 0
                 or stack_name == 'fire:flint_and_steel'
                 or stack_name == 'mcl_fire:flint_and_steel'
             then
-                minetest.swap_node(pos, { name = 'x_farming:candle_on_' .. i, param2 = node.param2 })
+                core.swap_node(pos, { name = 'x_farming:candle_on_' .. i, param2 = node.param2 })
             end
 
             return itemstack
@@ -777,7 +777,7 @@ for i = 1, 4 do
     })
 
     -- ON
-    minetest.register_node('x_farming:candle_on_' .. i, {
+    core.register_node('x_farming:candle_on_' .. i, {
         description = S('Candle'),
         short_description = S('Candle'),
         drawtype = 'mesh',
@@ -848,14 +848,14 @@ for i = 1, 4 do
         on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
             local stack_name = itemstack:get_name()
 
-            if minetest.get_item_group(stack_name, 'candle') > 0 and i < 4 then
-                minetest.swap_node(pos, { name = 'x_farming:candle_on_' .. i + 1, param2 = node.param2 })
+            if core.get_item_group(stack_name, 'candle') > 0 and i < 4 then
+                core.swap_node(pos, { name = 'x_farming:candle_on_' .. i + 1, param2 = node.param2 })
 
-                if not minetest.is_creative_enabled(clicker:get_player_name()) then
+                if not core.is_creative_enabled(clicker:get_player_name()) then
                     itemstack:take_item()
                 end
             else
-                minetest.swap_node(pos, { name = 'x_farming:candle_off_' .. i, param2 = node.param2 })
+                core.swap_node(pos, { name = 'x_farming:candle_off_' .. i, param2 = node.param2 })
             end
 
             return itemstack
@@ -870,7 +870,7 @@ for color_id, color_def in pairs(x_farming.candle_colors) do
 
     for i = 1, 4 do
         -- OFF
-        minetest.register_node('x_farming:candle_' .. color_id .. '_off_' .. i, {
+        core.register_node('x_farming:candle_' .. color_id .. '_off_' .. i, {
             description = color_def.name .. ' ' .. S('Candle'),
             short_description = color_def.name .. ' ' .. S('Candle'),
             drawtype = 'mesh',
@@ -935,20 +935,20 @@ for color_id, color_def in pairs(x_farming.candle_colors) do
             on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
                 local stack_name = itemstack:get_name()
 
-                if minetest.get_item_group(stack_name, 'candle') > 0
-                    and minetest.get_item_group(stack_name, 'candle_' .. '_' .. color_group) > 0
+                if core.get_item_group(stack_name, 'candle') > 0
+                    and core.get_item_group(stack_name, 'candle_' .. '_' .. color_group) > 0
                     and i < 4
                 then
-                    minetest.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_off_' .. i + 1, param2 = node.param2 })
+                    core.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_off_' .. i + 1, param2 = node.param2 })
 
-                    if not minetest.is_creative_enabled(clicker:get_player_name()) then
+                    if not core.is_creative_enabled(clicker:get_player_name()) then
                         itemstack:take_item()
                     end
-                elseif minetest.get_item_group(stack_name, 'torch') > 0
+                elseif core.get_item_group(stack_name, 'torch') > 0
                     or stack_name == 'fire:flint_and_steel'
                     or stack_name == 'mcl_fire:flint_and_steel'
                 then
-                    minetest.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_on_' .. i, param2 = node.param2 })
+                    core.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_on_' .. i, param2 = node.param2 })
                 end
 
                 return itemstack
@@ -957,7 +957,7 @@ for color_id, color_def in pairs(x_farming.candle_colors) do
         })
 
         -- ON
-        minetest.register_node('x_farming:candle_' .. color_id .. '_on_' .. i, {
+        core.register_node('x_farming:candle_' .. color_id .. '_on_' .. i, {
             description = color_def.name .. ' ' .. S('Candle'),
             short_description = color_def.name .. ' ' .. S('Candle'),
             drawtype = 'mesh',
@@ -1029,14 +1029,14 @@ for color_id, color_def in pairs(x_farming.candle_colors) do
             on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
                 local stack_name = itemstack:get_name()
 
-                if minetest.get_item_group(stack_name, 'candle') > 0 and i < 4 then
-                    minetest.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_on_' .. i + 1, param2 = node.param2 })
+                if core.get_item_group(stack_name, 'candle') > 0 and i < 4 then
+                    core.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_on_' .. i + 1, param2 = node.param2 })
 
-                    if not minetest.is_creative_enabled(clicker:get_player_name()) then
+                    if not core.is_creative_enabled(clicker:get_player_name()) then
                         itemstack:take_item()
                     end
                 else
-                    minetest.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_off_' .. i, param2 = node.param2 })
+                    core.swap_node(pos, { name = 'x_farming:candle_' .. color_id .. '_off_' .. i, param2 = node.param2 })
                 end
 
                 return itemstack
@@ -1052,13 +1052,13 @@ for color_id, color_def in pairs(x_farming.candle_colors) do
     end
 
     -- Crafting
-    minetest.register_craft({
+    core.register_craft({
         type = 'shapeless',
         output = 'x_farming:candle_' .. color_id .. '_off_1',
         recipe = { 'group:candle', craft_dye },
     })
 
-    if minetest.get_modpath('mcl_dye') then
+    if core.get_modpath('mcl_dye') then
         local mcl_groups = {}
 
         for key, value in pairs(color_def.mcl_groups) do
@@ -1067,7 +1067,7 @@ for color_id, color_def in pairs(x_farming.candle_colors) do
 
         local mcl_craft_dye = 'group:dye,' .. table.concat(mcl_groups, ',')
 
-        minetest.register_craft({
+        core.register_craft({
             type = 'shapeless',
             output = 'x_farming:candle_' .. color_id .. '_off_1',
             recipe = { 'group:candle', mcl_craft_dye },
@@ -1160,15 +1160,15 @@ local pillow_colors = {
     },
 }
 
-if not minetest.get_modpath('x_clay') then
-    minetest.register_craftitem('x_farming:dye_light_blue', {
+if not core.get_modpath('x_clay') then
+    core.register_craftitem('x_farming:dye_light_blue', {
         inventory_image = 'x_farming_dye_light_blue.png',
         description = S('Light Blue Dye'),
         short_description = S('Light Blue Dye'),
         groups = { dye = 1, color_light_blue = 1 }
     })
 
-    minetest.register_craft({
+    core.register_craft({
         type = 'shapeless',
         output = 'x_clay:dye_light_blue 2',
         recipe = { 'group:dye,color_white', 'group:dye,color_blue' },
@@ -1178,7 +1178,7 @@ end
 for _, def in ipairs(pillow_colors) do
     local color_group = 'color_' .. def.name
 
-    minetest.register_node('x_farming:pillow_' .. def.name, {
+    core.register_node('x_farming:pillow_' .. def.name, {
         description = S('Pillow') .. ' ' .. def.description,
         short_description = S('Pillow') .. ' ' .. def.description,
         tiles = { 'x_farming_pillow_' .. def.name .. '.png' },
@@ -1204,7 +1204,7 @@ for _, def in ipairs(pillow_colors) do
         sounds = x_farming.node_sound_pillow_defaults(),
     })
 
-    if minetest.get_modpath('mcl_dye') and x_farming.candle_colors[def.name] then
+    if core.get_modpath('mcl_dye') and x_farming.candle_colors[def.name] then
         local mcl_groups = {}
         local color_def = x_farming.candle_colors[def.name]
 
@@ -1214,15 +1214,15 @@ for _, def in ipairs(pillow_colors) do
 
         local mcl_craft_dye = 'group:dye,' .. table.concat(mcl_groups, ',')
 
-        minetest.register_craft({
+        core.register_craft({
             type = 'shapeless',
             output = 'x_farming:pillow_' .. def.name,
             recipe = { mcl_craft_dye, 'group:pillow' },
         })
     end
 
-    if minetest.get_modpath('dye') then
-        minetest.register_craft({
+    if core.get_modpath('dye') then
+        core.register_craft({
             type = 'shapeless',
             output = 'x_farming:pillow_' .. def.name,
             recipe = { 'group:dye,' .. color_group, 'group:pillow' },
@@ -1230,7 +1230,7 @@ for _, def in ipairs(pillow_colors) do
     end
 end
 
-minetest.register_node('x_farming:silt_loam_soil', {
+core.register_node('x_farming:silt_loam_soil', {
     description = S('Silt Loam Soil. Used for farming rice.'),
     short_description = S('Silt Loam Soil'),
     tiles = { 'x_farming_silt_loam_soil.png' },
@@ -1255,7 +1255,7 @@ minetest.register_node('x_farming:silt_loam_soil', {
 })
 
 -- barley stack
-minetest.register_node('x_farming:barley_stack', {
+core.register_node('x_farming:barley_stack', {
     description = S('Barley Stack'),
     tiles = {
         'x_farming_barley_stack_top.png',
@@ -1281,11 +1281,11 @@ minetest.register_node('x_farming:barley_stack', {
     _mcl_blast_resistance = 0.5,
     _mcl_hardness = 0.5,
     sounds = x_farming.node_sound_leaves_defaults(),
-    on_place = minetest.rotate_node
+    on_place = core.rotate_node
 })
 
 -- rice stack
-minetest.register_node('x_farming:rice_stack', {
+core.register_node('x_farming:rice_stack', {
     description = S('Rice Stack'),
     tiles = {
         'x_farming_rice_stack_top.png',
@@ -1311,10 +1311,10 @@ minetest.register_node('x_farming:rice_stack', {
     _mcl_blast_resistance = 0.5,
     _mcl_hardness = 0.5,
     sounds = x_farming.node_sound_leaves_defaults(),
-    on_place = minetest.rotate_node
+    on_place = core.rotate_node
 })
 
-minetest.register_node('x_farming:silt_loam_brick_block', {
+core.register_node('x_farming:silt_loam_brick_block', {
     description = S('Silt Loam Brick Block'),
     paramtype2 = 'facedir',
     place_param2 = 0,
@@ -1402,14 +1402,14 @@ x_farming.register_pie('honey_kiwi_pie', {
 --
 -- Convert farming soils - copy from MTG
 --
-if not minetest.get_modpath('farming') then
-    minetest.register_abm({
+if not core.get_modpath('farming') then
+    core.register_abm({
         label = 'X Farming soil',
         nodenames = { 'group:field' },
         interval = 15,
         chance = 4,
         action = function(pos, node)
-            local n_def = minetest.registered_nodes[node.name] or nil
+            local n_def = core.registered_nodes[node.name] or nil
             local wet = n_def.soil.wet or nil
             local base = n_def.soil.base or nil
             local dry = n_def.soil.dry or nil
@@ -1418,37 +1418,37 @@ if not minetest.get_modpath('farming') then
             end
 
             pos.y = pos.y + 1
-            local nn = minetest.get_node_or_nil(pos)
+            local nn = core.get_node_or_nil(pos)
             if not nn or not nn.name then
                 return
             end
-            local nn_def = minetest.registered_nodes[nn.name] or nil
+            local nn_def = core.registered_nodes[nn.name] or nil
             pos.y = pos.y - 1
 
-            if nn_def and nn_def.walkable and minetest.get_item_group(nn.name, 'plant') == 0 then
-                minetest.set_node(pos, { name = base })
+            if nn_def and nn_def.walkable and core.get_item_group(nn.name, 'plant') == 0 then
+                core.set_node(pos, { name = base })
                 return
             end
             -- check if there is water nearby
-            local wet_lvl = minetest.get_item_group(node.name, 'wet')
-            if minetest.find_node_near(pos, 3, { 'group:water' }) then
+            local wet_lvl = core.get_item_group(node.name, 'wet')
+            if core.find_node_near(pos, 3, { 'group:water' }) then
                 -- if it is dry soil and not base node, turn it into wet soil
                 if wet_lvl == 0 then
-                    minetest.set_node(pos, { name = wet })
+                    core.set_node(pos, { name = wet })
                 end
             else
                 -- only turn back if there are no unloaded blocks (and therefore
                 -- possible water sources) nearby
-                if not minetest.find_node_near(pos, 3, { 'ignore' }) then
+                if not core.find_node_near(pos, 3, { 'ignore' }) then
                     -- turn it back into base if it is already dry
                     if wet_lvl == 0 then
                         -- only turn it back if there is no plant/seed on top of it
-                        if minetest.get_item_group(nn.name, 'plant') == 0 and minetest.get_item_group(nn.name, 'seed') == 0 then
-                            minetest.set_node(pos, { name = base })
+                        if core.get_item_group(nn.name, 'plant') == 0 and core.get_item_group(nn.name, 'seed') == 0 then
+                            core.set_node(pos, { name = base })
                         end
                     elseif wet_lvl == 1 then
                         -- if its wet turn it back into dry soil
-                        minetest.set_node(pos, { name = dry })
+                        core.set_node(pos, { name = dry })
                     end
                 end
             end

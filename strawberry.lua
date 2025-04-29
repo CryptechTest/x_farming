@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 -- STRAWBERRY
 x_farming.register_plant('x_farming:strawberry', {
@@ -35,7 +35,7 @@ x_farming.register_plant('x_farming:strawberry', {
 -- needed
 local strawberry_def = {
     description = S('Strawberry') .. '\n' .. S('Compost chance') .. ': 30%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     groups = {
         -- X Farming
         compost = 30,
@@ -45,16 +45,16 @@ local strawberry_def = {
     short_description = S('Strawberry'),
 }
 
-if minetest.get_modpath('farming') then
-    strawberry_def.on_use = minetest.item_eat(2)
+if core.get_modpath('farming') then
+    strawberry_def.on_use = core.item_eat(2)
 end
 
-if minetest.get_modpath('mcl_farming') then
-    strawberry_def.on_place = minetest.item_eat(2)
-    strawberry_def.on_secondary_use = minetest.item_eat(2)
+if core.get_modpath('mcl_farming') then
+    strawberry_def.on_place = core.item_eat(2)
+    strawberry_def.on_secondary_use = core.item_eat(2)
 end
 
-minetest.override_item('x_farming:strawberry', strawberry_def)
+core.override_item('x_farming:strawberry', strawberry_def)
 
 ---crate
 x_farming.register_crate('crate_strawberry_3', {
@@ -66,31 +66,31 @@ x_farming.register_crate('crate_strawberry_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dirt_with_coniferous_litter')
         table.insert(deco_biomes, 'coniferous_forest')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:dirt_with_crystal_grass')
         table.insert(deco_biomes, 'everness:crystal_forest')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:podzol')
         table.insert(deco_biomes, 'MegaSpruceTaiga')
         table.insert(deco_biomes, 'MegaTaiga')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:strawberry',
             deco_type = 'simple',
             place_on = deco_place_on,

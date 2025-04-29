@@ -16,14 +16,14 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local mod_start_time = minetest.get_us_time()
-local path = minetest.get_modpath('x_farming')
+local mod_start_time = core.get_us_time()
+local path = core.get_modpath('x_farming')
 
 -- Legacy backwards compatibility
-minetest.register_alias('x_farming:hog_stew', 'x_farming:fish_stew')
+core.register_alias('x_farming:hog_stew', 'x_farming:fish_stew')
 
 -- MineClone2 support
-if minetest.get_modpath('mcl_core') and minetest.global_exists('mcl_core') then
+if core.get_modpath('mcl_core') and core.global_exists('mcl_core') then
     dofile(path .. '/mod_support_mcl_aliases.lua')
 end
 
@@ -72,7 +72,7 @@ if not x_farming.vessels then
 end
 
 ---timer for crates
-minetest.register_lbm({
+core.register_lbm({
     label = 'x_farming timer for crates',
     name = 'x_farming:start_nodetimer_crates',
     nodenames = x_farming.lbm_nodenames_crates,
@@ -83,7 +83,7 @@ minetest.register_lbm({
 
 -- MOD support
 
-if minetest.get_modpath('default') then
+if core.get_modpath('default') then
     dofile(path .. '/mod_support_default.lua')
 end
 
@@ -100,10 +100,10 @@ if x_farming.hunger_ng then
 end
 
 -- candles_3d
-if minetest.get_modpath('candles_3d') then
+if core.get_modpath('candles_3d') then
     dofile(path .. '/mod_support_candles_3d.lua')
 end
 
-local mod_end_time = (minetest.get_us_time() - mod_start_time) / 1000000
+local mod_end_time = (core.get_us_time() - mod_start_time) / 1000000
 
 print('[Mod] x_farming loaded.. [' .. mod_end_time .. 's]')
