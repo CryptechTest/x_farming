@@ -35,7 +35,7 @@ try {
         body: JSON.stringify(body),
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.CONTENT_DB_X_SPAWNERS_MOBS_TOKEN ?? argv.token}`
+            Authorization: `Bearer ${process.env.CONTENT_DB_X_FARMING_TOKEN ?? argv.token}`
         }
     })
     const data = await response.json()
