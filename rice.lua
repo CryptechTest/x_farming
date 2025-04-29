@@ -32,9 +32,21 @@ x_farming.register_plant('x_farming:rice', {
     visual_scale = 3.0,
     special_tiles = 'x_farming_rice_seed.png',
     node_dig_prediction = 'x_farming:silt_loam_soil',
-    groups = { attached_node = 0 },
+    groups = {
+        -- MTG
+        attached_node = 0,
+        -- VL
+        plant = 1,
+        dig_by_water = 0,
+        destroy_by_lava_flow = 1,
+        dig_by_piston = 1,
+        compostability = 30,
+        -- X Farming
+        compost = 30,
+    },
     node_placement_prediction = '',
     buildable_to = false,
+    floodable = false,
     selection_box = {
         type = 'fixed',
         fixed = {
@@ -116,11 +128,11 @@ x_farming.register_plant('x_farming:rice', {
         local water_above = minetest.find_nodes_in_area(
             vector.new(pos_above),
             vector.new(pos_above.x, pos_above.y + 2, pos_above.z),
-            { 'default:water_source' }
+            { 'group:water' }
         )
 
         if node_under.name ~= 'x_farming:silt_loam_soil'
-            or minetest.get_node(pos_above).name ~= 'default:water_source'
+            or core.get_item_group(minetest.get_node(pos_above).name, 'water') == 0
             or #water_above ~= 1
         then
             return itemstack
