@@ -19,6 +19,7 @@
 import fetch from 'node-fetch'
 import yargs from 'yargs/yargs'
 import {hideBin} from 'yargs/helpers'
+import 'dotenv/config'
 
 const argv = yargs(hideBin(process.argv)).argv
 
@@ -34,7 +35,7 @@ try {
         body: JSON.stringify(body),
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${argv.token}`
+            Authorization: `Bearer ${process.env.CONTENT_DB_X_SPAWNERS_MOBS_TOKEN ?? argv.token}`
         }
     })
     const data = await response.json()

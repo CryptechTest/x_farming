@@ -13,7 +13,7 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "push:ci": "node ./scripts/deploy"
+        "push:ci": "node ./scripts/deploy.mjs"
     },
     "repository": {
         "type": "git",
@@ -28,5 +28,8 @@
     "devDependencies": {
         "node-fetch": "^3.2.10",
         "yargs": "^17.6.1"
+    },
+    "dependencies": {
+        "dotenv": "^16.5.0"
     }
 }
