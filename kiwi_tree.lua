@@ -288,12 +288,19 @@ local kiwi_fruit_def = {
         eatable = 1,
         -- ALL
         flammable = 2,
-        attached_node = 1,
+        attached_node = 1, 
     },
     _mcl_blast_resistance = 0,
     _mcl_hardness = 0,
     sounds = x_farming.node_sound_leaves_defaults(),
-    sunlight_propagates = true
+    sunlight_propagates = true,
+	on_use = function(itemstack, user, pointed_thing)
+		local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+		if hunger_amount == 0 then
+			return itemstack
+		end
+		return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+	end,
 }
 
 if minetest.get_modpath('mcl_farming') then
