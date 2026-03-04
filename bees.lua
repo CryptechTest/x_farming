@@ -864,13 +864,13 @@ minetest.register_node('x_farming:bee', {
         local flower_pollinated = false
         if flower_node then
             if minetest.get_item_group(flower_node.name, 'flower') > 0 and data_hive.saturation < 16 then
-                if math.random(0, 100) <= 60 then
+                if math.random(0, 100) <= 50 then
                     data_hive.saturation = data_hive.saturation + 1
                     flower_pollinated = true
                 end
             elseif minetest.get_item_group(flower_node.name, 'farmable') > 0 then
                 if data_hive.saturation < 16 then
-                    if math.random(0, 100) <= 80 then
+                    if math.random(0, 100) <= 67 then
                         data_hive.saturation = data_hive.saturation + 1
                         flower_pollinated = true
                     end
@@ -892,11 +892,10 @@ minetest.register_node('x_farming:bee', {
                 local crop_pos = {x = pos.x, y = pos.y - 1, z = pos.z}
                 x_farming.grow_plant(crop_pos)
                 x_farming.x_bonemeal.particle_effect(crop_pos)
-                minetest.after(1, function()
-                    x_farming.grow_plant(crop_pos)
-                    grow_plants(crop_pos)
-                end)
                 if flower_pollinated then
+                    minetest.after(1, function()
+                        grow_plants(crop_pos)
+                    end)
                     minetest.after(2, function()
                         grow_plants(crop_pos)
                     end)
