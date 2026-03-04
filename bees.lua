@@ -818,6 +818,10 @@ minetest.register_node('x_farming:bee', {
         local data_hive = minetest.deserialize(meta_hive:get_string('x_farming'))
         local node_hive = minetest.get_node(pos_hive)
 
+        if data_hive == nil then
+            return
+        end
+
         if (data_hive.saturation >= 15 and math.random(0, 3) >= 1) or (data_hive.occupancy >= 3) then
             local pos_old_hive = vector.copy(pos_hive)
             if pos_old_hive then
@@ -860,25 +864,41 @@ minetest.register_node('x_farming:bee', {
         local flower_pollinated = false
         if flower_node then
             if minetest.get_item_group(flower_node.name, 'flower') > 0 and data_hive.saturation < 16 then
-                if math.random(0, 3) <= 0 then
+                if math.random(0, 100) <= 60 then
                     data_hive.saturation = data_hive.saturation + 1
                     flower_pollinated = true
                 end
             elseif minetest.get_item_group(flower_node.name, 'farmable') > 0 then
                 if data_hive.saturation < 16 then
-                    data_hive.saturation = data_hive.saturation + 1
-                    flower_pollinated = true
+                    if math.random(0, 100) <= 80 then
+                        data_hive.saturation = data_hive.saturation + 1
+                        flower_pollinated = true
+                    end
+                end
+                local function grow_plants(p)
+                    for x = -1, 1 do
+                        for z = -1, 1 do
+                            if math.random(100) < 33 then
+                                local pp = vector.new(p.x + x, p.y, p.z + z)
+                                local plant_node = core.get_node(pp)
+                                if core.get_item_group(plant_node.name, 'farmable') > 0 then
+                                    x_farming.grow_plant(pp)
+                                    x_farming.x_bonemeal.particle_effect(pp)
+                                end
+                            end
+                        end
+                    end
                 end
                 local crop_pos = {x = pos.x, y = pos.y - 1, z = pos.z}
                 x_farming.grow_plant(crop_pos)
                 x_farming.x_bonemeal.particle_effect(crop_pos)
                 minetest.after(1, function()
                     x_farming.grow_plant(crop_pos)
+                    grow_plants(crop_pos)
                 end)
-                if math.random(0,1) == 1 then
+                if flower_pollinated then
                     minetest.after(2, function()
-                        x_farming.grow_plant(crop_pos)
-                        x_farming.x_bonemeal.particle_effect(crop_pos)
+                        grow_plants(crop_pos)
                     end)
                 end
             end
