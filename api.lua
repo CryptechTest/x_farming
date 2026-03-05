@@ -1827,6 +1827,7 @@ local farming_steps = {
     ['x_farming:salt'] = 7,
     ['x_farming:barley'] = 8,
     ['x_farming:cotton'] = 8,
+    ['ctg_foods:rye'] = 11,
 }
 
 ---Particle and sound effect after the bone meal is successfully used
@@ -2301,7 +2302,7 @@ function x_farming.x_bonemeal.on_use(self, itemstack, user, pointed_thing)
 
     local mod = node.name:split(':')[1]
 
-    if (mod == 'farming' or mod == 'x_farming')
+    if (mod == 'farming' or mod == 'x_farming' or mod == "ctg_foods")
         and not string.find(node.name, '_sapling')
         and not string.find(node.name, '_seedling')
     then
