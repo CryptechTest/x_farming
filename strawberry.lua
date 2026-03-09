@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -15,7 +15,8 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-local S = minetest.get_translator(minetest.get_current_modname())
+
+local S = core.get_translator(core.get_current_modname())
 
 -- STRAWBERRY
 x_farming.register_plant('x_farming:strawberry', {
@@ -34,7 +35,7 @@ x_farming.register_plant('x_farming:strawberry', {
 -- needed
 local strawberry_def = {
     description = S('Strawberry') .. '\n' .. S('Compost chance') .. ': 30%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     groups = {
         hunger_amount = 2,
         -- X Farming
@@ -43,24 +44,24 @@ local strawberry_def = {
     },
     short_description = S('Strawberry'),
     on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        local hunger_amount = core.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
             return itemstack
         end
-        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+        return core.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end
 }
 
---[[if minetest.get_modpath('farming') then
-    strawberry_def.on_use = minetest.item_eat(2)
+--[[if core.get_modpath('farming') then
+    strawberry_def.on_use = core.item_eat(2)
 end--]]
 
-if minetest.get_modpath('mcl_farming') then
-    strawberry_def.on_place = minetest.item_eat(2)
-    strawberry_def.on_secondary_use = minetest.item_eat(2)
+if core.get_modpath('mcl_farming') then
+    strawberry_def.on_place = core.item_eat(2)
+    strawberry_def.on_secondary_use = core.item_eat(2)
 end
 
-minetest.override_item('x_farming:strawberry', strawberry_def)
+core.override_item('x_farming:strawberry', strawberry_def)
 
 ---crate
 x_farming.register_crate('crate_strawberry_3', {
@@ -72,31 +73,31 @@ x_farming.register_crate('crate_strawberry_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dirt_with_coniferous_litter')
         table.insert(deco_biomes, 'coniferous_forest')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:dirt_with_crystal_grass')
-        table.insert(deco_biomes, 'everness_crystal_forest')
+        table.insert(deco_biomes, 'everness:crystal_forest')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:podzol')
         table.insert(deco_biomes, 'MegaSpruceTaiga')
         table.insert(deco_biomes, 'MegaTaiga')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:strawberry',
             deco_type = 'simple',
             place_on = deco_place_on,

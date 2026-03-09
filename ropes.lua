@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,23 +16,23 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 local function place_rope(pos, itemstack)
-    local next_node = minetest.get_node(pos)
+    local next_node = core.get_node(pos)
     local stack_name = itemstack:get_name()
 
     while next_node.name == 'air' and not itemstack:is_empty() do
-        minetest.set_node(pos, { name = stack_name, param1 = 0 })
+        core.set_node(pos, { name = stack_name, param1 = 0 })
         itemstack:take_item()
         pos.y = pos.y - 1
-        next_node = minetest.get_node(pos)
+        next_node = core.get_node(pos)
     end
 
     return itemstack
 end
 
-minetest.register_node('x_farming:rope', {
+core.register_node('x_farming:rope', {
     description = S('Rope') .. '. ' .. S('Placing rope on rope will prelong the rope downwards.'),
     drawtype = 'plantlike',
     walkable = false,
@@ -56,16 +56,16 @@ minetest.register_node('x_farming:rope', {
     sounds = x_farming.node_sound_rope_defaults(),
     on_place = function(itemstack, placer, pointed_thing)
         local control = placer:get_player_control()
-        local pt_pos = minetest.get_pointed_thing_position(pointed_thing)
+        local pt_pos = core.get_pointed_thing_position(pointed_thing)
 
         if pt_pos and pointed_thing.type == 'node' then
-            local pt_node = minetest.get_node(pt_pos)
+            local pt_node = core.get_node(pt_pos)
 
-            if minetest.is_protected(pt_pos, placer:get_player_name()) then
+            if core.is_protected(pt_pos, placer:get_player_name()) then
                 return itemstack
             end
 
-            local pt_node_def = minetest.registered_nodes[pt_node.name]
+            local pt_node_def = core.registered_nodes[pt_node.name]
 
             -- check if we have to use default on_place first
             if pt_node_def.on_rightclick then
@@ -75,16 +75,16 @@ minetest.register_node('x_farming:rope', {
 
         -- placing rope on rope
         if pt_pos and not control.sneak then
-            local pt_node = minetest.get_node(pt_pos)
+            local pt_node = core.get_node(pt_pos)
 
-            if minetest.get_item_group(pt_node.name, 'rope') > 0 then
+            if core.get_item_group(pt_node.name, 'rope') > 0 then
                 -- add to rope
                 local _pos = vector.new(pt_pos)
-                local next_node = minetest.get_node(_pos)
+                local next_node = core.get_node(_pos)
 
-                while minetest.get_item_group(next_node.name, 'rope') > 0 do
+                while core.get_item_group(next_node.name, 'rope') > 0 do
                     _pos.y = _pos.y - 1
-                    next_node = minetest.get_node(_pos)
+                    next_node = core.get_node(_pos)
                 end
 
                 return place_rope(_pos, itemstack)
@@ -94,7 +94,7 @@ minetest.register_node('x_farming:rope', {
         if pointed_thing.type == 'node' then
             local pos = pointed_thing.above
 
-            if minetest.is_protected(pos, placer:get_player_name()) then
+            if core.is_protected(pos, placer:get_player_name()) then
                 return itemstack
             end
 
@@ -104,19 +104,19 @@ minetest.register_node('x_farming:rope', {
         return itemstack
     end,
     on_punch = function(pos, node, puncher, pointed_thing)
-        if minetest.is_protected(pos, puncher:get_player_name()) then
+        if core.is_protected(pos, puncher:get_player_name()) then
             return
         end
 
         local count = 0
         local below = vector.new(pos)
-        local node_below = minetest.get_node(below)
+        local node_below = core.get_node(below)
 
-        while minetest.get_item_group(node_below.name, 'rope') > 0 do
-            minetest.remove_node(below)
+        while core.get_item_group(node_below.name, 'rope') > 0 do
+            core.remove_node(below)
             below.y = below.y - 1
             count = count + 1
-            node_below = minetest.get_node(below)
+            node_below = core.get_node(below)
         end
 
         if count == 0 then
@@ -149,7 +149,7 @@ minetest.register_node('x_farming:rope', {
                 inv:add_item('main', stack)
             else
                 -- drop on the ground
-                minetest.add_item(puncher:get_pos(), stack)
+                core.add_item(puncher:get_pos(), stack)
             end
         end
 
@@ -157,7 +157,7 @@ minetest.register_node('x_farming:rope', {
     end,
 })
 
-minetest.register_node('x_farming:safety_net', {
+core.register_node('x_farming:safety_net', {
     description = S('Safety Net. No fall damage when landing on this net.'),
     drawtype = 'nodebox',
     node_box = {
@@ -185,11 +185,17 @@ minetest.register_node('x_farming:safety_net', {
         flammable = 3,
         bouncy = 33,
         fall_damage_add_percent = -100,
+        -- MCL
+        handy = 1,
+        hoey = 1,
+        shearsy = 1,
+        swordy = 1
     },
+    _mcl_hardness = 0.2,
     sounds = x_farming.node_sound_rope_defaults()
 })
 
-minetest.register_node('x_farming:rope_fence', {
+core.register_node('x_farming:rope_fence', {
     description = S('Rope') .. ' ' .. S('Fence'),
     drawtype = 'nodebox',
     paramtype = 'light',
@@ -241,7 +247,13 @@ minetest.register_node('x_farming:rope_fence', {
         -- MTG
         fence = 1,
         snappy = 3,
-        flammable = 2
+        flammable = 2,
+        -- MCL
+        handy = 1,
+        hoey = 1,
+        shearsy = 1,
+        swordy = 1
     },
+    _mcl_hardness = 0.2,
     sounds = x_farming.node_sound_rope_defaults()
 })

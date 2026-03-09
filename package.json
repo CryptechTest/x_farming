@@ -1,7 +1,7 @@
 {
     "name": "x_farming",
     "version": "1.0.0",
-    "description": "Adds bow and arrows to Minetest.",
+    "description": "Adds new farming crops, plants and items.",
     "main": "index.js",
     "type": "module",
     "directories": {
@@ -13,8 +13,7 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "push:ci": "node ./scripts/deploy",
-        "lua-diagnostics": "node ./scripts/lls-check"
+        "push:ci": "node ./scripts/deploy.mjs"
     },
     "repository": {
         "type": "git",
@@ -27,8 +26,10 @@
     },
     "homepage": "https://bitbucket.org/minetest_gamers/x_farming#readme",
     "devDependencies": {
-        "jaguar": "^6.0.1",
         "node-fetch": "^3.2.10",
         "yargs": "^17.6.1"
+    },
+    "dependencies": {
+        "dotenv": "^16.5.0"
     }
 }

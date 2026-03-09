@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -15,15 +15,16 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-local S = minetest.get_translator(minetest.get_current_modname())
+
+local S = core.get_translator(core.get_current_modname())
 
 -- how often a growth failure tick is retried (e.g. too dark)
 local function tick_again(pos)
-    minetest.get_node_timer(pos):start(math.random(80, 160))
+    core.get_node_timer(pos):start(math.random(80, 160))
 end
 
 -- SALT
-minetest.register_craftitem('x_farming:salt', {
+core.register_craftitem('x_farming:salt', {
     description = S('Salt'),
     short_description = S('Salt'),
     tiles = { 'x_farming_salt.png' },
@@ -32,7 +33,7 @@ minetest.register_craftitem('x_farming:salt', {
     wield_image = 'x_farming_salt.png'
 })
 
-minetest.register_node('x_farming:seed_salt', {
+core.register_node('x_farming:seed_salt', {
     description = S('Salty Water (plant soil)'),
     short_description = S('Salty Water (plant soil)'),
     inventory_image = 'x_farming_salt_water.png',
@@ -97,8 +98,8 @@ minetest.register_node('x_farming:seed_salt', {
     on_timer = x_farming.grow_plant,
     on_place = function(itemstack, placer, pointed_thing)
         local under = pointed_thing.under
-        local node = minetest.get_node(under)
-        local udef = minetest.registered_nodes[node.name]
+        local node = core.get_node(under)
+        local udef = core.registered_nodes[node.name]
         if udef and udef.on_rightclick
             and not (placer and placer:is_player()
             and placer:get_player_control().sneak)
@@ -111,7 +112,7 @@ minetest.register_node('x_farming:seed_salt', {
 })
 
 -- 1
-minetest.register_node('x_farming:salt_1', {
+core.register_node('x_farming:salt_1', {
     description = S('Salt') .. ' 1',
     short_description = S('Salt') .. ' 1',
     drawtype = 'nodebox',
@@ -190,7 +191,7 @@ minetest.register_node('x_farming:salt_1', {
 })
 
 -- 2
-minetest.register_node('x_farming:salt_2', {
+core.register_node('x_farming:salt_2', {
     description = S('Salt') .. ' 2',
     short_description = S('Salt') .. ' 2',
     drawtype = 'nodebox',
@@ -269,7 +270,7 @@ minetest.register_node('x_farming:salt_2', {
 })
 
 -- 3
-minetest.register_node('x_farming:salt_3', {
+core.register_node('x_farming:salt_3', {
     description = S('Salt') .. ' 3',
     short_description = S('Salt') .. ' 3',
     drawtype = 'nodebox',
@@ -349,7 +350,7 @@ minetest.register_node('x_farming:salt_3', {
 })
 
 -- 4
-minetest.register_node('x_farming:salt_4', {
+core.register_node('x_farming:salt_4', {
     description = S('Salt') .. ' 4',
     short_description = S('Salt') .. ' 4',
     drawtype = 'nodebox',
@@ -429,7 +430,7 @@ minetest.register_node('x_farming:salt_4', {
 })
 
 -- 5
-minetest.register_node('x_farming:salt_5', {
+core.register_node('x_farming:salt_5', {
     description = S('Salt') .. ' 5',
     short_description = S('Salt') .. ' 5',
     drawtype = 'nodebox',
@@ -510,7 +511,7 @@ minetest.register_node('x_farming:salt_5', {
 })
 
 -- 6
-minetest.register_node('x_farming:salt_6', {
+core.register_node('x_farming:salt_6', {
     description = S('Salt') .. ' 6',
     short_description = S('Salt') .. ' 6',
     drawtype = 'nodebox',
@@ -591,7 +592,7 @@ minetest.register_node('x_farming:salt_6', {
 })
 
 -- 7
-minetest.register_node('x_farming:salt_7', {
+core.register_node('x_farming:salt_7', {
     description = S('Salt') .. ' 7',
     short_description = S('Salt') .. ' 7',
     drawtype = 'nodebox',
@@ -673,7 +674,7 @@ minetest.register_node('x_farming:salt_7', {
 })
 
 -- replacement LBM for pre-nodetimer plants
-minetest.register_lbm({
+core.register_lbm({
     name = 'x_farming:start_nodetimer_salt',
     nodenames = {
         'x_farming:seed_salt',
@@ -699,12 +700,12 @@ x_farming.register_bag('bag_salt', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dirt')
         table.insert(deco_place_on, 'default:dry_dirt')
         table.insert(deco_biomes, 'rainforest_swamp')
@@ -712,13 +713,13 @@ minetest.register_on_mods_loaded(function()
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:sand')
         table.insert(deco_biomes, 'Savanna_beach')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:salt',
             deco_type = 'schematic',
             place_on = deco_place_on,
@@ -734,7 +735,7 @@ minetest.register_on_mods_loaded(function()
             biomes = deco_biomes,
             y_max = 0,
             y_min = 0,
-            schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_salt_decor.mts',
+            schematic = core.get_modpath('x_farming') .. '/schematics/x_farming_salt_decor.mts',
         })
     end
 end)

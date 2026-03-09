@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 -- COTTON
 x_farming.register_plant('x_farming:cotton', {
@@ -44,7 +44,7 @@ local cotton_def = {
     }
 }
 
-minetest.override_item('x_farming:cotton', cotton_def)
+core.override_item('x_farming:cotton', cotton_def)
 
 -- Crate
 x_farming.register_crate('crate_cotton2_3', {
@@ -56,30 +56,30 @@ x_farming.register_crate('crate_cotton2_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dry_dirt_with_dry_grass')
         table.insert(deco_biomes, 'savanna')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:dry_dirt_with_dry_grass')
-        table.insert(deco_biomes, 'everness_baobab_savanna')
+        table.insert(deco_biomes, 'everness:baobab_savanna')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
         table.insert(deco_biomes, 'Savanna')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:cotton',
             deco_type = 'simple',
             place_on = deco_place_on,

@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -14,10 +14,13 @@
 
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
---]] local S = minetest.get_translator(minetest.get_current_modname())
+--]]
+
+local S = core.get_translator(core.get_current_modname())
+
 
 -- Large cactus
-minetest.register_decoration({
+core.register_decoration({
     name = 'x_farming:large_cactus',
     deco_type = 'schematic',
     place_on = {'default:desert_sand'},
@@ -37,13 +40,13 @@ minetest.register_decoration({
     biomes = {'desert'},
     y_max = 48,
     y_min = 4,
-    schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_large_cactus_new.mts',
+    schematic = core.get_modpath('x_farming') .. '/schematics/x_farming_large_cactus_new.mts',
     flags = 'place_center_x, place_center_z',
     rotation = 'random'
 })
 
 -- Large cactus legacy
-minetest.register_decoration({
+core.register_decoration({
     name = 'x_farming:large_cactus',
     deco_type = 'schematic',
     place_on = {'default:desert_sand'},
@@ -63,12 +66,12 @@ minetest.register_decoration({
     biomes = {'desert'},
     y_max = 64,
     y_min = 28,
-    schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_large_cactus.mts',
+    schematic = core.get_modpath('x_farming') .. '/schematics/x_farming_large_cactus.mts',
     flags = 'place_center_x, place_center_z',
     rotation = 'random'
 })
 
-minetest.register_decoration({
+core.register_decoration({
     name = 'x_farming:huge_cactus',
     deco_type = 'schematic',
     place_on = {'default:desert_sand'},
@@ -88,12 +91,12 @@ minetest.register_decoration({
     biomes = {'desert'},
     y_max = 34,
     y_min = 12,
-    schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_huge_cactus.mts',
+    schematic = core.get_modpath('x_farming') .. '/schematics/x_farming_huge_cactus.mts',
     flags = 'place_center_x, place_center_z',
     rotation = 'random'
 })
 
-minetest.register_node('x_farming:cactus', {
+core.register_node('x_farming:cactus', {
     description = S('Cactus'),
     tiles = {'x_farming_cactus_top.png', 'x_farming_cactus_top.png', 'x_farming_cactus.png', 'x_farming_cactus.png',
              'x_farming_cactus.png^[transformFX', 'x_farming_cactus.png^[transformFX'},
@@ -115,13 +118,13 @@ minetest.register_node('x_farming:cactus', {
         compostability = 50
     },
     sounds = x_farming.node_sound_wood_defaults(),
-    --on_place = minetest.rotate_node,
+    --on_place = core.rotate_node,
 	after_dig_node = function(pos, node, metadata, digger)
 		default.dig_up(pos, node, digger)
 	end,
 })
 
-minetest.register_node('x_farming:cactus_fruit', {
+core.register_node('x_farming:cactus_fruit', {
     description = S('Dragon Fruit'),
     short_description = S('Dragon Fruit'),
     inventory_image = 'x_farming_cactus_fruit_sides.png',
@@ -166,32 +169,32 @@ minetest.register_node('x_farming:cactus_fruit', {
     sounds = x_farming.node_sound_wood_defaults(),
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         if oldnode.param2 == 20 then
-            minetest.set_node(pos, {
+            core.set_node(pos, {
                 name = 'x_farming:cactus_fruit_mark'
             })
-            minetest.get_node_timer(pos):start(math.random(300, 1500))
+            core.get_node_timer(pos):start(math.random(300, 1500))
         else
-            local n = minetest.get_node({
+            local n = core.get_node({
                 x = pos.x,
                 y = pos.y - 1,
                 z = pos.z
             })
             if n.name ~= 'default:cactus' then
-                minetest.remove_node(pos)
-            elseif minetest.get_node_light(pos) < 11 then
-                minetest.get_node_timer(pos):start(200)
+                core.remove_node(pos)
+            elseif core.get_node_light(pos) < 11 then
+                core.get_node_timer(pos):start(200)
             elseif oldnode.param2 ~= 1 then
-                minetest.set_node(pos, {
+                core.set_node(pos, {
                     name = 'x_farming:cactus_fruit_mark'
                 })
-                minetest.get_node_timer(pos):start(math.random(30, 500))
-                minetest.log("action", "Placing missing cactus fruit mark at: " .. minetest.pos_to_string(pos))
+                core.get_node_timer(pos):start(math.random(30, 500))
+                core.log("action", "Placing missing cactus fruit mark at: " .. core.pos_to_string(pos))
             end
         end
     end
 })
 
-minetest.register_node('x_farming:cactus_fruit_mark', {
+core.register_node('x_farming:cactus_fruit_mark', {
     description = S('Cactus Fruit Marker'),
     short_description = S('Cactus Fruit Marker'),
     inventory_image = 'x_farming_cactus_fruit_sides.png^x_farming_invisible_node_overlay.png',
@@ -209,13 +212,13 @@ minetest.register_node('x_farming:cactus_fruit_mark', {
         attached_node = 3
     },
     on_timer = function(pos, elapsed)
-        local n = minetest.get_node(pos)
+        local n = core.get_node(pos)
         if n.name ~= 'default:cactus' or n.name ~= 'x_farming:cactus' then
-            minetest.remove_node(pos)
-        elseif minetest.get_node_light(pos) < 11 then
-            minetest.get_node_timer(pos):start(200)
+            core.remove_node(pos)
+        elseif core.get_node_light(pos) < 11 then
+            core.get_node_timer(pos):start(200)
         else
-            minetest.set_node(pos, {
+            core.set_node(pos, {
                 name = 'x_farming:cactus_fruit',
                 param2 = 20
             })
@@ -227,17 +230,17 @@ minetest.register_node('x_farming:cactus_fruit_mark', {
 
 local cactus_fruit_item_def = {
     description = S('Dragon Fruit') .. '\n' .. S('Compost chance') .. ': 65%\n' ..
-        minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
+        core.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     short_description = S('Dragon Fruit'),
     drawtype = 'plantlike',
     tiles = {'x_farming_cactus_fruit_item.png'},
     inventory_image = 'x_farming_cactus_fruit_item.png',
     on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        local hunger_amount = core.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
             return itemstack
         end
-        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+        return core.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     sounds = default.node_sound_leaves_defaults(),
     groups = {
@@ -250,16 +253,21 @@ local cactus_fruit_item_def = {
         compostability = 65
     },
     after_place_node = function(pos, placer, itemstack, pointed_thing)
-        minetest.set_node(pos, {
+        core.set_node(pos, {
             name = 'x_farming:cactus_fruit',
             param2 = 1
         })
     end
 }
 
-minetest.register_node('x_farming:cactus_fruit_item', cactus_fruit_item_def)
+if core.get_modpath('mcl_farming') then
+    cactus_fruit_item_def.on_secondary_use = core.item_eat(2)
+end
 
-minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
+
+core.register_node('x_farming:cactus_fruit_item', cactus_fruit_item_def)
+
+core.register_node('x_farming:large_cactus_with_fruit_seedling', {
     description = S('Large Cactus with Fruit Seedling') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Large Cactus with Fruit Seedling'),
     drawtype = 'plantlike',
@@ -312,35 +320,35 @@ minetest.register_node('x_farming:large_cactus_with_fruit_seedling', {
         -- Large cactus contains on average 14 cactus nodes.
         -- 14 * 199.2 = 2788.8s.
         -- Set random range to average to 2789s.
-        minetest.get_node_timer(pos):start(math.random(1859, 3719))
+        core.get_node_timer(pos):start(math.random(1859, 3719))
     end,
     on_timer = function(pos, elapsed)
-        local node_under = minetest.get_node_or_nil({
+        local node_under = core.get_node_or_nil({
             x = pos.x,
             y = pos.y - 1,
             z = pos.z
         })
         if not node_under then
             -- Node under not yet loaded, try later
-            minetest.get_node_timer(pos):start(300)
+            core.get_node_timer(pos):start(300)
             return
         end
 
-        if minetest.get_item_group(node_under.name, 'sand') == 0 then
+        if core.get_item_group(node_under.name, 'sand') == 0 then
             -- Seedling dies
-            minetest.remove_node(pos)
+            core.remove_node(pos)
             return
         end
 
-        local light_level = minetest.get_node_light(pos)
+        local light_level = core.get_node_light(pos)
         if not light_level or light_level < 13 then
             -- Too dark for growth, try later in case it's night
-            minetest.get_node_timer(pos):start(300)
+            core.get_node_timer(pos):start(300)
             return
         end
 
-        minetest.log('action',
-            'A large cactus seedling grows into a large' .. 'cactus at ' .. minetest.pos_to_string(pos))
+        core.log('action',
+            'A large cactus seedling grows into a large' .. 'cactus at ' .. core.pos_to_string(pos))
         x_farming.grow_large_cactus(pos)
     end
 })
@@ -351,20 +359,20 @@ x_farming.register_leafdecay({
     radius = 1
 })
 
-minetest.register_craft({
+core.register_craft({
     output = 'x_farming:large_cactus_with_fruit_seedling',
     recipe = {{'', 'x_farming:cactus_fruit_item', ''},
               {'x_farming:cactus_fruit_item', 'group:cactus', 'x_farming:cactus_fruit_item'},
               {'', 'x_farming:cactus_fruit_item', ''}}
 })
 
-minetest.register_craft({
+core.register_craft({
     type = 'fuel',
     recipe = 'x_farming:large_cactus_with_fruit_seedling',
     burntime = 5
 })
 
-minetest.register_craft({
+core.register_craft({
     type = 'fuel',
     recipe = 'x_farming:cactus_fruit_item',
     burntime = 10
@@ -446,16 +454,16 @@ local function dmg_object(pos, object, strength)
     apply_fractional_damage(object, dmg * mul)
 end
 
-minetest.register_abm({
+core.register_abm({
     nodenames = {"group:thorns"},
     interval = 1,
     chance = 1,
     action = function(pos, node, active_object_count, active_object_count_wider)
-        local strength = minetest.get_item_group(node.name, "thorns")
+        local strength = core.get_item_group(node.name, "thorns")
         local thorns_dmg_mult_sqrt = math.sqrt(1 / 0.2)
         local max_dist = math.min(0.375, strength * thorns_dmg_mult_sqrt)
         local abdomen_offset = 1;
-        for _, o in pairs(minetest.get_objects_inside_radius(pos, max_dist + abdomen_offset)) do
+        for _, o in pairs(core.get_objects_inside_radius(pos, max_dist + abdomen_offset)) do
             if o ~= nil and o:get_hp() > 0 then
                 dmg_object(pos, o, strength)
             end
@@ -463,30 +471,30 @@ minetest.register_abm({
     end
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:desert_sand')
         table.insert(deco_biomes, 'desert')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:forsaken_desert_sand')
-        table.insert(deco_biomes, 'everness_forsaken_desert')
+        table.insert(deco_biomes, 'everness:forsaken_desert')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:sand')
         table.insert(deco_biomes, 'Desert')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:large_cactus',
             deco_type = 'schematic',
             place_on = deco_place_on,
@@ -506,7 +514,7 @@ minetest.register_on_mods_loaded(function()
             biomes = deco_biomes,
             y_max = 31000,
             y_min = 4,
-            schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_large_cactus.mts',
+            schematic = core.get_modpath('x_farming') .. '/schematics/x_farming_large_cactus.mts',
             flags = 'place_center_x, place_center_z',
             rotation = 'random'
         })

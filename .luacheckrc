@@ -19,7 +19,9 @@ exclude_files = {
 globals = {
     'x_farming',
     'mobs',
-    'hbhunger'
+    'hbhunger',
+    'creative',
+    'dungeon_loot'
 }
 
 read_globals = {

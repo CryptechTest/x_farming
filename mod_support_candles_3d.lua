@@ -1,5 +1,5 @@
 --[[
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,7 @@
 
 -- Candles
 
-minetest.register_craft({
+core.register_craft({
     output = 'candles_3d:unlit_orange_1',
     recipe = {
         { 'x_farming:string' },
@@ -26,7 +26,7 @@ minetest.register_craft({
     },
 })
 
-minetest.register_craft({
+core.register_craft({
     output = 'candles_3d:unlit_orange_1',
     recipe = {
         { 'farming:string' },

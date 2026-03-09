@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -96,7 +96,7 @@ local tree_defs = {
                 return false
             end
 
-            if minetest.find_node_near(pos, 1, { 'group:snowy' }) then
+            if core.find_node_near(pos, 1, { 'group:snowy' }) then
                 default.grow_new_snowy_pine_tree(pos)
             else
                 default.grow_new_pine_tree(pos)
@@ -170,7 +170,7 @@ local tree_defs = {
                 return false
             end
 
-            local node = minetest.get_node(pos)
+            local node = core.get_node(pos)
 
             default.grow_papyrus(pos, node)
 

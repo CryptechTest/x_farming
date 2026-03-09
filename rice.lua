@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 x_farming.register_plant('x_farming:rice', {
     description = S('Rice Seed') .. '\n' .. S('Compost chance') .. ': 30%',
@@ -32,9 +32,21 @@ x_farming.register_plant('x_farming:rice', {
     visual_scale = 3.0,
     special_tiles = 'x_farming_rice_seed.png',
     node_dig_prediction = 'x_farming:silt_loam_soil',
-    groups = { attached_node = 0 },
+    groups = {
+        -- MTG
+        attached_node = 0,
+        -- VL
+        plant = 1,
+        dig_by_water = 0,
+        destroy_by_lava_flow = 1,
+        dig_by_piston = 1,
+        compostability = 30,
+        -- X Farming
+        compost = 30,
+    },
     node_placement_prediction = '',
     buildable_to = false,
+    floodable = false,
     selection_box = {
         type = 'fixed',
         fixed = {
@@ -106,50 +118,50 @@ x_farming.register_plant('x_farming:rice', {
         local player_name = placer:get_player_name()
         local pos_under = pointed_thing.under
         local pos_above = pointed_thing.above
-        local node_under = minetest.get_node(pos_under)
-        local def_under = minetest.registered_nodes[node_under.name]
+        local node_under = core.get_node(pos_under)
+        local def_under = core.registered_nodes[node_under.name]
 
         if def_under and def_under.on_rightclick and not placer:get_player_control().sneak then
             return def_under.on_rightclick(pos_under, node_under, placer, itemstack, pointed_thing) or itemstack
         end
 
-        local water_above = minetest.find_nodes_in_area(
+        local water_above = core.find_nodes_in_area(
             vector.new(pos_above),
             vector.new(pos_above.x, pos_above.y + 2, pos_above.z),
-            { 'default:water_source' }
+            { 'group:water' }
         )
 
         if node_under.name ~= 'x_farming:silt_loam_soil'
-            or minetest.get_node(pos_above).name ~= 'default:water_source'
+            or core.get_item_group(core.get_node(pos_above).name, 'water') == 0
             or #water_above ~= 1
         then
             return itemstack
         end
 
-        if minetest.is_protected(pos_under, player_name)
-            or minetest.is_protected(pos_above, player_name)
+        if core.is_protected(pos_under, player_name)
+            or core.is_protected(pos_above, player_name)
         then
-            minetest.record_protection_violation(pos_under, player_name)
+            core.record_protection_violation(pos_under, player_name)
             return itemstack
         end
 
         node_under.name = itemstack:get_name()
-        minetest.set_node(pos_under, node_under)
+        core.set_node(pos_under, node_under)
         x_farming.tick(pos_under)
 
-        if not minetest.is_creative_enabled(player_name) then
+        if not core.is_creative_enabled(player_name) then
             itemstack:take_item()
         end
 
         return itemstack
     end,
     after_destruct = function(pos, oldnode)
-        minetest.set_node(pos, { name = 'x_farming:silt_loam_soil' })
+        core.set_node(pos, { name = 'x_farming:silt_loam_soil' })
     end,
     on_timer = function(pos, elapsed)
-        local node = minetest.get_node(pos)
+        local node = core.get_node(pos)
         local name = node.name
-        local def = minetest.registered_nodes[name]
+        local def = core.registered_nodes[name]
 
         if not def.next_plant then
             -- disable timer for fully grown plant
@@ -157,8 +169,8 @@ x_farming.register_plant('x_farming:rice', {
         end
 
         -- grow seed
-        if minetest.get_item_group(node.name, 'seed') and def.fertility then
-            local water_above = minetest.find_nodes_in_area(
+        if core.get_item_group(node.name, 'seed') and def.fertility then
+            local water_above = core.find_nodes_in_area(
                 vector.new(pos),
                 vector.new(pos.x, pos.y + 2, pos.z),
                 { 'default:water_source' }
@@ -175,9 +187,9 @@ x_farming.register_plant('x_farming:rice', {
                 placenode.param2 = def.place_param2
             end
 
-            minetest.swap_node(pos, placenode)
+            core.swap_node(pos, placenode)
 
-            if minetest.registered_nodes[def.next_plant].next_plant then
+            if core.registered_nodes[def.next_plant].next_plant then
                 x_farming.tick(pos)
                 return
             end
@@ -186,13 +198,13 @@ x_farming.register_plant('x_farming:rice', {
         end
 
         -- check if emerged in water
-        local water_above = minetest.find_nodes_in_area(
+        local water_above = core.find_nodes_in_area(
             vector.new(pos),
             vector.new(pos.x, pos.y + 2, pos.z),
             { 'default:water_source' }
         )
 
-        local air_above = minetest.find_nodes_in_area(
+        local air_above = core.find_nodes_in_area(
             vector.new(pos),
             vector.new(pos.x, pos.y + 3, pos.z),
             { 'air' }
@@ -204,7 +216,7 @@ x_farming.register_plant('x_farming:rice', {
         end
 
         -- check light
-        local light = minetest.get_node_light(pos)
+        local light = core.get_node_light(pos)
 
         if not light or light < def.minlight or light > def.maxlight then
             x_farming.tick_again(pos)
@@ -218,23 +230,23 @@ x_farming.register_plant('x_farming:rice', {
             placenode.param2 = def.place_param2
         end
 
-        minetest.swap_node(pos, placenode)
+        core.swap_node(pos, placenode)
 
         -- new timer needed?
-        if minetest.registered_nodes[def.next_plant].next_plant then
+        if core.registered_nodes[def.next_plant].next_plant then
             x_farming.tick(pos)
         end
     end
 })
 
 -- Registered before the stairs so the stairs get fuel recipes.
-minetest.register_craft({
+core.register_craft({
     type = 'fuel',
     recipe = 'x_farming:rice_stack',
     burntime = 3,
 })
 
-if minetest.get_modpath('stairs') then
+if core.get_modpath('stairs') then
     do
         local recipe = 'x_farming:rice'
         local groups = { snappy = 3, flammable = 4 }
@@ -272,12 +284,12 @@ x_farming.register_bag('bag_rice_grains', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dirt')
         table.insert(deco_place_on, 'default:dry_dirt')
         table.insert(deco_biomes, 'rainforest_swamp')
@@ -285,13 +297,13 @@ minetest.register_on_mods_loaded(function()
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:sand')
         table.insert(deco_biomes, 'Savanna_beach')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:rice',
             deco_type = 'simple',
             place_on = deco_place_on,

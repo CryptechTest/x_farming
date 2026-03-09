@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -15,7 +15,8 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-local S = minetest.get_translator(minetest.get_current_modname())
+
+local S = core.get_translator(core.get_current_modname())
 
 -- MELON
 x_farming.register_plant('x_farming:melon', {
@@ -33,7 +34,7 @@ x_farming.register_plant('x_farming:melon', {
 -- needed
 local melon_def = {
     description = S('Melon') .. '\n' .. S('Compost chance') .. ': 50%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     groups = {
         hunger_amount = 2,
         -- X Farming
@@ -44,29 +45,29 @@ local melon_def = {
         compostability = 50,
     },
     on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        local hunger_amount = core.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
             return itemstack
         end
-        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+        return core.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
     _mcl_saturation = 1.2,
     wield_image = 'x_farming_melon.png',
 }
 
-if minetest.get_modpath('farming') then
-    melon_def.on_use = minetest.item_eat(2)
+if core.get_modpath('farming') then
+    melon_def.on_use = core.item_eat(2)
 end
 
-if minetest.get_modpath('mcl_farming') then
-    melon_def.on_place = minetest.item_eat(2)
-    melon_def.on_secondary_use = minetest.item_eat(2)
+if core.get_modpath('mcl_farming') then
+    melon_def.on_place = core.item_eat(2)
+    melon_def.on_secondary_use = core.item_eat(2)
 end
 
-minetest.override_item('x_farming:melon', melon_def)
+core.override_item('x_farming:melon', melon_def)
 
 -- MELON FRUIT - HARVEST
-minetest.register_node('x_farming:melon_fruit', {
+core.register_node('x_farming:melon_fruit', {
     description = S('Melon Fruit'),
     tiles = {
         'x_farming_melon_fruit_top.png',
@@ -126,13 +127,14 @@ minetest.register_node('x_farming:melon_fruit', {
     },
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         local parent = oldmetadata.fields.parent
-        local parent_pos_from_child = minetest.string_to_pos(parent)
+        local parent_pos_from_child = core.string_to_pos(parent)
         local parent_node = nil
 
         -- make sure we have position
         if parent_pos_from_child
             and parent_pos_from_child ~= nil then
-            parent_node = minetest.get_node(parent_pos_from_child)
+
+            parent_node = core.get_node(parent_pos_from_child)
         end
 
         -- tick parent if parent stem still exists
@@ -145,7 +147,7 @@ minetest.register_node('x_farming:melon_fruit', {
 })
 
 -- MELON BLOCK - HARVEST from crops
-minetest.register_node('x_farming:melon_block', {
+core.register_node('x_farming:melon_block', {
     description = S('Melon Block') .. '\n' .. S('Compost chance') .. ': 65%',
     short_description = S('Melon Block'),
     tiles = {
@@ -179,14 +181,14 @@ minetest.register_node('x_farming:melon_block', {
 })
 
 -- take over the growth from minetest_game farming from here
-minetest.override_item('x_farming:melon_8', {
+core.override_item('x_farming:melon_8', {
     next_plant = 'x_farming:melon_fruit',
     on_timer = x_farming.grow_block
 })
 
 --  Golden Melon
 local golden_melon_def = {
-    description = S('Golden Melon') .. '\n' .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 10'),
+    description = S('Golden Melon') .. '\n' .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 10'),
     inventory_image = 'x_farming_golden_melon.png',
     wield_image = 'x_farming_golden_melon.png',
     groups = {
@@ -197,31 +199,31 @@ local golden_melon_def = {
     },
     _mcl_saturation = 14.4,
     on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        local hunger_amount = core.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
             return itemstack
         end
-        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+        return core.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
 }
 
 if x_farming.hbhunger ~= nil or x_farming.hunger_ng ~= nil then
-    golden_melon_def.description = golden_melon_def.description .. '\n' .. minetest.colorize(x_farming.colors.red, S('Heal') .. ': 10')
+    golden_melon_def.description = golden_melon_def.description .. '\n' .. core.colorize(x_farming.colors.red, S('Heal') .. ': 10')
 end
 
-if minetest.get_modpath('farming') then
-    golden_melon_def.on_use = minetest.item_eat(10)
+if core.get_modpath('farming') then
+    golden_melon_def.on_use = core.item_eat(10)
 end
 
-if minetest.get_modpath('mcl_farming') then
-    golden_melon_def.on_place = minetest.item_eat(10)
-    golden_melon_def.on_secondary_use = minetest.item_eat(10)
+if core.get_modpath('mcl_farming') then
+    golden_melon_def.on_place = core.item_eat(10)
+    golden_melon_def.on_secondary_use = core.item_eat(10)
 end
 
-minetest.register_craftitem('x_farming:golden_melon', golden_melon_def)
+core.register_craftitem('x_farming:golden_melon', golden_melon_def)
 
 -- replacement LBM for pre-nodetimer plants
-minetest.register_lbm({
+core.register_lbm({
     name = 'x_farming:start_nodetimer_melon',
     nodenames = { 'x_farming:melon_8' },
     action = function(pos, node)
@@ -239,30 +241,30 @@ x_farming.register_crate('crate_melon_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dirt_with_grass')
         table.insert(deco_biomes, 'grassland')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:dirt_with_coral_grass')
-        table.insert(deco_biomes, 'everness_coral_forest')
+        table.insert(deco_biomes, 'everness:coral_forest')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
         table.insert(deco_biomes, 'Plains')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:melon',
             deco_type = 'simple',
             place_on = deco_place_on,

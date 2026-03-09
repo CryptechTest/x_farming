@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 local stove_fire_sounds = {}
 
@@ -62,12 +62,12 @@ local function add_item_to_grid_matrix(grid_matrix, item)
 end
 
 local function stop_stove_sound(pos, fadeout_step)
-    local hash = minetest.hash_node_position(pos)
+    local hash = core.hash_node_position(pos)
     local sound_ids = stove_fire_sounds[hash]
 
     if sound_ids then
         for _, sound_id in ipairs(sound_ids) do
-            minetest.sound_fade(sound_id, -1, 0)
+            core.sound_fade(sound_id, -1, 0)
         end
 
         stove_fire_sounds[hash] = nil
@@ -119,7 +119,7 @@ local function add_item_smoke_particles(pos)
         collisiondetection = true
     }
 
-    if minetest.has_feature({ dynamic_add_media_table = true, particlespawner_tweenable = true }) then
+    if core.has_feature({ dynamic_add_media_table = true, particlespawner_tweenable = true }) then
         -- new syntax, after v5.6.0
         particlespawner_def = {
             amount = 5,
@@ -160,12 +160,12 @@ local function add_item_smoke_particles(pos)
         }
     end
 
-    minetest.add_particlespawner(particlespawner_def)
+    core.add_particlespawner(particlespawner_def)
 end
 
 -- Entity
 
-minetest.register_entity('x_farming:stove_food', {
+core.register_entity('x_farming:stove_food', {
     initial_properties = {
         visual = 'wielditem',
         visual_size = { x = 0.2, y = 0.2, z = 0.2 },
@@ -187,7 +187,7 @@ minetest.register_entity('x_farming:stove_food', {
             return
         end
 
-        local _staticdata = minetest.deserialize(staticdata)
+        local _staticdata = core.deserialize(staticdata)
 
         for key, value in pairs(_staticdata) do
             self[key] = value
@@ -208,15 +208,15 @@ minetest.register_entity('x_farming:stove_food', {
         if self._nodechecktimer <= 0 then
             self._nodechecktimer = 2
             local pos = self.object:get_pos()
-            local node_above = minetest.get_node(vector.new(pos.x, pos.y + 0.5, pos.z))
-            local node_under = minetest.get_node(vector.new(pos.x, pos.y - 0.5, pos.z))
+            local node_above = core.get_node(vector.new(pos.x, pos.y + 0.5, pos.z))
+            local node_under = core.get_node(vector.new(pos.x, pos.y - 0.5, pos.z))
 
             -- drop items if above is obstructed or no heat_source below
             if node_above.name ~= 'air'
-                or minetest.get_item_group(node_under.name, 'heat_source') < 1
+                or core.get_item_group(node_under.name, 'heat_source') < 1
             then
-                local meta = minetest.get_meta(vector.new(pos.x, pos.y - 0.5, pos.z))
-                local grid_matrix = minetest.deserialize(meta:get_string('grid_matrix'))
+                local meta = core.get_meta(vector.new(pos.x, pos.y - 0.5, pos.z))
+                local grid_matrix = core.deserialize(meta:get_string('grid_matrix'))
 
                 if not grid_matrix then
                     return
@@ -229,10 +229,10 @@ minetest.register_entity('x_farming:stove_food', {
                     remove_item_from_grid_matrix(grid_matrix, value)
                 end
 
-                meta:set_string('grid_matrix', minetest.serialize(grid_matrix))
+                meta:set_string('grid_matrix', core.serialize(grid_matrix))
 
                 -- remove entity and drop item
-                minetest.add_item(pos, ItemStack({ name = self.itemname }))
+                core.add_item(pos, ItemStack({ name = self.itemname }))
                 self.object:remove()
                 return
             end
@@ -242,13 +242,13 @@ minetest.register_entity('x_farming:stove_food', {
         local staticdata = {
             itemname = self.itemname
         }
-        return minetest.serialize(staticdata)
+        return core.serialize(staticdata)
     end,
 })
 
 -- Nodes
-minetest.register_node('x_farming:stove', {
-    description = S('Stove inactive)'),
+core.register_node('x_farming:stove', {
+    description = S('Stove (inactive)'),
     tiles = {
         'x_farming_stove_top.png',
         'x_farming_stove_side.png',
@@ -272,9 +272,9 @@ minetest.register_node('x_farming:stove', {
     _mcl_hardness = 3.5,
     sounds = x_farming.node_sound_stone_defaults(),
     on_construct = function(pos)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local infotext = S('Stove inactive.') .. ' ' .. S('Activate by torch or flint and steel.')
-        local node = minetest.get_node(pos)
+        local node = core.get_node(pos)
 
         local x_shift = -0.6
         local m_pos = vector.new(pos.x - 0.6, pos.y + 0.5, pos.z)
@@ -357,22 +357,22 @@ minetest.register_node('x_farming:stove', {
             }
         end
 
-        meta:set_string('grid_matrix', minetest.serialize(initial_grid_matrix))
+        meta:set_string('grid_matrix', core.serialize(initial_grid_matrix))
         meta:set_string('infotext', infotext)
     end,
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local stack = player:get_wielded_item()
         local stack_name = stack:get_name()
 
-        if minetest.get_item_group(stack_name, 'torch') > 0
+        if core.get_item_group(stack_name, 'torch') > 0
             or stack_name == 'fire:flint_and_steel'
             or stack_name == 'mcl_fire:flint_and_steel'
         then
             local infotext = S('Stove active.') .. ' ' .. S('De-activate with shovel. Stove will de-activate by its self after a while if there are no items to cook.')
             meta:set_string('infotext', infotext)
-            minetest.swap_node(pos, { name = 'x_farming:stove_active', param2 = node.param2 })
-            minetest.get_node_timer(pos):start(1)
+            core.swap_node(pos, { name = 'x_farming:stove_active', param2 = node.param2 })
+            core.get_node_timer(pos):start(1)
         end
 
         return itemstack
@@ -383,7 +383,7 @@ minetest.register_node('x_farming:stove', {
 })
 
 -- Active stove
-minetest.register_node('x_farming:stove_active', {
+core.register_node('x_farming:stove_active', {
     description = S('Stove active'),
     tiles = {
         {
@@ -428,14 +428,14 @@ minetest.register_node('x_farming:stove_active', {
     light_source = 8,
     drop = 'x_farming:stove',
     on_construct = function(pos)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local infotext = S('Stove active.') .. ' ' .. S('De-activate with shovel. Stove will de-activate by its self after a while if there are no items to cook.')
 
         meta:set_string('infotext', infotext)
     end,
     on_timer = function(pos, elapsed)
-        local meta = minetest.get_meta(pos)
-        local grid_matrix = minetest.deserialize(meta:get_string('grid_matrix'))
+        local meta = core.get_meta(pos)
+        local grid_matrix = core.deserialize(meta:get_string('grid_matrix'))
 
         if not grid_matrix then
             return
@@ -460,8 +460,8 @@ minetest.register_node('x_farming:stove_active', {
             total_running_time = 0
             meta:set_float('total_running_time', total_running_time)
 
-            local node = minetest.get_node(pos)
-            minetest.swap_node(pos, { name = 'x_farming:stove', param2 = node.param2 })
+            local node = core.get_node(pos)
+            core.swap_node(pos, { name = 'x_farming:stove', param2 = node.param2 })
             meta:set_int('timer_elapsed', 0)
             local infotext = S('Stove inactive.') .. ' ' .. S('Activate by torch or flint and steel.')
             meta:set_string('infotext', infotext)
@@ -472,8 +472,8 @@ minetest.register_node('x_farming:stove_active', {
 
         -- play sound
         if timer_elapsed == 0 or (timer_elapsed + 1) % 5 == 0 then
-            local sound_id = minetest.sound_play('x_farming_stove_active', { pos = pos, max_hear_distance = 16, gain = 0.25 })
-            local hash = minetest.hash_node_position(pos)
+            local sound_id = core.sound_play('x_farming_stove_active', { pos = pos, max_hear_distance = 16, gain = 0.25 })
+            local hash = core.hash_node_position(pos)
 
             stove_fire_sounds[hash] = stove_fire_sounds[hash] or {}
             table.insert(stove_fire_sounds[hash], sound_id)
@@ -484,7 +484,7 @@ minetest.register_node('x_farming:stove_active', {
             end
 
             -- Remove the sound ID automatically from table after 11 seconds
-            minetest.after(11, function()
+            core.after(11, function()
                 if not stove_fire_sounds[hash] then
                     return
                 end
@@ -511,11 +511,11 @@ minetest.register_node('x_farming:stove_active', {
                     -- drop cooked item and remove from meta
                     if grid_matrix[row][item_pos].cooked_time > item.output.time then
                         -- drop cooked item
-                        minetest.add_item(vector.from_string(item_pos), ItemStack(item.output.item))
+                        core.add_item(vector.from_string(item_pos), ItemStack(item.output.item))
 
                         -- drop recipe replacements
                         for _, replacement in ipairs(item.output.replacements) do
-                            minetest.add_item(vector.from_string(item_pos), ItemStack(replacement))
+                            core.add_item(vector.from_string(item_pos), ItemStack(replacement))
                         end
 
                         -- remove from metadata
@@ -523,7 +523,7 @@ minetest.register_node('x_farming:stove_active', {
 
                         if removed_items_result.removed_from_pos then
                             -- remove entity
-                            for _, o in ipairs(minetest.get_objects_inside_radius(pos, 0.7)) do
+                            for _, o in ipairs(core.get_objects_inside_radius(pos, 0.7)) do
                                 local armor_groups = o:get_armor_groups() or {}
 
                                 if armor_groups.stove_food and armor_groups.stove_food > 0 then
@@ -536,7 +536,7 @@ minetest.register_node('x_farming:stove_active', {
                         end
 
                         -- Play cooling sound
-                        minetest.sound_play('x_farming_stove_sizzle', {
+                        core.sound_play('x_farming_stove_sizzle', {
                             pos = vector.from_string(item_pos),
                             max_hear_distance = 16,
                             gain = 0.07
@@ -548,7 +548,7 @@ minetest.register_node('x_farming:stove_active', {
                     -- restore entity items after `clearobjects`
                     local missing_items = table.copy(items)
 
-                    for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 0.7)) do
+                    for _, obj in ipairs(core.get_objects_inside_radius(pos, 0.7)) do
                         local armor_groups = obj:get_armor_groups() or {}
 
                         if armor_groups.stove_food and armor_groups.stove_food > 0 then
@@ -576,10 +576,10 @@ minetest.register_node('x_farming:stove_active', {
                                 itemname = value.itemstring
                             }
 
-                            local obj = minetest.add_entity(
+                            local obj = core.add_entity(
                                 vector.from_string(ent_pos),
                                 'x_farming:stove_food',
-                                minetest.serialize(staticdata)
+                                core.serialize(staticdata)
                             )
 
                             if obj then
@@ -592,19 +592,19 @@ minetest.register_node('x_farming:stove_active', {
         end
 
         -- set meta
-        meta:set_string('grid_matrix', minetest.serialize(grid_matrix))
+        meta:set_string('grid_matrix', core.serialize(grid_matrix))
         meta:set_float('total_running_time', total_running_time)
 
         return true
     end,
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-        local meta = minetest.get_meta(pos)
+        local meta = core.get_meta(pos)
         local wield_stack = player:get_wielded_item()
         local wield_stack_name = wield_stack:get_name()
 
         -- de-activate stove
-        if minetest.get_item_group(wield_stack_name, 'shovel') > 0 then
-            minetest.swap_node(pos, { name = 'x_farming:stove', param2 = node.param2 })
+        if core.get_item_group(wield_stack_name, 'shovel') > 0 then
+            core.swap_node(pos, { name = 'x_farming:stove', param2 = node.param2 })
             meta:set_int('timer_elapsed', 0)
             local infotext = S('Stove inactive.') .. ' ' .. S('Activate by torch or flint and steel.')
             meta:set_string('infotext', infotext)
@@ -612,7 +612,7 @@ minetest.register_node('x_farming:stove_active', {
         end
 
         -- check if item is cook-able
-        local output = minetest.get_craft_result({
+        local output = core.get_craft_result({
             method = 'cooking',
             width = 1,
             items = { itemstack }
@@ -624,11 +624,11 @@ minetest.register_node('x_farming:stove_active', {
         end
 
         -- check if space above
-        if minetest.get_node(vector.new(pos.x, pos.y + 1, pos.z)).name ~= 'air' then
+        if core.get_node(vector.new(pos.x, pos.y + 1, pos.z)).name ~= 'air' then
             return itemstack
         end
 
-        local grid_matrix = minetest.deserialize(meta:get_string('grid_matrix'))
+        local grid_matrix = core.deserialize(meta:get_string('grid_matrix'))
         local grid_items = get_grid_matrix_items(grid_matrix)
 
         if #grid_items >= 6 then
@@ -674,10 +674,10 @@ minetest.register_node('x_farming:stove_active', {
             itemname = wield_stack_name
         }
 
-        local obj = minetest.add_entity(
+        local obj = core.add_entity(
             ent_pos,
             'x_farming:stove_food',
-            minetest.serialize(staticdata)
+            core.serialize(staticdata)
         )
 
         if obj then
@@ -686,13 +686,13 @@ minetest.register_node('x_farming:stove_active', {
         end
 
         -- Play cooling sound
-        minetest.sound_play('x_farming_stove_sizzle_put', {
+        core.sound_play('x_farming_stove_sizzle_put', {
             pos = ent_pos,
             max_hear_distance = 16,
             gain = 0.1
         }, true)
 
-        meta:set_string('grid_matrix', minetest.serialize(grid_matrix))
+        meta:set_string('grid_matrix', core.serialize(grid_matrix))
         itemstack:take_item()
 
         return itemstack
@@ -705,8 +705,8 @@ minetest.register_node('x_farming:stove_active', {
             return
         end
 
-        local objs = minetest.get_objects_inside_radius(pos, 0.7)
-        local grid_matrix = minetest.deserialize(oldmetadata.fields.grid_matrix)
+        local objs = core.get_objects_inside_radius(pos, 0.7)
+        local grid_matrix = core.deserialize(oldmetadata.fields.grid_matrix)
         local grid_items = get_grid_matrix_items(grid_matrix)
 
         -- remove entitites
@@ -720,7 +720,7 @@ minetest.register_node('x_farming:stove_active', {
 
         -- drop items
         for _, item in ipairs(grid_items) do
-            minetest.add_item(vector.new(pos.x, pos.y + 0.7, pos.z), ItemStack(item.itemstring))
+            core.add_item(vector.new(pos.x, pos.y + 0.7, pos.z), ItemStack(item.itemstring))
         end
     end,
     on_rotate = function()

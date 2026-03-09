@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,24 +16,24 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 -- spawn snow golem
 local function pumpkin_on_construct(pos)
-    if not minetest.get_modpath('mobs_npc') then return end
+    if not core.get_modpath('mobs_npc') then return end
 
     for i = 1, 2 do
-        if minetest.get_node({ x = pos.x, y = pos.y - i, z = pos.z }).name ~= 'default:snowblock' then
+        if core.get_node({ x = pos.x, y = pos.y - i, z = pos.z }).name ~= 'default:snowblock' then
             return
         end
     end
 
     --if 3 snow block are placed, this will make snow golem
     for i = 0, 2 do
-        minetest.remove_node({ x = pos.x, y = pos.y - i, z = pos.z })
+        core.remove_node({ x = pos.x, y = pos.y - i, z = pos.z })
     end
 
-    minetest.add_entity({ x = pos.x, y = pos.y - 1, z = pos.z }, 'mobs_npc:snow_golem')
+    core.add_entity({ x = pos.x, y = pos.y - 1, z = pos.z }, 'mobs_npc:snow_golem')
 end
 
 -- PUMPKIN
@@ -93,14 +93,14 @@ local pumpkin_fruit_def = {
     },
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         local parent = oldmetadata.fields.parent
-        local parent_pos_from_child = minetest.string_to_pos(parent)
+        local parent_pos_from_child = core.string_to_pos(parent)
         local parent_node = nil
 
         -- make sure we have position
         if parent_pos_from_child
             and parent_pos_from_child ~= nil then
 
-            parent_node = minetest.get_node(parent_pos_from_child)
+            parent_node = core.get_node(parent_pos_from_child)
         end
 
         -- tick parent if parent stem still exists
@@ -113,10 +113,10 @@ local pumpkin_fruit_def = {
     end
 }
 
-minetest.register_node('x_farming:pumpkin_fruit', pumpkin_fruit_def)
+core.register_node('x_farming:pumpkin_fruit', pumpkin_fruit_def)
 
 -- PUMPKIN BLOCK - HARVEST from crops
-minetest.register_node('x_farming:pumpkin_block', {
+core.register_node('x_farming:pumpkin_block', {
     description = S('Pumpkin Block') .. '\n' .. S('Compost chance') .. ': 65%',
     short_description = S('Pumpkin Block'),
     tiles = {
@@ -151,7 +151,7 @@ minetest.register_node('x_farming:pumpkin_block', {
 })
 
 -- PUMPKIN LANTERN -- from recipe
-minetest.register_node('x_farming:pumpkin_lantern', {
+core.register_node('x_farming:pumpkin_lantern', {
     description = S('Pumpkin Lantern'),
     short_description = S('Pumpkin Lantern'),
     tiles = {
@@ -182,16 +182,16 @@ minetest.register_node('x_farming:pumpkin_lantern', {
 })
 
 -- drop blocks instead of items
-minetest.register_alias_force('x_farming:pumpkin', 'x_farming:pumpkin_block')
+core.register_alias_force('x_farming:pumpkin', 'x_farming:pumpkin_block')
 
 -- take over the growth from minetest_game farming from here
-minetest.override_item('x_farming:pumpkin_8', {
+core.override_item('x_farming:pumpkin_8', {
     next_plant = 'x_farming:pumpkin_fruit',
     on_timer = x_farming.grow_block
 })
 
 -- replacement LBM for pre-nodetimer plants
-minetest.register_lbm({
+core.register_lbm({
     name = 'x_farming:start_nodetimer_pumpkin',
     nodenames = { 'x_farming:pumpkin_8' },
     action = function(pos, node)
@@ -209,30 +209,30 @@ x_farming.register_crate('crate_pumpkin_block_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:sand')
         table.insert(deco_biomes, 'sandstone_desert')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:forsaken_desert_sand')
-        table.insert(deco_biomes, 'everness_forsaken_desert')
+        table.insert(deco_biomes, 'everness:forsaken_desert')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:sand')
         table.insert(deco_biomes, 'Desert')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:pumpkin',
             deco_type = 'simple',
             place_on = deco_place_on,

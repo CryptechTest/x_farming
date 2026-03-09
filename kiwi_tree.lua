@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -15,9 +15,8 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-stairs = stairs --[[@as MtgStairs]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 -- Required wrapper to allow customization of x_farming.after_place_leaves
 local function after_place_leaves(...)
@@ -25,7 +24,7 @@ local function after_place_leaves(...)
 end
 
 -- trunk
-minetest.register_node('x_farming:kiwi_tree', {
+core.register_node('x_farming:kiwi_tree', {
     description = S('Kiwi Tree'),
     short_description = S('Kiwi Tree'),
     tiles = { 'x_farming_kiwi_tree_top.png', 'x_farming_kiwi_tree_top.png', 'x_farming_kiwi_tree.png' },
@@ -49,11 +48,11 @@ minetest.register_node('x_farming:kiwi_tree', {
     _mcl_blast_resistance = 2,
     _mcl_hardness = 2,
     sounds = x_farming.node_sound_wood_defaults(),
-    on_place = minetest.rotate_node
+    on_place = core.rotate_node
 })
 
 -- leaves
-minetest.register_node('x_farming:kiwi_leaves', {
+core.register_node('x_farming:kiwi_leaves', {
     description = S('Kiwi Tree Leaves') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Kiwi Tree Leaves'),
     drawtype = 'allfaces_optional',
@@ -104,7 +103,7 @@ minetest.register_node('x_farming:kiwi_leaves', {
 })
 
 -- sapling
-minetest.register_node('x_farming:kiwi_sapling', {
+core.register_node('x_farming:kiwi_sapling', {
     description = S('Kiwi Tree Sapling') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Kiwi Tree Sapling'),
     drawtype = 'plantlike',
@@ -140,7 +139,7 @@ minetest.register_node('x_farming:kiwi_sapling', {
     _mcl_hardness = 0,
     sounds = x_farming.node_sound_leaves_defaults(),
     on_construct = function(pos)
-        minetest.get_node_timer(pos):start(math.random(300, 1500))
+        core.get_node_timer(pos):start(math.random(300, 1500))
     end,
     on_place = function(itemstack, placer, pointed_thing)
         itemstack = x_farming.sapling_on_place(itemstack, placer, pointed_thing,
@@ -157,9 +156,8 @@ minetest.register_node('x_farming:kiwi_sapling', {
 })
 
 -- fruit - for marker only
-minetest.register_node('x_farming:kiwi', {
-    description = S('Kiwi') .. '\n' .. S('Compost chance') .. ': 30%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
+core.register_node('x_farming:kiwi', {
+    description = S('Kiwi'),
     short_description = S('Kiwi'),
     drawtype = 'plantlike',
     visual_scale = 0.5,
@@ -209,20 +207,13 @@ minetest.register_node('x_farming:kiwi', {
     sounds = x_farming.node_sound_leaves_defaults(),
     after_dig_node = function(pos, oldnode, oldmetadata, digger)
         if oldnode.param2 == 0 then
-            minetest.set_node(pos, { name = 'x_farming:kiwi_mark' })
-            minetest.get_node_timer(pos):start(math.random(300, 1500))
+            core.set_node(pos, { name = 'x_farming:kiwi_mark' })
+            core.get_node_timer(pos):start(math.random(300, 1500))
         end
-    end,
-    on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
-        if hunger_amount == 0 then
-            return itemstack
-        end
-        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
 })
 
-minetest.register_node('x_farming:kiwi_mark', {
+core.register_node('x_farming:kiwi_mark', {
     description = S('Kiwi Marker'),
     short_description = S('Kiwi Marker'),
     inventory_image = 'x_farming:kiwi_fruit.png^x_farming_invisible_node_overlay.png',
@@ -237,12 +228,12 @@ minetest.register_node('x_farming:kiwi_mark', {
     drop = '',
     groups = { not_in_creative_inventory = 1 },
     on_timer = function(pos, elapsed)
-        if not minetest.find_node_near(pos, 1, 'x_farming:kiwi_leaves') then
-            minetest.remove_node(pos)
-        elseif minetest.get_node_light(pos) < 11 then
-            minetest.get_node_timer(pos):start(200)
+        if not core.find_node_near(pos, 1, 'x_farming:kiwi_leaves') then
+            core.remove_node(pos)
+        elseif core.get_node_light(pos) < 11 then
+            core.get_node_timer(pos):start(200)
         else
-            minetest.set_node(pos, { name = 'x_farming:kiwi' })
+            core.set_node(pos, { name = 'x_farming:kiwi' })
         end
     end
 })
@@ -250,7 +241,7 @@ minetest.register_node('x_farming:kiwi_mark', {
 -- Kiwi eatable fruit
 local kiwi_fruit_def = {
     description = S('Kiwi') .. '\n' .. S('Compost chance') .. ': 65%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     short_description = S('Kiwi'),
     drawtype = 'mesh',
     mesh = 'x_farming_kiwi_fruit.obj',
@@ -295,19 +286,19 @@ local kiwi_fruit_def = {
     sounds = x_farming.node_sound_leaves_defaults(),
     sunlight_propagates = true,
 	on_use = function(itemstack, user, pointed_thing)
-		local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+		local hunger_amount = core.get_item_group(itemstack:get_name(), "hunger_amount") or 0
 		if hunger_amount == 0 then
 			return itemstack
 		end
-		return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+		return core.item_eat(hunger_amount)(itemstack, user, pointed_thing)
 	end,
 }
 
-if minetest.get_modpath('mcl_farming') then
-    kiwi_fruit_def.on_secondary_use = minetest.item_eat(2)
+if core.get_modpath('mcl_farming') then
+    kiwi_fruit_def.on_secondary_use = core.item_eat(2)
 end
 
-minetest.register_node('x_farming:kiwi_fruit', kiwi_fruit_def)
+core.register_node('x_farming:kiwi_fruit', kiwi_fruit_def)
 
 -- leafdecay
 x_farming.register_leafdecay({
@@ -317,7 +308,7 @@ x_farming.register_leafdecay({
 })
 
 -- planks
-minetest.register_node('x_farming:kiwi_wood', {
+core.register_node('x_farming:kiwi_wood', {
     description = S('Kiwi Wood Planks'),
     short_description = S('Kiwi Wood Planks'),
     paramtype2 = 'facedir',
@@ -347,7 +338,7 @@ minetest.register_node('x_farming:kiwi_wood', {
 })
 
 -- Stairs
-if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
+if core.global_exists('stairs') and core.get_modpath('stairs') then
     stairs.register_stair_and_slab(
         'kiwi_wood',
         'x_farming:kiwi_wood',
@@ -360,7 +351,7 @@ if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
     )
 end
 
-if minetest.get_modpath('mcl_stairs') then
+if core.get_modpath('mcl_stairs') then
     mcl_stairs.register_stair_and_slab(
         'kiwi_wood',
         'x_farming:kiwi_wood',
@@ -386,30 +377,30 @@ x_farming.register_crate('crate_kiwi_fruit_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dry_dirt_with_dry_grass')
         table.insert(deco_biomes, 'savanna')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:dirt_with_coral_grass')
         table.insert(deco_biomes, 'everness:dry_dirt_with_dry_grass')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
         table.insert(deco_biomes, 'Savanna')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:kiwi_tree',
             deco_type = 'schematic',
             place_on = deco_place_on,
@@ -425,7 +416,7 @@ minetest.register_on_mods_loaded(function()
             biomes = deco_biomes,
             y_max = 31000,
             y_min = 1,
-            schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_kiwi_tree.mts',
+            schematic = core.get_modpath('x_farming') .. '/schematics/x_farming_kiwi_tree.mts',
             flags = 'place_center_x, place_center_z',
             rotation = 'random',
         })

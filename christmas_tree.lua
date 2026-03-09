@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,9 +16,9 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
-minetest.register_node('x_farming:christmas_tree_sapling', {
+core.register_node('x_farming:christmas_tree_sapling', {
     description = S('Christmas Tree Sapling') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Christmas Tree Sapling'),
     drawtype = 'plantlike',
@@ -55,7 +55,7 @@ minetest.register_node('x_farming:christmas_tree_sapling', {
     sounds = x_farming.node_sound_leaves_defaults(),
 
     on_construct = function(pos)
-        minetest.get_node_timer(pos):start(math.random(300, 1500))
+        core.get_node_timer(pos):start(math.random(300, 1500))
     end,
 
     on_place = function(itemstack, placer, pointed_thing)
@@ -73,7 +73,7 @@ minetest.register_node('x_farming:christmas_tree_sapling', {
 })
 
 -- Decorated Pine Leaves
-minetest.register_node('x_farming:christmas_tree_leaves', {
+core.register_node('x_farming:christmas_tree_leaves', {
     description = S('Decorated Pine Leaves') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Decorated Pine Leaves'),
     drawtype = 'allfaces_optional',
@@ -120,7 +120,7 @@ minetest.register_node('x_farming:christmas_tree_leaves', {
 })
 
 -- Star
-minetest.register_node('x_farming:christmas_tree_star', {
+core.register_node('x_farming:christmas_tree_star', {
     description = S('Christmas Tree Star'),
     tiles = { 'x_farming_christmas_tree_star.png' },
     inventory_image = 'x_farming_christmas_tree_star.png',

@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,24 +16,22 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-stairs = stairs --[[@as MtgStairs]]
-
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 -- how often node timers for plants will tick, +/- some random value
 local function tick(pos)
-    minetest.get_node_timer(pos):start(math.random(332, 572))
+    core.get_node_timer(pos):start(math.random(332, 572))
 end
 
 -- how often a growth failure tick is retried (e.g. too dark)
 local function tick_again(pos)
-    minetest.get_node_timer(pos):start(math.random(80, 160))
+    core.get_node_timer(pos):start(math.random(80, 160))
 end
 
 function x_farming.grow_cocoa_plant(pos, elapsed)
-    local node = minetest.get_node(pos)
+    local node = core.get_node(pos)
     local name = node.name
-    local def = minetest.registered_nodes[name]
+    local def = core.registered_nodes[name]
 
     if not def.next_plant then
         -- disable timer for fully grown plant
@@ -41,26 +39,26 @@ function x_farming.grow_cocoa_plant(pos, elapsed)
     end
 
     -- check if on jungletree
-    local direction = minetest.facedir_to_dir(node.param2)
+    local direction = core.facedir_to_dir(node.param2)
     local below_pos = vector.add(pos, direction)
-    local below = minetest.get_node(below_pos)
+    local below = core.get_node(below_pos)
     if below.name ~= 'default:jungletree' and below.name ~= 'x_farming:jungle_tree' then
         tick_again(pos)
         return
     end
 
     -- check light
-    local light = minetest.get_node_light(pos)
+    local light = core.get_node_light(pos)
     if not light or light < def.minlight or light > def.maxlight then
         tick_again(pos)
         return
     end
 
     -- grow
-    minetest.swap_node(pos, { name = def.next_plant, param2 = node.param2 })
+    core.swap_node(pos, { name = def.next_plant, param2 = node.param2 })
 
     -- new timer needed?
-    if minetest.registered_nodes[def.next_plant].next_plant then
+    if core.registered_nodes[def.next_plant].next_plant then
         tick(pos)
     end
 end
@@ -75,10 +73,10 @@ function x_farming.place_cocoa_bean(itemstack, placer, pointed_thing)
         return itemstack
     end
 
-    local under = minetest.get_node(pt.under)
-    local above = minetest.get_node(pt.above)
+    local under = core.get_node(pt.under)
+    local above = core.get_node(pt.above)
 
-    local udef = minetest.registered_nodes[under.name]
+    local udef = core.registered_nodes[under.name]
     if udef and udef.on_rightclick
         and not (placer and placer:is_player()
         and placer:get_player_control().sneak)
@@ -88,21 +86,21 @@ function x_farming.place_cocoa_bean(itemstack, placer, pointed_thing)
 
     local player_name = placer and placer:get_player_name() or ''
 
-    if minetest.is_protected(pt.under, player_name) then
-        minetest.record_protection_violation(pt.under, player_name)
+    if core.is_protected(pt.under, player_name) then
+        core.record_protection_violation(pt.under, player_name)
         return
     end
 
-    if minetest.is_protected(pt.above, player_name) then
-        minetest.record_protection_violation(pt.above, player_name)
+    if core.is_protected(pt.above, player_name) then
+        core.record_protection_violation(pt.above, player_name)
         return
     end
 
     -- return if any of the nodes is not registered
-    if not minetest.registered_nodes[under.name] then
+    if not core.registered_nodes[under.name] then
         return itemstack
     end
-    if not minetest.registered_nodes[above.name] then
+    if not core.registered_nodes[above.name] then
         return itemstack
     end
 
@@ -114,7 +112,7 @@ function x_farming.place_cocoa_bean(itemstack, placer, pointed_thing)
     end
 
     -- check if you can replace the node above the pointed node
-    if not minetest.registered_nodes[above.name].buildable_to then
+    if not core.registered_nodes[above.name].buildable_to then
         return itemstack
     end
 
@@ -124,13 +122,13 @@ function x_farming.place_cocoa_bean(itemstack, placer, pointed_thing)
     end
 
     local direction = vector.direction(pt.above, pt.under)
-    local new_param2 = minetest.dir_to_facedir(direction)
+    local new_param2 = core.dir_to_facedir(direction)
 
     -- add the node and remove 1 item from the itemstack
-    minetest.set_node(pt.above, { name = 'x_farming:cocoa_1', param2 = new_param2 })
+    core.set_node(pt.above, { name = 'x_farming:cocoa_1', param2 = new_param2 })
 
     tick(pt.above)
-    if not minetest.is_creative_enabled(player_name) then
+    if not core.is_creative_enabled(player_name) then
         itemstack:take_item()
     end
 
@@ -138,7 +136,7 @@ function x_farming.place_cocoa_bean(itemstack, placer, pointed_thing)
 end
 
 -- COCOA
-minetest.register_craftitem('x_farming:cocoa_bean', {
+core.register_craftitem('x_farming:cocoa_bean', {
     description = S('Cocoa bean') .. ' (' .. S('plant on jungle tree trunk') .. ')'
         .. '\n' .. S('Compost chance') .. ': 65%',
     short_description = S('Cocoa bean'),
@@ -150,7 +148,7 @@ minetest.register_craftitem('x_farming:cocoa_bean', {
 })
 
 -- 1
-minetest.register_node('x_farming:cocoa_1', {
+core.register_node('x_farming:cocoa_1', {
     description = S('Cocoa') .. ' 1',
     short_description = S('Cocoa') .. ' 1',
     drawtype = 'nodebox',
@@ -223,7 +221,7 @@ minetest.register_node('x_farming:cocoa_1', {
 })
 
 -- 2
-minetest.register_node('x_farming:cocoa_2', {
+core.register_node('x_farming:cocoa_2', {
     description = S('Cocoa') .. ' 2',
     short_description = S('Cocoa') .. ' 2',
     drawtype = 'nodebox',
@@ -296,7 +294,7 @@ minetest.register_node('x_farming:cocoa_2', {
 })
 
 -- 3
-minetest.register_node('x_farming:cocoa_3', {
+core.register_node('x_farming:cocoa_3', {
     description = S('Cocoa') .. ' 3',
     short_description = S('Cocoa') .. ' 3',
     drawtype = 'nodebox',
@@ -370,7 +368,7 @@ minetest.register_node('x_farming:cocoa_3', {
 })
 
 -- replacement LBM for pre-nodetimer plants
-minetest.register_lbm({
+core.register_lbm({
     name = 'x_farming:start_nodetimer_cocoa',
     nodenames = {
         'x_farming:cocoa_1',
@@ -381,7 +379,7 @@ minetest.register_lbm({
     end,
 })
 
-minetest.register_node('x_farming:jungle_with_cocoa_sapling', {
+core.register_node('x_farming:jungle_with_cocoa_sapling', {
     description = S('Jungle Tree with Cocoa Sapling') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Jungle Tree with Cocoa Sapling'),
     drawtype = 'plantlike',
@@ -418,7 +416,7 @@ minetest.register_node('x_farming:jungle_with_cocoa_sapling', {
     sounds = x_farming.node_sound_leaves_defaults(),
 
     on_construct = function(pos)
-        minetest.get_node_timer(pos):start(math.random(300, 1500))
+        core.get_node_timer(pos):start(math.random(300, 1500))
     end,
 
     on_place = function(itemstack, placer, pointed_thing)
@@ -435,7 +433,7 @@ minetest.register_node('x_farming:jungle_with_cocoa_sapling', {
 })
 
 -- trunk
-minetest.register_node('x_farming:jungle_tree', {
+core.register_node('x_farming:jungle_tree', {
     description = S('Jungle Tree'),
     short_description = S('Jungle Tree'),
     tiles = { 'x_farming_jungle_tree_top.png', 'x_farming_jungle_tree_top.png', 'x_farming_jungle_tree.png' },
@@ -460,11 +458,11 @@ minetest.register_node('x_farming:jungle_tree', {
     _mcl_hardness = 2,
     sounds = x_farming.node_sound_wood_defaults(),
 
-    on_place = minetest.rotate_node
+    on_place = core.rotate_node
 })
 
 -- leaves
-minetest.register_node('x_farming:jungle_leaves', {
+core.register_node('x_farming:jungle_leaves', {
     description = S('Jungle Tree Leaves') .. '\n' .. S('Compost chance') .. ': 30%',
     short_description = S('Jungle Tree Leaves'),
     drawtype = 'allfaces_optional',
@@ -526,7 +524,7 @@ x_farming.register_leafdecay({
 })
 
 -- planks
-minetest.register_node('x_farming:jungle_wood', {
+core.register_node('x_farming:jungle_wood', {
     description = S('Jungle Wood Planks'),
     short_description = S('Jungle Wood Planks'),
     paramtype2 = 'facedir',
@@ -558,7 +556,7 @@ minetest.register_node('x_farming:jungle_wood', {
 -- Cookie
 local cookie_def = {
     description = S('Cookie') .. '\n' .. S('Compost chance') .. ': 85%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 2'),
     inventory_image = 'x_farming_cookie.png',
     groups = {
         hunger_amount = 2,
@@ -570,29 +568,29 @@ local cookie_def = {
         compostability = 85
     },
     on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        local hunger_amount = core.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
             return itemstack
         end
-        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+        return core.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
 }
 
-if minetest.get_modpath('farming') then
-    cookie_def.on_use = minetest.item_eat(2)
+if core.get_modpath('farming') then
+    cookie_def.on_use = core.item_eat(2)
 end
 
-if minetest.get_modpath('mcl_farming') then
-    cookie_def.on_place = minetest.item_eat(2)
-    cookie_def.on_secondary_use = minetest.item_eat(2)
+if core.get_modpath('mcl_farming') then
+    cookie_def.on_place = core.item_eat(2)
+    cookie_def.on_secondary_use = core.item_eat(2)
 end
 
-minetest.register_craftitem('x_farming:cookie', cookie_def)
+core.register_craftitem('x_farming:cookie', cookie_def)
 
 -- Chocolate
 local chocolate_def = {
     description = S('Chocolate') .. '\n' .. S('Compost chance') .. ': 65%\n'
-        .. minetest.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
+        .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 3'),
     inventory_image = 'x_farming_chocolate.png',
     groups = {
         -- MTG
@@ -604,27 +602,27 @@ local chocolate_def = {
         hunger_amount = 3
     },
     on_use = function(itemstack, user, pointed_thing)
-        local hunger_amount = minetest.get_item_group(itemstack:get_name(), "hunger_amount") or 0
+        local hunger_amount = core.get_item_group(itemstack:get_name(), "hunger_amount") or 0
         if hunger_amount == 0 then
             return itemstack
         end
-        return minetest.item_eat(hunger_amount)(itemstack, user, pointed_thing)
+        return core.item_eat(hunger_amount)(itemstack, user, pointed_thing)
     end,
 }
 
-if minetest.get_modpath('farming') then
-    chocolate_def.on_use = minetest.item_eat(3)
+if core.get_modpath('farming') then
+    chocolate_def.on_use = core.item_eat(3)
 end
 
-if minetest.get_modpath('mcl_farming') then
-    chocolate_def.on_place = minetest.item_eat(3)
-    chocolate_def.on_secondary_use = minetest.item_eat(3)
+if core.get_modpath('mcl_farming') then
+    chocolate_def.on_place = core.item_eat(3)
+    chocolate_def.on_secondary_use = core.item_eat(3)
 end
 
-minetest.register_craftitem('x_farming:chocolate', chocolate_def)
+core.register_craftitem('x_farming:chocolate', chocolate_def)
 
 -- Stairs
-if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
+if core.global_exists('stairs') and core.get_modpath('stairs') then
     stairs.register_stair_and_slab(
         'jungle_wood',
         'x_farming:jungle_wood',
@@ -637,7 +635,7 @@ if minetest.global_exists('stairs') and minetest.get_modpath('stairs') then
     )
 end
 
-if minetest.get_modpath('mcl_stairs') then
+if core.get_modpath('mcl_stairs') then
     mcl_stairs.register_stair_and_slab(
         'x_farming_jungle_wood',
         'x_farming:jungle_wood',
@@ -663,32 +661,32 @@ x_farming.register_crate('crate_cocoa_bean_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
     local deco_fill_ratio = 0.025
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dirt_with_rainforest_litter')
         table.insert(deco_biomes, 'rainforest')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:dirt_with_grass_1')
-        table.insert(deco_biomes, 'everness_bamboo_forest')
+        table.insert(deco_biomes, 'everness:bamboo_forest')
         deco_fill_ratio = deco_fill_ratio / 20
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
         table.insert(deco_biomes, 'Jungle')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:jungle_tree',
             deco_type = 'schematic',
             place_on = deco_place_on,
@@ -697,7 +695,7 @@ minetest.register_on_mods_loaded(function()
             biomes = deco_biomes,
             y_max = 31000,
             y_min = 1,
-            schematic = minetest.get_modpath('x_farming') .. '/schematics/x_farming_jungle_tree_with_cocoa.mts',
+            schematic = core.get_modpath('x_farming') .. '/schematics/x_farming_jungle_tree_with_cocoa.mts',
             flags = 'place_center_x, place_center_z',
             rotation = '0',
         })

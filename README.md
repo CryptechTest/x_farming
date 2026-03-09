@@ -6,7 +6,7 @@ Farming with new plants, crops and ice fishing.
 
 ## Description
 
-Hunger points in the description assume that you have [hbhubger](https://forum.minetest.net/viewtopic.php?t=11336) with hunger mod configured with x_farming. If not then you can consider hunger points as health points.
+Hunger points in the description assume that you have [hbhubger](https://forum.core.net/viewtopic.php?t=11336) with hunger mod configured with x_farming. If not then you can consider hunger points as health points.
 
 ## Features
 
@@ -435,4 +435,4 @@ Seeds can be found also in dungeon chests.
 
 ## Installation
 
-see: https://wiki.minetest.net/Installing_Mods
+see: https://wiki.core.net/Installing_Mods

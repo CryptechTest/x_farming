@@ -48,9 +48,9 @@ example
                 return false
             end
 
-            minetest.place_schematic(
+            core.place_schematic(
                 { x = pos.x - 19, y = pos.y, z = pos.z - 19 },
-                minetest.get_modpath('mymod') .. '/schematics/mymod_mytree_from_sapling.mts',
+                core.get_modpath('mymod') .. '/schematics/mymod_mytree_from_sapling.mts',
                 'random',
                 nil,
                 false

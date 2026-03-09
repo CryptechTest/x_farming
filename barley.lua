@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 -- BARLEY
 x_farming.register_plant('x_farming:barley', {
@@ -45,16 +45,16 @@ local override_def = {
     _mcl_blast_resistance = 0,
 }
 
-minetest.override_item('x_farming:barley', override_def)
+core.override_item('x_farming:barley', override_def)
 
 -- Registered before the stairs so the stairs get fuel recipes.
-minetest.register_craft({
+core.register_craft({
     type = 'fuel',
     recipe = 'x_farming:barley_stack',
     burntime = 3,
 })
 
-if minetest.get_modpath('stairs') then
+if core.get_modpath('stairs') then
     do
         local recipe = 'x_farming:barley'
         local groups = { snappy = 3, flammable = 4 }
@@ -82,31 +82,31 @@ x_farming.register_crate('crate_barley_3', {
     }
 })
 
-minetest.register_on_mods_loaded(function()
+core.register_on_mods_loaded(function()
     local deco_place_on = {}
     local deco_biomes = {}
 
     -- MTG
-    if minetest.get_modpath('default') then
+    if core.get_modpath('default') then
         table.insert(deco_place_on, 'default:dry_dirt_with_dry_grass')
         table.insert(deco_biomes, 'savanna')
     end
 
     -- Everness
-    if minetest.get_modpath('everness') then
+    if core.get_modpath('everness') then
         table.insert(deco_place_on, 'everness:dry_dirt_with_dry_grass')
-        table.insert(deco_biomes, 'everness_baobab_savanna')
+        table.insert(deco_biomes, 'everness:baobab_savanna')
     end
 
     -- MCL
-    if minetest.get_modpath('mcl_core') then
+    if core.get_modpath('mcl_core') then
         table.insert(deco_place_on, 'mcl_core:dirt_with_grass')
         table.insert(deco_biomes, 'Savanna')
         table.insert(deco_biomes, 'SavannaM')
     end
 
     if next(deco_place_on) and next(deco_biomes) then
-        minetest.register_decoration({
+        core.register_decoration({
             name = 'x_farming:barley',
             deco_type = 'simple',
             place_on = deco_place_on,

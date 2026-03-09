@@ -3,9 +3,6 @@
 .* export-ignore
 assets export-ignore
 scripts export-ignore
-bin export-ignore
-docs export-ignore
-types export-ignore
 *.zip export-ignore
 bitbucket-pipelines.yml export-ignore
 package.json export-ignore

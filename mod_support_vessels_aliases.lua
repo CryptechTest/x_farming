@@ -16,4 +16,4 @@
 --]]
 
 -- Bottles
-minetest.register_alias('x_farming:glass_bottle', 'vessels:glass_bottle')
+core.register_alias('x_farming:glass_bottle', 'vessels:glass_bottle')

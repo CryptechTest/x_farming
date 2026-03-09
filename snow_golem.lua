@@ -16,9 +16,9 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-mobs = minetest.global_exists('mobs') and mobs --[[@as table]]
+mobs = core.global_exists('mobs') and mobs --[[@as table]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 mobs.npc_drops = {
   'default:mese_crystal',
@@ -127,7 +127,7 @@ local snow_golem_def = {
             pos.y = pos.y + 0.5
 
             -- add item if it exists
-            local obj = minetest.add_item(pos, {
+            local obj = core.add_item(pos, {
                 name = mobs.npc_drops[math.random(1, #mobs.npc_drops)]
             })
 
@@ -141,7 +141,7 @@ local snow_golem_def = {
                 obj:remove() -- item does not exist
             end
 
-            minetest.chat_send_player(name, S('Snow Golem dropped you an item for gold!'))
+            core.chat_send_player(name, S('Snow Golem dropped you an item for gold!'))
 
             return
         end
@@ -152,11 +152,11 @@ local snow_golem_def = {
             if self.order == 'follow' then
                 self.order = 'stand'
 
-                minetest.chat_send_player(name, S('NPC stands still.'))
+                core.chat_send_player(name, S('NPC stands still.'))
             else
                 self.order = 'follow'
 
-                minetest.chat_send_player(name, S('NPC will follow you.'))
+                core.chat_send_player(name, S('NPC will follow you.'))
             end
         end
     end,

@@ -1,6 +1,6 @@
 --[[
-    X Farming. Extends Minetest farming mod with new plants, crops and ice fishing.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    X Farming. Extends Luanti farming mod with new plants, crops and ice fishing.
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 local hoe_wood_def = {
     description = S('Wooden Hoe'),
@@ -45,10 +45,10 @@ local hoe_steel_def = {
     groups = { hoe = 1 }
 }
 
-if minetest.get_modpath('farming') then
-    minetest.override_item('farming:hoe_wood', hoe_wood_def)
-    minetest.override_item('farming:hoe_stone', hoe_stone_def)
-    minetest.override_item('farming:hoe_steel', hoe_steel_def)
+if core.get_modpath('farming') then
+    core.override_item('farming:hoe_wood', hoe_wood_def)
+    core.override_item('farming:hoe_stone', hoe_stone_def)
+    core.override_item('farming:hoe_steel', hoe_steel_def)
 else
     x_farming.register_hoe('x_farming:hoe_wood', hoe_wood_def)
     x_farming.register_hoe('x_farming:hoe_stone', hoe_stone_def)
