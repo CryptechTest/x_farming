@@ -864,6 +864,7 @@ x_farming.register_plant = function(name, def)
 
     core.register_node(':' .. mname .. ':seed_' .. pname, {
         description = def.description,
+        short_description = def.description,
         tiles = def.tiles or { def.inventory_image },
         inventory_image = def.inventory_image,
         wield_image = def.inventory_image,
@@ -910,6 +911,7 @@ x_farming.register_plant = function(name, def)
     -- Register harvest
     core.register_craftitem(':' .. mname .. ':' .. pname, {
         description = def.harvest_description,
+        short_description = def.harvest_description,
         inventory_image = mname .. '_' .. pname .. '.png',
         groups = def.groups or { flammable = 2 },
     })
