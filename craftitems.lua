@@ -84,7 +84,7 @@ core.register_craftitem('x_farming:bottle_water', {
 -- Bottle Honey
 local bottle_honey_def = {
     description = S('Honey Bottle') .. '\n' ..
-        core.colorize(x_farming.colors.brown, S('Hunger') .. ': 6') .. '\n' .. core.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
+        core.colorize(x_farming.colors.brown, S('Hunger') .. ': 6'),
     tiles = { 'x_farming_bottle_honey.png' },
     inventory_image = 'x_farming_bottle_honey.png',
     wield_image = 'x_farming_bottle_honey.png',
